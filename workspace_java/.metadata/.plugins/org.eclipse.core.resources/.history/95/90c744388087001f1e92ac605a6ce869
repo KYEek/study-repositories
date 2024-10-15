@@ -1,0 +1,12 @@
+package jdbc.day01;
+
+public class DQL_select_PreparedStatement_02 {
+
+	public static void main(String[] args) {
+
+		
+		
+		
+	}// end of main()-----------------------------
+
+}

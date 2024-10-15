@@ -1,0 +1,301 @@
+Microsoft Windows [Version 10.0.22631.4169]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\user>sqlplus /nolog
+==> 오라클 명령프롬프트인 SQL> 을 띄워라는 말이다.
+
+SQL*Plus: Release 18.0.0.0.0 - Production on 수 9월 11 11:44:13 2024
+Version 18.4.0.0.0
+
+Copyright (c) 1982, 2018, Oracle.  All rights reserved.
+
+SQL> show user
+==> 현재 오라클 서버에 연결된 사용자가 누구인지 보여라는 말이다.
+USER은 ""입니다
+==> 현재 오라클 서버에 연결된 사용자가 없다는 말이다.
+
+SQL> connect system/gclass
+==> 오라클 사용자 계정명은 system 이고, 암호는 gclass 인 것으로 연결해라는 말이다.
+연결되었습니다.
+
+SQL> show user
+USER은 "SYSTEM"입니다
+==> 현재 오라클 서버에 연결된 사용자가 SYSTEM 이다는 말이다.
+
+SQL> disconnect
+==> 현재 오라클 서버에 연결된 사용자를 오라클 서버에서 연결을 끊어라는 말이다.
+Oracle Database 18c Express Edition Release 18.0.0.0.0 - Production
+Version 18.4.0.0.0에서 분리되었습니다.
+
+SQL> show user
+USER은 ""입니다
+==> 현재 오라클 서버에 연결된 사용자가 없다는 말이다.
+
+SQL> connect system/kkjskdfjksdjfd
+ERROR:
+ORA-01017: 사용자명/비밀번호가 부적합, 로그온할 수 없습니다.
+
+SQL> connect jjkfsdsf/gclass
+ERROR:
+ORA-01017: 사용자명/비밀번호가 부적합, 로그온할 수 없습니다.
+
+SQL> host
+==> 잠시 운영체제의 명령프롬프트로 가겠다는 말이다.
+Microsoft Windows [Version 10.0.22631.4169]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\user>exit
+
+SQL> host ipconfig /all
+
+Windows IP 구성
+
+   호스트 이름 . . . . . . . . : DESKTOP-45IQGUS
+   주 DNS 접미사 . . . . . . . :
+   노드 유형 . . . . . . . . . : 혼성
+   IP 라우팅 사용. . . . . . . : 아니요
+   WINS 프록시 사용. . . . . . : 아니요
+
+이더넷 어댑터 이더넷:
+
+   연결별 DNS 접미사. . . . :
+   설명. . . . . . . . . . . . : Realtek PCIe GbE Family Controller
+   물리적 주소 . . . . . . . . : D0-AD-08-5C-F2-FB
+   DHCP 사용 . . . . . . . . . : 아니요
+   자동 구성 사용. . . . . . . : 예
+   링크-로컬 IPv6 주소 . . . . : fe80::4112:75d2:9a63:c4c5%16(기본 설정)
+   IPv4 주소 . . . . . . . . . : 192.168.0.219(기본 설정)
+   서브넷 마스크 . . . . . . . : 255.255.255.0
+   기본 게이트웨이 . . . . . . : 192.168.0.1
+   DHCPv6 IAID . . . . . . . . : 114339080
+   DHCPv6 클라이언트 DUID. . . : 00-01-00-01-2D-15-3D-F7-D0-AD-08-5C-F2-FB
+   DNS 서버. . . . . . . . . . : 168.126.63.1
+                                 8.8.8.8
+   Tcpip를 통한 NetBIOS. . . . : 사용
+
+이더넷 어댑터 이더넷 2:
+
+   연결별 DNS 접미사. . . . :
+   설명. . . . . . . . . . . . : VirtualBox Host-Only Ethernet Adapter
+   물리적 주소 . . . . . . . . : 0A-00-27-00-00-0F
+   DHCP 사용 . . . . . . . . . : 아니요
+   자동 구성 사용. . . . . . . : 예
+   링크-로컬 IPv6 주소 . . . . : fe80::b4a4:86b3:3989:9082%15(기본 설정)
+   IPv4 주소 . . . . . . . . . : 192.168.56.1(기본 설정)
+   서브넷 마스크 . . . . . . . : 255.255.255.0
+   기본 게이트웨이 . . . . . . :
+   DHCPv6 IAID . . . . . . . . : 805961767
+   DHCPv6 클라이언트 DUID. . . : 00-01-00-01-2D-15-3D-F7-D0-AD-08-5C-F2-FB
+   Tcpip를 통한 NetBIOS. . . . : 사용
+
+무선 LAN 어댑터 Wi-Fi:
+
+   미디어 상태 . . . . . . . . : 미디어 연결 끊김
+   연결별 DNS 접미사. . . . :
+   설명. . . . . . . . . . . . : Realtek RTL8852BE WiFi 6 802.11ax PCIe Adapter
+   물리적 주소 . . . . . . . . : 20-0B-74-95-75-02
+   DHCP 사용 . . . . . . . . . : 예
+   자동 구성 사용. . . . . . . : 예
+
+무선 LAN 어댑터 로컬 영역 연결* 1:
+
+   미디어 상태 . . . . . . . . : 미디어 연결 끊김
+   연결별 DNS 접미사. . . . :
+   설명. . . . . . . . . . . . : Microsoft Wi-Fi Direct Virtual Adapter
+   물리적 주소 . . . . . . . . : 22-0B-74-95-75-02
+   DHCP 사용 . . . . . . . . . : 예
+   자동 구성 사용. . . . . . . : 예
+
+무선 LAN 어댑터 로컬 영역 연결* 2:
+
+   미디어 상태 . . . . . . . . : 미디어 연결 끊김
+   연결별 DNS 접미사. . . . :
+   설명. . . . . . . . . . . . : Microsoft Wi-Fi Direct Virtual Adapter #2
+   물리적 주소 . . . . . . . . : 26-0B-74-95-75-02
+   DHCP 사용 . . . . . . . . . : 예
+   자동 구성 사용. . . . . . . : 예
+
+이더넷 어댑터 Bluetooth 네트워크 연결:
+
+   미디어 상태 . . . . . . . . : 미디어 연결 끊김
+   연결별 DNS 접미사. . . . :
+   설명. . . . . . . . . . . . : Bluetooth Device (Personal Area Network)
+   물리적 주소 . . . . . . . . : 20-0B-74-95-75-03
+   DHCP 사용 . . . . . . . . . : 예
+   자동 구성 사용. . . . . . . : 예
+
+SQL> host cls
+==> 운영체제 명령어인 cls 를 실행하여 화면지우기를 한다.
+
+SQL> conn system/gclass   ==> connect 를 conn 으로 줄일 수 있다.
+연결되었습니다.
+
+SQL> show user
+USER은 "SYSTEM"입니다
+
+SQL> disconn   ==> disconnect 를 disconn 으로 줄일 수 있다.
+Oracle Database 18c Express Edition Release 18.0.0.0.0 - Production
+Version 18.4.0.0.0에서 분리되었습니다.
+
+SQL> show user
+USER은 ""입니다
+
+SQL> conn sys/gclass   ==> sys 로 연결을 하려면 반드시 뒤에 as sysdba 를 꼭 붙여야 한다.
+ERROR:
+ORA-28009: SYS(SYSDBA 또는 SYSOPER)로 접속해야 합니다.
+
+SQL> conn sys/gclass as sysdba  ==> sys 로 연결을 하려면 반드시 뒤에 as sysdba 를 꼭 붙여야 한다.
+연결되었습니다.
+
+SQL> show user
+USER은 "SYS"입니다   ==> SYS 가 오라클 데이터베이스 관리자(정) 계정이다.
+
+SQL> disconn
+Oracle Database 18c Express Edition Release 18.0.0.0.0 - Production
+Version 18.4.0.0.0에서 분리되었습니다.
+
+SQL> conn system/gclass
+연결되었습니다.
+
+SQL> show user
+USER은 "SYSTEM"입니다   ==> SYSTEM 은 오라클 데이터베이스 관리자(부) 계정이다.
+
+SQL> shutdown immediate
+ORA-01031: 권한이 불충분합니다
+==> 오라클 데이터베이스 관리자(부) 계정인  SYSTEM 은 오라클 서버를 중지 또는 시작(구동)을 할 수 있는 권한이 없다.!!
+
+SQL> disconn
+Oracle Database 18c Express Edition Release 18.0.0.0.0 - Production
+Version 18.4.0.0.0에서 분리되었습니다.
+
+SQL> conn sys/gclass as sysdba
+연결되었습니다.
+
+SQL> show user
+USER은 "SYS"입니다
+
+SQL> shutdown immediate   ==> 오라클 서버를 중지시키는 것이다.
+==> 오라클 데이터베이스 관리자(정) 계정인  SYS 는 오라클 서버를 중지 또는 시작(구동)을 할 수 있는 권한이 있다.!!
+데이터베이스가 닫혔습니다.
+데이터베이스가 마운트 해제되었습니다.
+ORACLE 인스턴스가 종료되었습니다.
+
+SQL> show user
+USER은 "SYS"입니다
+
+SQL> disconn
+Oracle Database 18c Express Edition Release 18.0.0.0.0 - Production
+Version 18.4.0.0.0에서 분리되었습니다.
+
+SQL> show user
+USER은 ""입니다
+
+
+SQL> conn system/gclass
+ERROR:
+ORA-01034: ORACLE not available  ==> 오라클 서버가 중지되었으므로 사용불가하다.
+ORA-27101: shared memory realm does not exist
+프로세스 ID: 0
+세션 ID: 0 일련 번호: 0
+
+
+SQL> show user
+USER은 ""입니다
+
+SQL> conn sys/gclass as sysdba
+휴지 인스턴스에 접속되었습니다.
+==> 현재 오라클 서버가 중지되어진 상태에서 SYS 로 연결되었다는 말이다.
+==> SYS 는 오라클 서버가 중지되어진 상태이더라도 연결이 가능하다.
+
+SQL> show user
+USER은 "SYS"입니다
+
+SQL> startup     ==> 오라클 서버를 구동시켜주는 명령어인데 SYS 가 해줄 수 있다.
+ORACLE 인스턴스가 시작되었습니다.
+
+Total System Global Area 1610612584 bytes
+Fixed Size                  9031528 bytes
+Variable Size            1375731712 bytes
+Database Buffers          218103808 bytes
+Redo Buffers                7745536 bytes
+데이터베이스가 마운트되었습니다.
+데이터베이스가 열렸습니다.
+
+SQL> show user
+USER은 "SYS"입니다
+
+SQL> disconn
+Oracle Database 18c Express Edition Release 18.0.0.0.0 - Production
+Version 18.4.0.0.0에서 분리되었습니다.
+
+SQL> conn system/gclass
+연결되었습니다.
+==> SYS 를 제외한 나머지 모든 오라클 사용자 계정은 반드시 오라클 서버가 구동(시작)되어야만 연결하여 사용할 수 있다.
+
+SQL> show user
+USER은 "SYSTEM"입니다
+
+SQL> select * from dba_users;
+==> sqlplus 를 사용하여 DB를 다루고자 할 때 아래와 같이 결과물을 얻으므로 보기에 안 좋다.!!!   그래서 우리는 ORACLE DataBase 서버를 설치한 후, ORACLE DataBase 서버를 다루는 툴(Tool)인 sqldeveloper 를 사용하여 쓰겠다.
+
+
+USERNAME
+--------------------------------------------------------------------------------
+   USER_ID
+----------
+PASSWORD
+--------------------------------------------------------------------------------
+ACCOUNT_STATUS                                                   LOCK_DAT
+---------------------------------------------------------------- --------
+EXPIRY_D DEFAULT_TABLESPACE
+-------- ------------------------------------------------------------
+TEMPORARY_TABLESPACE
+------------------------------------------------------------
+LOCAL_TEMP_TABLESPACE                                        CREATED
+------------------------------------------------------------ --------
+PROFILE
+--------------------------------------------------------------------------------
+INITIAL_RSRC_CONSUMER_GROUP
+--------------------------------------------------------------------------------
+EXTERNAL_NAME
+--------------------------------------------------------------------------------
+PASSWORD_VERSIONS                  ED AUTHENTICATION_T PR COMMON
+---------------------------------- -- ---------------- -- ------
+LAST_LOGIN                                                                  OR
+--------------------------------------------------------------------------- --
+INHERI
+------
+DEFAULT_COLLATION
+--------------------------------------------------------------------------------
+IMPLIC ALL_SH
+------ ------
+
+
+36 행이 선택되었습니다.
+
+SQL> exit
+Oracle Database 18c Express Edition Release 18.0.0.0.0 - Production
+Version 18.4.0.0.0에서 분리되었습니다.
+
+C:\Users\user>exit
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

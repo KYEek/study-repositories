@@ -1,0 +1,83 @@
+package jdbc.day02;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+public class SQLException_insert_PreparedStatement_01 {
+
+	public static void main(String[] args) {
+
+		Connection conn = null;
+
+		PreparedStatement pstmt = null;
+
+		ResultSet rs = null;
+		
+		Scanner sc = new Scanner(System.in);
+
+		try {
+
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "JDBC_USER", "gclass");
+			//——————————————————————————————————————————————————————————————————————————————————————————————
+			
+			System.out.print("😊 학번 : ");
+			String stno = sc.nextLine();
+			
+			System.out.print("😊 성명 : ");
+			String name = sc.nextLine();
+			
+			System.out.print("😊 연락처 : ");
+			String tel = sc.nextLine();
+			
+			System.out.print("😊 주소 : ");
+			String addr = sc.nextLine();
+			
+			System.out.print("😊 학급번호 : ");
+			String fk_classno = sc.nextLine();
+			
+			String sql = " insert into tbl_student(stno, name, tel, addr, fk_classno) "
+						+" values (to_number(?), ?, ?, ?, to_number(?) )";
+			
+			
+			
+			
+			//——————————————————————————————————————————————————————————————————————————————————————————————
+			
+			
+		} catch (ClassNotFoundException e) {
+			System.out.println(">>> ojdbc8.jar 파일이 없습니다. <<<");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+					rs = null;
+				}
+
+				if (pstmt != null) {
+					pstmt.close();
+					pstmt = null;
+				}
+
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		sc.close();
+		System.out.println("프로그램 종료😘");
+	}// end of main()-------------------------------------------------------------------
+
+}

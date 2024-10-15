@@ -1,0 +1,115 @@
+SQL> conn system/gclass
+연결되었습니다.
+SQL> show user
+USER은 "SYSTEM"입니다
+SQL> disconn ==> disconect 를 disconn으로 줄이는게 가능
+Oracle Database 18c Express Edition Release 18.0.0.0.0 - Production
+Version 18.4.0.0.0에서 분리되었습니다.
+SQL>
+
+SQL> conn sys/gcalss	==> sys로 연결을 하려면 as sysdba를 꼭 붙여야 한다.
+ERROR:
+ORA-28009: SYS(SYSDBA 또는 SYSOPER)로 접속해야 합니다.
+
+SQL> conn sys/gclass as sysdba
+연결되었습니다.
+SQL> show user
+USER은 "SYS"입니다	==>SYS가 오라클 데이터베이스 관리자(정) 계정이다.
+
+SQL> conn system/gclass
+연결되었습니다.
+
+SQL> show user
+USER은 "SYSTEM"입니다	==>SYSTEM 오라클 데이터베이스 관리자(부) 계정이다.
+
+SQL> shutdown immediate
+ORA-01031: 권한이 불충분합니다
+==> 오라클 데이터베이스 관리자(부) 계정인 SYSTEM은 오라클 서버를 중지 또는 시작(구동)을 할 수 있는 권한이 없다!!
+
+SQL> show user
+USER은 "SYS"입니다
+
+SQL> shutdown immediate	==> 오라클 서버를 중지시키는 것이다.
+==> 오라클 데이터베이스 관리자(정) 계정인 SYS는 오라클 서버를 중지 또는 시작(구동)을 할 수 있는 권한이 있다
+데이터베이스가 닫혔습니다.
+데이터베이스가 마운트 해제되었습니다.
+ORACLE 인스턴스가 종료되었습니다.
+
+SQL> conn system/gclass
+ERROR:
+ORA-01034: ORACLE not available ==> 오라클 서버가 중지되었으므로 사용불가하다.
+ORA-27101: shared memory realm does not exist
+프로세스 ID: 0
+세션 ID: 0 일련 번호: 0
+
+
+SQL> show user
+USER은 ""입니다
+
+SQL> conn sys/gclass as sysdba
+==>휴지 인스턴스에 접속되었습니다.	==> 현재 오라클 서버가 중지되어진 상태에서 SYS로 연결되었다는 말이다.
+==> SYS는 오라클 서버가 중지되어진 상태이더라도 연결이 가능하다.
+
+SQL> show user	==> 서버를 구동시켜주는 명령어
+USER은 "SYS"입니다
+
+ORACLE 인스턴스가 시작되었습니다.
+
+Total System Global Area 1610612584 bytes
+Fixed Size                  9031528 bytes
+Variable Size            1375731712 bytes
+Database Buffers          218103808 bytes
+Redo Buffers                7745536 bytes
+데이터베이스가 마운트되었습니다.
+데이터베이스가 열렸습니다.
+
+
+SQL> disconn
+Oracle Database 18c Express Edition Release 18.0.0.0.0 - Production
+Version 18.4.0.0.0에서 분리되었습니다.
+
+SQL> conn system/gclass
+연결되었습니다.
+==> SYS를 제외한 나머지 모든 오라클 사용자 계정은 반드시 오라클 서버가 구동(시작) 되어야만 연결하여 사용할 수 있다
+
+SQL> show user
+USER은 "SYSTEM"입니다
+
+SQL> select * from dba_users;
+==> sqlplus를 사용하여 DB를 다루고자 할 때 아래와 같이 결과물을 얻으므로 보기에 안 좋다. 그래서 우리는 ORACLE DataBase 서버를 설치한 후, ORACLE DataBase 서버를 다루는 툴(Tool)인 sqldeveloper를 사용하여 쓰겠다.
+
+USERNAME
+--------------------------------------------------------------------------------
+   USER_ID
+----------
+PASSWORD
+--------------------------------------------------------------------------------
+ACCOUNT_STATUS                                                   LOCK_DAT
+---------------------------------------------------------------- --------
+EXPIRY_D DEFAULT_TABLESPACE
+-------- ------------------------------------------------------------
+TEMPORARY_TABLESPACE
+------------------------------------------------------------
+LOCAL_TEMP_TABLESPACE                                        CREATED
+------------------------------------------------------------ --------
+PROFILE
+--------------------------------------------------------------------------------
+INITIAL_RSRC_CONSUMER_GROUP
+--------------------------------------------------------------------------------
+EXTERNAL_NAME
+--------------------------------------------------------------------------------
+PASSWORD_VERSIONS                  ED AUTHENTICATION_T PR COMMON
+---------------------------------- -- ---------------- -- ------
+LAST_LOGIN                                                                  OR
+--------------------------------------------------------------------------- --
+INHERI
+------
+DEFAULT_COLLATION
+--------------------------------------------------------------------------------
+IMPLIC ALL_SH
+
+대충 이런식으로 나온다
+
+SQL> exit
+Oracle Database 18c Express Edition Release 18.0.0.0.0 - Production
+Version 18.4.0.0.0에서 분리되었습니다.

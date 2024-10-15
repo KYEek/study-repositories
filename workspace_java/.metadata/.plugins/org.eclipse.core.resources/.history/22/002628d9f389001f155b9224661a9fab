@@ -1,0 +1,10 @@
+package jdbc.day01;
+
+public class DDL_create_drop_PreparedStatement_06 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}
