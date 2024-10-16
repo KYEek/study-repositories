@@ -143,8 +143,7 @@ public class MemberDAO_imple implements MemberDAO {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "JDBC_USER", "gclass");
 			
-			String sql = " update tbl_member set status = 0 where userid = '?' ";
-			pstmt.setInt(1,userseq);
+			String sql = " update tbl_member set status = 0 where userid = 'rbdud9698' ";
 			
 			pstmt = conn.prepareStatement(sql);
 			result = pstmt.executeUpdate();
