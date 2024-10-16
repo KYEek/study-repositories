@@ -11,7 +11,6 @@ public class Member_main {
 		Scanner sc = new Scanner(System.in);
 		
 		mctrl.menu_Start(sc);
-		
 		sc.close();
 		System.out.println("\n (o゜▽゜)o☆  프로그램 종료  o(*￣▽￣*)ブ");
 

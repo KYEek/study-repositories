@@ -1,6 +1,7 @@
 package jdbc.day03;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -58,12 +59,12 @@ public class MemberCtrl {
 			
 			// 로그인 한 후
 			if(isSuccess_Login = true) {
-				String admin_menu = "admin".equals(member.getUserid()) ? "4. 모든회원조회" : "";
-				String bar = "admin".equals(member.getUserid()) ?"⁙".repeat(66):"⁙".repeat(48);
+				String add_menu = "admin".equals(member.getUserid()) ? "4. 모든회원조회" : "4.내정보 수정하기";
+				//String bar = "admin".equals(member.getUserid()) ?"⁙".repeat(66):"⁙".repeat(48);
 				
 				System.out.println("\n⁙⁙⁙⁙⁙시작메뉴 [" +member.getName() +"]님 로그인 중...⁙⁙⁙⁙⁙⁙ \n"
-						+ "1. 로그아웃  2. 회원탈퇴  3. 나의정보보기  " + admin_menu + " \n"
-						+ bar);
+						+ "1. 로그아웃  2. 회원탈퇴  3. 나의정보보기  " + add_menu + " \n"
+						+ "⁙".repeat(66));
 		
 				System.out.print("메뉴번호 선택 : ");
 				s_Choice = sc.nextLine();
@@ -82,12 +83,20 @@ public class MemberCtrl {
 					do {
 						System.out.print(" /_ \\ 정말로 탈퇴 하시겠습니까? [Y/N] : ");
 						yn = sc.nextLine();
-						
 						if("y".equalsIgnoreCase(yn)) {
-							mdao.memberDelete(member.getUserseq());
+							int n = mdao.memberDelete(member.getUserseq());
+							if(n == 1) {
+								member = null;
+								isSuccess_Login = false;
+								System.out.println("회원탈퇴가 성공되었습니다 (￣ ‘i ￣;)\n");
+							}
 						}
 						else if("n".equalsIgnoreCase(yn)) {
-							
+							System.out.println("회원탈퇴를 취소하셨습니다.\n");
+						}
+						
+						else {
+							System.out.println("Y 또는 N만 입력하세😡.\n");
 						}
 						
 						
@@ -96,13 +105,21 @@ public class MemberCtrl {
 					
 					break;
 				case "3":	//나의정보조회
-		
+					
+					System.out.println(member.toString());
+					
+					
 					break;
 				case "4":	//admin 으로 로그인 시 모든 회원 조회, 일반회원으로 로그인 시 메뉴에 없는 번호로 표시
 					if("admin".equals(member.getUserid())) {
-						System.out.println("모든 회원들의 정보를 보여주겠습니다🙇");
-						break;
+						
+						showALLMember();
 					}
+					else {
+						//수정 전 나의 정보
+						updateMyinfo(member, sc);
+					}
+					break;
 				default:
 					System.out.println(">>> 메뉴에 없는 번호 입니다. 다시 선택하세요!! <<<");
 					break;
@@ -115,7 +132,44 @@ public class MemberCtrl {
 	}
 	
 	
-	
+
+
+
+
+	private void updateMyinfo(MemberDTO member, Scanner sc) {
+		// TODO Auto-generated method stub
+		System.out.println(member.toString());
+		System.out.println("== [주의사항] 변경하지 않으려면 그냥 엔터하세요!!");
+		System.out.print("- 성명 : ");
+		String name = sc.nextLine();
+		System.out.print("- 연락처 : ");
+		String mobile = sc.nextLine();
+		
+		System.out.println("\n\n");
+		if (name.isEmpty()) {
+			name = member.getName();
+		}
+		if (mobile.isEmpty()) {
+			mobile = member.getMobile();
+		}
+		
+		int n = mdao.updateMyinfo(name, mobile, member.getUserseq()); 
+		member.setName(name);
+		member.setMobile(mobile);
+		if(n == 1)
+		{
+			System.out.println("\n수정 완료!! (((o(*ﾟ▽ﾟ*)o)))\n");
+			// 수정 후 나의 정보
+			System.out.println(member.toString());
+		}
+		
+	}
+
+
+
+
+
+
 	//		회원가입을 해주는 메소드 		//
 	private void memberRegister(Scanner sc) {
 		
@@ -178,6 +232,46 @@ public class MemberCtrl {
 		
 		return member;
 	}
+	
+	
+	
+	//			모든 회원을 조회해주는 메소드			//
+	private void showALLMember() {
+		
+		List<MemberDTO> memberList = mdao.showALLMember();
+		
+		if(memberList != null) {
+			
+			StringBuilder sb = new StringBuilder();
+			
+			sb.append("-".repeat(50) + "\n");
+			sb.append("회원번호  아이디  회원명  연락처  포인트  가입일자  가입상태\n");
+			sb.append("-".repeat(50) + "\n");
+			
+			for (int i = 0; i<memberList.size(); i++) {
+				
+				String status = (memberList.get(i).getStatus() == 1)? "가입중": "탈퇴";
+				
+				sb.append(memberList.get(i).getUserseq()+ "  ");
+				sb.append(memberList.get(i).getUserid()+ "  ");
+				sb.append(memberList.get(i).getName()+ "  ");
+				sb.append(memberList.get(i).getMobile()+ "  ");
+				sb.append(memberList.get(i).getPoint()+ "  ");
+				sb.append(memberList.get(i).getRegisterday().substring(0, 10)+ "  ");
+				sb.append(status + "\n");
+			}// end of for --------------------------------------
+			
+			
+			//System.out.println(sb.toString());
+			//또는
+			System.out.println(sb);
+		}
+		else  {
+			System.out.println("가입된 회원이 1명도 없습니다.😭😭");
+		}
+		
+	} // end of showALLMember------------------------------------
+	
 	
 	
 

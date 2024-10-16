@@ -56,4 +56,15 @@
     from tbl_member
     where status = 1 and userid = 'rbdud9698' and passwd = 'qwer1234$';
     
-    update set
+    update tbl_member set status = 1 where userseq = 5 ;
+    commit;
+    
+    select userseq, userid, name, mobile, point, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') as registerday, case status when 0 then '탈퇴' else '가입중' end as status
+    from tbl_member
+    where userid != 'admin'
+    order by userseq;
+    
+    
+    update tbl_member set name = 'aaa', mobile = '000' where userseq = 2;
+    
+    rollback;

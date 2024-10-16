@@ -15,15 +15,25 @@ public class MemberDTO {
 	private String mobile; 		// 연락처
 	private int point; 			// 포인트
 	private String registerday; // 가입일자
-	private String status; 		//status 컬럼의 값이 1 이면 가입된 상태, 0 이면 탈퇴
+	private int status; 		//status 컬럼의 값이 1 이면 가입된 상태, 0 이면 탈퇴
 	
 	
 	
 	
 	
+	@Override
+	public String toString() {
+		
+		
+		return "\n==== 나의 정보 ====\n"
+			+ "성명 : " + name + "\n" 
+			+ "연락처 : " + mobile + "\n" 
+			+ "포인트 : " + point + "\n" 
+			+ "가입일자 : " + registerday.substring(0, 10);
+		
+	}
 	
-	
-	
+
 	
 	
 	
@@ -99,12 +109,12 @@ public class MemberDTO {
 	}
 	
 	
-	public String getStatus() {
+	public int getStatus() {
 		return status;
 	}
 	
 	
-	public void setStatus(String status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 	
