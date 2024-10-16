@@ -84,7 +84,7 @@ public class MemberCtrl {
 						yn = sc.nextLine();
 						
 						if("y".equalsIgnoreCase(yn)) {
-							mdao.memberDelete(member.getUserseq());
+							
 						}
 						else if("n".equalsIgnoreCase(yn)) {
 							
