@@ -1,6 +1,11 @@
 package jdbc.day02;
 
-
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Scanner;
 
 /*		== HR에서 예전에 생성해두었던 pcd_tbl_member_test1_insert 프로시저 을 사용해본다.
  create or replace procedure  pcd_tbl_member_test1_insert(p_id varchar2, p_pwd varchar2, p_name varchar2)
@@ -55,6 +60,98 @@ package jdbc.day02;
 public class Procedure_insert_sqlexception_CallableStatement_04 {
 
 	public static void main(String[] args) {
+		
+		Connection conn = null;
+
+		CallableStatement cstmt = null;
+		// CallableStatement cstmt 은 Connection conn(연결한 DB 서버)에 존재하는 Procedure 를 호출해주는 객체(우편배달부)이다.
+		String userid = null;
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "HR", "gclass");
+			
+			
+			// >>> 3. Connection conn 객체를 사용하여 prepareCall() 메소드를 호출함으로써
+	        //        CallableStatement cstmt 객체를 생성한다.
+	        //        즉, 우편배달부(택배기사) 객체 만들기
+			cstmt = conn.prepareCall("{call pcd_tbl_member_test1_insert(?, ?, ?)}");
+			/*
+				 오라클 서버에 생성한 프로시저 pcd_student_select_one 의 
+            	 매개변수 갯수가 2개 이므로 ? 를 2개 준다.
+            	 
+            	 다음으로 오라클의 프로시저를 수행( executeUpdate() 또는 execute() ) 하기에 앞서서  
+				반드시 해야할 일은 IN mode 로 되어진 파라미터에 값을 넣어주고,
+				OUT mode 로 설정된 곳에 그 결과값을 받아오도록 아래와 같이 설정해야 한다.
+				
+				프로시저의 IN mode 로 되어진 파라미터에 값을 넣어줄때는 
+				cstmt.setXXX() 메소드를 사용한다. 
+					 
+			 */
+			
+			Scanner sc = new Scanner(System.in);
+			System.out.print("😐 아이디 : ");
+			userid = sc.nextLine();	//서울 강남구
+			
+			System.out.print("😐 비밀번호 : ");
+			String passwd = sc.nextLine();	//서울 강남구
+			
+			System.out.print("😐 성명 : ");
+			String name = sc.nextLine();	//서울 강남구
+			
+			cstmt.setString(1, userid); // 숫자 1 은 프로시저 파라미터중 첫번째 파라미터인 IN 모드의 ? 를 말한다.
+			cstmt.setString(2, passwd); // 숫자 1 은 프로시저 파라미터중 두번째 파라미터인 IN 모드의 ? 를 말한다.
+			cstmt.setString(3, name); 	// 숫자 1 은 프로시저 파라미터중 세번째 파라미터인 IN 모드의 ? 를 말한다.
+			
+			// >>> 4. CallableStatement cstmt 객체를 사용하여 오라클의 프로시저 실행하기  <<<
+			//cstmt.execute();		//오라클 서버에게 해당 프로시저를 실행해라는 것이다.
+			//또는
+			int n = cstmt.executeUpdate();	//오라클 서버에게 해당 프로시저를 실행해라는 것이다.
+			
+			if(n==1) {
+				System.out.println(">>> 회원가입 성공!! <<<");
+			}
+			else {
+				
+			}
+			
+			
+			
+			sc.close();
+
+		} catch (ClassNotFoundException e) {
+			System.out.println(">>> ojdbc8.jar 파일이 없습니다. <<<");
+		} catch (SQLException e) {
+			if(e.getErrorCode()==20002 || e.getErrorCode() == 20003) {
+				System.out.println(e.getMessage());
+			}
+			else if(e.getErrorCode()== 1) {
+				System.out.println("아이디 "+userid+" 은(는) 이미 사용중이므로 다른 아이디로 입력하세요!!");
+			}
+			else {
+				e.printStackTrace();
+			}
+		} finally {
+			try {
+
+				if (cstmt != null) {
+					cstmt.close();
+					cstmt = null;
+				}
+
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		System.out.println("(((o(*ﾟ▽ﾟ*)o)))프로그램 종료");
+
 
 	}
 

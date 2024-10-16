@@ -1,0 +1,10 @@
+package jdbc.day03;
+
+public class Member_main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

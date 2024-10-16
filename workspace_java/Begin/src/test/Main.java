@@ -5,26 +5,9 @@ import java.util.Scanner;
 public class Main {
 
 	public static void main(String[] args) {
-		int amount = 0;
-		int a = 0, b = 0;
-		int count = 0, sum  = 0;
-		
-		Scanner sc = new Scanner(System.in);
-		
-		amount = Integer.parseInt(sc.nextLine());
-		count = Integer.parseInt(sc.nextLine());
-		
-		for (int i= 0; i < count; i ++) {
-			a = sc.nextInt();
-			b = sc.nextInt();
-			
-			sum += (a * b);
-		}
-		if (sum == amount)
-			System.out.println("Yes");
-		else
-			System.out.println("No");
-		
+		System.out.println("\n⁙⁙⁙⁙⁙시작메뉴 [연규영]님 로그인 중...⁙⁙⁙⁙⁙⁙ \n"
+				+ "1. 로그아웃  2. 회원탈퇴  3. 나의정보보기  4.모든회원정보 \n");
+		System.out.println("⁙".repeat(66));
 	}
 
 }
