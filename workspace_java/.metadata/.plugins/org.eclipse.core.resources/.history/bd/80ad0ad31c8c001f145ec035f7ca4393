@@ -1,0 +1,102 @@
+package jdbc.day04.board.controller;
+
+import java.util.Scanner;
+
+import jdbc.day03.MemberDTO;
+
+public class Controller {
+
+	
+
+	// field
+	
+	
+	// method
+	//			시작 메뉴			//
+	public void menu_Start(Scanner sc) {
+		String s_Choice = "";
+		boolean isSuccess_Login = false;
+		MemberDTO member = null;
+		
+		
+		
+		do {
+			// 로그인 하기전
+			if(isSuccess_Login == false) {
+				do {
+					System.out.println("\n⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙시작메뉴⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙ \n"
+									+ "1. 회원가입  2. 로그인  3. 프로그램 종료 \n"
+									+ "⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙⁙");
+					
+					System.out.print("메뉴번호 선택 : ");
+					s_Choice = sc.nextLine();
+		
+					switch (s_Choice) {
+					case "1": // 회원가입
+						memberRegister(sc);
+						break;
+					case "2": // 로그인
+						member = login(sc);
+						if(member != null)
+							isSuccess_Login = true;
+						break;
+					case "3": // 프로그램 종료
+		
+						return;	//menu_Start(Scanner sc) 이 메서드를 종료함
+					default:
+						System.out.println("😣 메뉴에 없는 번호 입니다. 다시 선택하세요!!");
+						break;
+					}
+				} while (!("2".equals(s_Choice) && isSuccess_Login == true));		
+			}// end of if-------------------------------
+			
+			
+			
+			// 로그인 한 후
+			if(isSuccess_Login = true) {
+				String admin_menu = "admin".equals(member.getUserid()) ? "4. 관리자전용(모든회원조회)" : "";
+				String bar = "admin".equals(member.getUserid()) ?"⁙".repeat(66):"⁙".repeat(48);
+				
+				System.out.println("\n⁙⁙⁙⁙⁙시작메뉴 [" +member.getName() +"]님 로그인 중...⁙⁙⁙⁙⁙⁙ \n"
+						+ "1. 로그아웃  2. 나의정보보기  3. 게시판가기  " + admin_menu + " \n"
+						+ bar);
+		
+				System.out.print("메뉴번호 선택 : ");
+				s_Choice = sc.nextLine();
+				
+				
+				switch (s_Choice) {
+				case "1":	//로그아웃
+					member = null;
+					isSuccess_Login = false;
+					System.out.println("로그아웃 되었습니다 O(∩_∩)O");
+					break;
+				case "2":	//나의정보보기
+					System.out.println(member.toString());
+					
+					break;
+				case "3":	//게시판가기
+					
+					
+					
+					
+					break;
+				case "4":	//admin 으로 로그인 시 모든 회원 조회, 일반회원으로 로그인 시 메뉴에 없는 번호로 표시
+					if("admin".equals(member.getUserid())) {
+						
+						showALLMember();
+						break;
+					}
+				default:
+					System.out.println(">>> 메뉴에 없는 번호 입니다. 다시 선택하세요!! <<<");
+					break;
+				}
+			}//end of if---------------------------------------------
+			
+		} while (true);
+		//end of while---------------------------------------------
+		
+		
+	}// end of public void menu_Start(Scanner sc) -------------------
+	
+}

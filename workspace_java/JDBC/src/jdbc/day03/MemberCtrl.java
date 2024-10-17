@@ -8,10 +8,10 @@ import java.util.Scanner;
 public class MemberCtrl {
 
 	// field, arrtibute, property, 속성
-	
-	//method, operation, 기능
 	MemberDAO mdao = new MemberDAO_imple();
 	
+	
+	//method, operation, 기능
 	//		시작 메뉴를 보여주는 메소드(기능)			//
 	public void menu_Start(Scanner sc) {
 		

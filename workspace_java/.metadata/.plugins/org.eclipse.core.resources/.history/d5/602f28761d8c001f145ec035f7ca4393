@@ -1,0 +1,7 @@
+package jdbc.day04.board.model;
+
+import jdbc.day03.MemberDAO;
+
+public class MemberDAO_imple implements MemberDAO {
+
+}
