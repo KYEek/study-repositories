@@ -68,8 +68,17 @@ commit;
 rollback;
 
     select boardno
-        , case when length(subject) > 15 then substr(subject, 1, 13)||'..' else subject end
+        , case when length(subject) > 15 then substr(subject, 1, 13)||'..' else subject end subject
         , name, to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') writeday, viewcount
     from tbl_board B join tbl_member M
     on B.fk_userid = M.userid
     order by boardno desc;
+    
+    select subject, contents, name, viewcount
+    from 
+    (
+    select subject, contents, viewcount, fk_userid
+    from  tbl_board
+    where boardno = 5
+    ) B join tbl_member M
+    on B.fk_userid = M.userid;

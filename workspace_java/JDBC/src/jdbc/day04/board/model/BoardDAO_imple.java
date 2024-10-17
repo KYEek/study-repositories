@@ -5,9 +5,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import jdbc.day04.board.domain.BoardDTO;
+import jdbc.day04.member.domain.MemberDTO;
 
 public class BoardDAO_imple implements BoardDAO {
 	
@@ -115,9 +118,123 @@ public class BoardDAO_imple implements BoardDAO {
 	@Override
 	public List<BoardDTO> boardList() {
 		
-		
-		return null;
+		List<BoardDTO> boardList = new ArrayList<>();
+
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "JDBC_USER", "gclass");
+
+			String sql = " select boardno "
+					+ " , case when length(subject) > 15 then substr(subject, 1, 13)||'..' else subject end subject "
+					+ " , name, to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') writeday, viewcount "
+					+ " from tbl_board B join tbl_member M "
+					+ " on B.fk_userid = M.userid "
+					+ " order by boardno desc ";
+			
+
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			int cnt = 0;
+			while (rs.next()) {
+				
+				BoardDTO board = new BoardDTO();
+				
+				board.setBoardno(rs.getInt("boardno"));
+				board.setSubject(rs.getString("subject"));
+				MemberDTO member = new MemberDTO();
+				
+				member.setName(rs.getString("name"));
+				board.setMbrdto(member);
+				
+				board.setWriteday(rs.getString("writeday"));
+				board.setViewcount(rs.getInt("viewcount"));
+				
+				boardList.add(board);
+			}
+
+		} catch (ClassNotFoundException e) {
+			System.out.println(">>> ojdbc8.jar 파일이 없습니다. <<<");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+
+		return boardList;
 	}
+
+
+	// 글 1개 내용 보기
+	// == 현재 로그인 사용자가 자신이 쓴 글을 볼때는 조회수 증가가 없지만
+	//    다른 사용자가 쓴 글을 볼때는 조회수를 1증가 해주어야 한다.
+	@Override
+	public BoardDTO viewContents(Map<String, String> paraMap) {
+		
+		BoardDTO bdto = null;
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "JDBC_USER", "gclass");
+
+			String sql = " select subject, contents, name, viewcount, fk_userid "
+					+ " from  "
+					+ " ( "
+					+ "     select subject, contents, viewcount, fk_userid "
+					+ "     from  tbl_board "
+					+ "     where boardno = ? "
+					+ " ) B join tbl_member M "
+					+ " on B.fk_userid = M.userid ";
+			
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, paraMap.get("boardNo"));
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				bdto = new BoardDTO();
+				
+				bdto.setSubject(rs.getString("subject"));
+				bdto.setContents(rs.getString("contents"));
+				
+				MemberDTO mbrdto = new MemberDTO();
+				mbrdto.setName(rs.getString("name"));
+				bdto.setViewcount(rs.getInt("viewcount"));
+				//————————————————————————————————
+				
+				//로그인한 사용자가 다른 사용자가 쓴 글을 조회할 경우에만 글 조회수 1증가 시켜야 한다.
+				if(!paraMap.get("login_userid").equals(rs.getString("fk_userid"))); {
+					sql = " update tbl_board set viewcount = viewcount + 1 "
+							+ "where boardno = ? ";
+					pstmt = conn.prepareStatement(sql);
+					pstmt.setString(1, paraMap.get("boardNo"));
+					
+					pstmt.executeUpdate();
+					
+					bdto.setViewcount(bdto.getViewcount() + 1);
+					
+				}//end of if————————————————————————————————
+				
+			}
+
+		} catch (ClassNotFoundException e) {
+			System.out.println(">>> ojdbc8.jar 파일이 없습니다. <<<");
+		} catch (SQLException e) {
+			if(e.getErrorCode()==1722) {
+				System.out.println(">> [경고] 글번호는 정수만 가능합니다. << \n");
+			}
+			else {
+				e.printStackTrace();
+			}
+			
+			
+		} finally {
+			close();
+		}
+		
+		
+		
+		return bdto;
+	}// end of viewContents————————————————————————————————————————
 			
 			
 			

@@ -26,7 +26,7 @@ public class BoardDTO {	//BoardDTO는
 	private int viewcount;		//조회수 
 	private String boardpasswd;	//글암호
 	
-	private MemberDTO mbrdto;//JOIN 해서 select 하는 용도
+	private MemberDTO mbrdto;	//JOIN 해서 select 하는 용도
 	
 	
 	
@@ -95,5 +95,11 @@ public class BoardDTO {	//BoardDTO는
 		this.mbrdto = mbrdto;
 	}
 	
+	
+	///--------------------------------------------------
+	public String boardInfo() {
+		
+		return boardno + "\t" + subject + "\t\t" + mbrdto.getName() + "\t" + writeday + "\t\t" + viewcount;
+	}
 	
 }

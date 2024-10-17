@@ -1,6 +1,7 @@
 package jdbc.day04.board.model;
 
 import java.util.List;
+import java.util.Map;
 
 import jdbc.day04.board.domain.BoardDTO;
 
@@ -15,5 +16,11 @@ public interface BoardDAO {
 
 	// 글 목록 보기
 	List<BoardDTO> boardList();
+
+	
+	// 글 1개 내용 보기
+	// == 현재 로그인 사용자가 자신이 쓴 글을 볼때는 조회수 증가가 없지만
+	//    다른 사용자가 쓴 글을 볼때는 조회수를 1증가 해주어야 한다.
+	BoardDTO viewContents(Map<String, String> paraMap);
 
 }
