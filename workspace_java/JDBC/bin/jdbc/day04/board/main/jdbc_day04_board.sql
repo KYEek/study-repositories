@@ -53,3 +53,23 @@ order by userseq desc;
 
 update tbl_member set point = point + 10
 where userid = 'rbdud9698';
+
+insert into tbl_board(boardno, fk_userid, subject, contents, boardpasswd)
+values(seq_board.nextval, 'rbdud9698', 'ddd', 'asdff' , 'asdfs');
+
+truncate table tbl_board;
+
+drop sequence seq_board;
+
+select *
+from tbl_board;
+
+commit;
+rollback;
+
+    select boardno
+        , case when length(subject) > 15 then substr(subject, 1, 13)||'..' else subject end
+        , name, to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') writeday, viewcount
+    from tbl_board B join tbl_member M
+    on B.fk_userid = M.userid
+    order by boardno desc;

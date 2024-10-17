@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import jdbc.day04.board.domain.BoardDTO;
 
@@ -63,7 +64,7 @@ public class BoardDAO_imple implements BoardDAO {
 			// Transaction 처리를 위해서 수동 commit 으로 전환 시킨다.
 			conn.setAutoCommit(false);
 			
-			String sql = " insert into tbl_board(boardno, fk_userid, subject, contents, boardpasswd)) "
+			String sql = " insert into tbl_board(boardno, fk_userid, subject, contents, boardpasswd) "
 					+ " values(seq_board.nextval, ?, ?, ? ,?) ";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, bdto.getFk_userid());
@@ -71,18 +72,52 @@ public class BoardDAO_imple implements BoardDAO {
 			pstmt.setString(3, bdto.getContents());
 			pstmt.setString(4, bdto.getBoardpasswd());
 
-			result = pstmt.executeUpdate();
+			int n1 = pstmt.executeUpdate();
 
+			if( n1 == 1) {	// tbl_board 테이블에 insert가 성공되었다라면
+				sql = " update tbl_member set point = point + 10 "
+					+ " where userid = ? ";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, bdto.getFk_userid());
+				
+				int n2 = pstmt.executeUpdate();
+				
+				if(n2 == 1) {
+					conn.commit();
+					result = 1;
+				}
+				
+			}
+			
 		} catch (ClassNotFoundException e) {
 			System.out.println(">>> ojdbc8.jar 파일이 없습니다. <<<");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			if(e.getErrorCode()==2290) {
+				System.out.println(">> 아이디 " +bdto.getFk_userid()+ "님의 포인트는 30을 초과할 수 없기 때문에 오류발생 하였습니다. <<");
+			}
+			else {
+				e.printStackTrace();
+			}
+			try {
+				conn.rollback();
+				result = -1;
+			}
+			catch (SQLException e1) {	}
+			
 		} finally {
 			close();
 		}
 
 		return result;
 	}//end of write ---------------------------
+
+	//			글 목록 보기			//
+	@Override
+	public List<BoardDTO> boardList() {
+		
+		
+		return null;
+	}
 			
 			
 			

@@ -9,7 +9,9 @@ package jdbc.day04.member.domain;
 //어떤 테이블에 데이터를 insert 하고자 할때 DTO에 담아서 보낸다.
 //또한 어떤 테이블에서 데이터를 select 하고자 할때도 DTO에 담아서 읽어온다.
 
-public class MemberDTO {
+public class MemberDTO {	//MemberDTO는
+							//오라클의 tbl_member에 해당합니다.
+							//tbl_member 테이블은 오라클의 tbl_board 테이블을 자식테이블로 하고있는 부모테이블이다.
 	
 	// field, arrtibute, property, 속성
 	private int userseq;		// 회원번호   

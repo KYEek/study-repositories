@@ -1,5 +1,7 @@
 package jdbc.day04.board.domain;
 
+import jdbc.day04.member.domain.MemberDTO;
+
 //데이터베이스에서 domain 이란?
 //엔티티의 속성들이 가질 수 있는 값들의 집합을 뜻하는 것이다.
 //대부분의 DBMS에서 도메인이란 속성에 대응하는 컬럼에 대한 데이터 타입(Data Type)과 길이를 의미한다.
@@ -10,7 +12,12 @@ package jdbc.day04.board.domain;
 //또한 어떤 테이블에서 데이터를 select 하고자 할때도 DTO에 담아서 읽어온다.
 
 
-public class BoardDTO {
+public class BoardDTO {	//BoardDTO는
+						//오라클의 tbl_board에 해당합니다.
+						//tbl_board 테이블은 오라클의 tbl_member 테이블을 부모테이블로 하고있는 자식테이블이다.
+	
+	//field
+	
 	private int boardno;		//글번호
 	private String fk_userid;	//작성자아이디
 	private String subject;		//글제목
@@ -19,7 +26,11 @@ public class BoardDTO {
 	private int viewcount;		//조회수 
 	private String boardpasswd;	//글암호
 	
+	private MemberDTO mbrdto;//JOIN 해서 select 하는 용도
 	
+	
+	
+	//method
 	public int getBoardno() {
 		return boardno;
 	}
@@ -75,5 +86,14 @@ public class BoardDTO {
 	public void setBoardpasswd(String boardpasswd) {
 		this.boardpasswd = boardpasswd;
 	}
+	
+	public MemberDTO getMbrdto() {
+		return mbrdto;
+	}
+
+	public void setMbrdto(MemberDTO mbrdto) {
+		this.mbrdto = mbrdto;
+	}
+	
 	
 }

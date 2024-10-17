@@ -1,5 +1,6 @@
 package jdbc.day04.board.controller;
 
+import java.util.List;
 import java.util.Scanner;
 
 import jdbc.day04.board.domain.BoardDTO;
@@ -30,7 +31,7 @@ public class BoardController {
 		
 		switch (s_menuNo) {
 		case "1":	//글목록보기
-			//boardList();
+			boardList();
 			break;
 		case "2":	//글내용보기
 			//viewContents(member.getUserid(), sc);
@@ -72,6 +73,9 @@ public class BoardController {
 	}
 
 	
+	
+
+
 	// *** 글쓰기를 해주는 메소드 *** //
 	// === Transaction 처리 ===
 	//    (tbl_board 테이블에 insert 가 성공되어지면 tbl_member 테이블의 point 컬럼에 10씩 증가 update 를 할 것이다.
@@ -81,22 +85,22 @@ public class BoardController {
 		
 		int result = 0;
 	
-		System.out.print("⌂⌂⌂⌂⌂글쓰기⌂⌂⌂⌂⌂");
+		System.out.println("⌂⌂⌂⌂⌂글쓰기⌂⌂⌂⌂⌂");
 		
 		System.out.println("1. 작성자명 : " + member.getName());
 		
-		System.out.println("2. 글제목 [최대 100글자] : " + member.getName());
+		System.out.print("2. 글제목 [최대 100글자] : " );
 		String subject = sc.nextLine();
 		
-		System.out.println("3. 글내용 [최대 200글자] : " + member.getName());
+		System.out.print("3. 글내용 [최대 200글자] : " );
 		String contents = sc.nextLine();
 		
-		System.out.println("4. 글암호 [최대 20글자] : " + member.getName());
+		System.out.print("4. 글암호 [최대 20글자] : " );
 		String boardpasswd = sc.nextLine();
 		
 		
 		BoardDTO bdto = new BoardDTO();
-		bdto.setFk_userid(member.getName());
+		bdto.setFk_userid(member.getUserid());
 		bdto.setSubject(subject);
 		bdto.setContents(contents);
 		bdto.setBoardpasswd(boardpasswd);
@@ -130,6 +134,14 @@ public class BoardController {
 		return result;
 	}
 	
+	
+	//		글목록보기 해주는 메소드		//
+	private void boardList() {
+		// TODO Auto-generated method stub
+		List<BoardDTO> boardList = bdao.boardList();
+		
+		
+	}//end of private void boardList() -----------------------------------
 	
 	
 	
