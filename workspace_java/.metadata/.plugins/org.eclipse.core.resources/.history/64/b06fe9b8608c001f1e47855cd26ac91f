@@ -202,7 +202,14 @@ public class BoardDAO_imple implements BoardDAO {
 				bdto.setViewcount(rs.getInt("viewcount"));
 				
 				//————————————————————————————————
-				
+				if(paraMap.get("login_userid").equals(rs.getString("fk_userid"))) {
+					System.out.println("테스트");
+					
+				}//end of if————————————————————————————————
+				if(!paraMap.get("login_userid").equals(rs.getString("fk_userid"))) {
+					System.out.println("테스트2");
+					
+				}//end of if————————————————————————————————
 				
 				//로그인한 사용자가 다른 사용자가 쓴 글을 조회할 경우에만 글 조회수 1증가 시켜야 한다.
 				if(!(paraMap.get("login_userid").equals(rs.getString("fk_userid")))) {

@@ -198,16 +198,13 @@ public class BoardDAO_imple implements BoardDAO {
 				
 				MemberDTO mbrdto = new MemberDTO();
 				mbrdto.setName(rs.getString("name"));
-				bdto.setMbrdto(mbrdto);
 				bdto.setViewcount(rs.getInt("viewcount"));
-				
 				//————————————————————————————————
 				
-				
 				//로그인한 사용자가 다른 사용자가 쓴 글을 조회할 경우에만 글 조회수 1증가 시켜야 한다.
-				if(!(paraMap.get("login_userid").equals(rs.getString("fk_userid")))) {
+				if(!paraMap.get("login_userid").equals(rs.getString("fk_userid"))); {
 					sql = " update tbl_board set viewcount = viewcount + 1 "
-							+ " where boardno = ? ";
+							+ "where boardno = ? ";
 					pstmt = conn.prepareStatement(sql);
 					pstmt.setString(1, paraMap.get("boardNo"));
 					

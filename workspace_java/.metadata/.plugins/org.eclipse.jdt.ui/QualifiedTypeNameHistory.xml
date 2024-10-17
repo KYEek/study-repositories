@@ -37,4 +37,5 @@
     <fullyQualifiedTypeName name="java.sql.ResultSet"/>
     <fullyQualifiedTypeName name="jdbc.day03.MemberDTO"/>
     <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="jdbc.day04.board.domain.BoardDTO"/>
 </qualifiedTypeNameHistroy>

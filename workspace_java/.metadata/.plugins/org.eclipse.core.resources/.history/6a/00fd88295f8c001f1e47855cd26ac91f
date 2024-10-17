@@ -197,17 +197,6 @@ public class BoardController {
 		
 		BoardDTO bdto = bdao.viewContents(paraMap);
 		
-		if(bdto != null) {
-			// 존재하는 글번호를 입력한 경우
-			System.out.println("[글제목] " + bdto.getSubject() + "\n"
-							+ "[글내용] " + bdto.getContents() + "\n"
-							+ "[작성자] " + bdto.getMbrdto().getName() + "\n"
-							+ "[조회수] " + bdto.getViewcount());
-		}
-		else {
-			// 존재하지 않는 글번호 또는 글번호를 숫자가 아닌 문자로 입력한 경우
-			System.out.println(">> 글번호 " + boardNo + "은(는) 글 목록에 존재하지 않습니다. << \n");
-		}
 		
 	}//end of viewContents————————————————————————————————
 	
