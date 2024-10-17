@@ -74,11 +74,14 @@ rollback;
     on B.fk_userid = M.userid
     order by boardno desc;
     
-    select subject, contents, name, viewcount
+    select subject, contents, name, viewcount, fk_userid
     from 
     (
-    select subject, contents, viewcount, fk_userid
-    from  tbl_board
-    where boardno = 5
+        select subject, contents, viewcount, fk_userid
+        from  tbl_board
+        where boardno = 5
     ) B join tbl_member M
     on B.fk_userid = M.userid;
+    
+    
+    
