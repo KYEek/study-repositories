@@ -1,0 +1,27 @@
+package jdbc.day04.board.controller;
+
+import java.util.Scanner;
+
+import jdbc.day04.member.domain.MemberDTO;
+
+public class BoardController {
+	
+	
+	
+	//field
+	
+	
+	
+	
+	//method
+	//			게시판 메뉴	를 보여주는 메소드		//
+	public void menu_Board(MemberDTO member, Scanner sc) {
+		
+		System.out.println("\n--------------게시판 메뉴 [" + member.getName() + "님 로그인중..]------------------\n");
+		
+	}
+	
+	
+	
+	
+}

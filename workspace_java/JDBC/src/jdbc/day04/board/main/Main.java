@@ -3,13 +3,13 @@ package jdbc.day04.board.main;
 
 import java.util.Scanner;
 
-import jdbc.day04.board.controller.Controller;
+import jdbc.day04.member.controller.MemberController;
 
 
 public class Main {
 
 	public static void main(String[] args) {
-		Controller ctrl = new Controller();
+		MemberController ctrl = new MemberController();
 		
 		Scanner sc = new Scanner(System.in);
 		

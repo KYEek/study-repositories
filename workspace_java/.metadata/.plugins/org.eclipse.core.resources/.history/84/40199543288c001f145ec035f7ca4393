@@ -1,0 +1,11 @@
+package jdbc.day04.board.domain;
+
+public class BoardDTO {
+	private int boardno;
+	private String fk_userid;
+	private String subject;
+	private String contents;
+	private String writeday;
+	private int viewcount;
+	private String boardpasswd;
+}

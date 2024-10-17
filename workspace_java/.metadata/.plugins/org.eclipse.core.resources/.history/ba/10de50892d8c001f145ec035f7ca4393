@@ -1,0 +1,33 @@
+package jdbc.day04.board.controller;
+
+import java.util.Scanner;
+
+import jdbc.day04.member.domain.MemberDTO;
+
+public class BoardController {
+	
+	
+	
+	//field
+	
+	
+	
+	
+	//method
+	//			게시판 메뉴	를 보여주는 메소드		//
+	public void menu_Board(MemberDTO member, Scanner sc) {
+		
+		System.out.println("\n--------------게시판 메뉴 [" + member.getName() + "님 로그인중..]------------------\n"
+						+ "1.글목록보기   2.글내용보기   3.글쓰기   4.댓글쓰기 \n"
+						+ "5.글수정하기   6.글삭제하기   7.최근1주일간 일자별 게시글 작성건수 \n"
+						+ "8.이번달 일자별 게시글 작성건수 9.나가기 \n");
+		
+		System.out.print("🤚메뉴번호 선택 : ");
+		String s_menuNo = sc.nextLine();
+		
+	}
+	
+	
+	
+	
+}
