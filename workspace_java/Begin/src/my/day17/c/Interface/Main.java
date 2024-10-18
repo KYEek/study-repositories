@@ -3,7 +3,6 @@ package my.day17.c.Interface;
 public class Main {
 
 	public static void main(String[] args) {
-		// TODO main Method
 		// --다형성(Polymorphism)--
 		// 자식클래스로 생성되어진 객체를 부모클래스의 타입으로 받을 수 있다.
 		// 특정한 인터페이스로 구현된 클래스의 객체는 특정한 인터페이스의 타입으로 받을 수 가 있다.!!!

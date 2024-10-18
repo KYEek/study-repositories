@@ -48,7 +48,6 @@ public class MemberDAO_imple implements MemberDAO {
 	
 	@Override
 	public int memberRegister(MemberDTO member) {
-		// TODO Auto-generated method stub
 		int result = 0;
 
 		try {

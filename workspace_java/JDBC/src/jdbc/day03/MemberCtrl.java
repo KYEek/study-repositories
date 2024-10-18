@@ -137,7 +137,6 @@ public class MemberCtrl {
 
 
 	private void updateMyinfo(MemberDTO member, Scanner sc) {
-		// TODO Auto-generated method stub
 		System.out.println(member.toString());
 		System.out.println("== [주의사항] 변경하지 않으려면 그냥 엔터하세요!!");
 		System.out.print("- 성명 : ");

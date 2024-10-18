@@ -3,7 +3,6 @@ package my.day18.b.user_define_exception;
 public class Main {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		Product_imple p1 = new Product_imple();
 		p1.setProd_name("새우깡");
 		p1.setJango(100);

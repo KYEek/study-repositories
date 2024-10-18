@@ -55,7 +55,6 @@ public class MemberDAO_imple implements MemberDAO {
 	//	회원가입 메서드 		//
 	@Override
 	public int memberRegister(MemberDTO member) {
-		// TODO Auto-generated method stub
 		int result = 0;
 
 		try {
@@ -259,7 +258,6 @@ public class MemberDAO_imple implements MemberDAO {
 	//		회원가입 메서드 		//
 	/*
 	public int memberRegister(MemberDTO member) {
-		// TODO Auto-generated method stub
 		
 		int result = 0;
 		

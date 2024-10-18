@@ -3,7 +3,6 @@ package my.day17.d.Interface_inheritance;
 public class Main {
 
 	public static void main(String[] args) {
-		// TODO Main
 		
 		Me_imple me = new Me_imple();
 		

@@ -118,7 +118,6 @@ public class Ctrl_company_imple implements Ctrl_company {
 
 	@Override
 	public Company_imple login(Scanner sc, Map<String, Company_imple> cp_map) {
-		// TODO Auto-generated method stub
 		System.out.print(":D구인회사 ID : ");
 		String id = sc.nextLine();
 		

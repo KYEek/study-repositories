@@ -385,14 +385,9 @@ public class BoardDAO_imple implements BoardDAO {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "JDBC_USER", "gclass");
 
-			String sql = " select subject, contents, name, viewcount, fk_userid, BOARDPASSWD "
-					+ " from  "
-					+ " ( "
-					+ "     select subject, contents, viewcount, fk_userid, BOARDPASSWD "
-					+ "     from  tbl_board "
-					+ "     where boardno = ? "
-					+ " ) B join tbl_member M "
-					+ " on B.fk_userid = M.userid ";
+			String sql = " select subject, contents, fk_userid, BOARDPASSWD "
+					+ " from tbl_board "
+					+ " where boardno = ? ";
 			
 
 			pstmt = conn.prepareStatement(sql);
@@ -404,11 +399,7 @@ public class BoardDAO_imple implements BoardDAO {
 				
 				bdto.setSubject(rs.getString("subject"));
 				bdto.setContents(rs.getString("contents"));
-				
-				MemberDTO mbrdto = new MemberDTO();
-				mbrdto.setName(rs.getString("name"));
-				bdto.setMbrdto(mbrdto);
-				bdto.setViewcount(rs.getInt("viewcount"));
+				bdto.setFk_userid(rs.getString("fk_userid"));
 				bdto.setBoardpasswd(rs.getString("BOARDPASSWD"));	//글암호
 				
 				//————————————————————————————————
@@ -435,6 +426,81 @@ public class BoardDAO_imple implements BoardDAO {
 		
 		return bdto;
 	}// end of viewContents————————————————————————————————————————
+
+	
+	//			글 수정 메소드				//
+	@Override
+	public int updateBoard(Map<String, String> paraMap) {
+		int result = 0;
+
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "JDBC_USER", "gclass");
+
+			// Transaction 처리를 위해서 수동 commit 으로 전환 시킨다.
+			conn.setAutoCommit(false);
+			
+			String sql = " update tbl_board set subject = ?, contents = ? "
+						+ " where boardno = ? ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, paraMap.get("subject"));
+			pstmt.setString(2, paraMap.get("contents"));
+			pstmt.setString(3, paraMap.get("boardno"));
+
+			result = pstmt.executeUpdate();
+
+			
+		} catch (ClassNotFoundException e) {
+			System.out.println(">>> ojdbc8.jar 파일이 없습니다. <<<");
+		} catch (SQLException e) {
+			if(e.getErrorCode() == 1722) {
+				System.out.println("글 번호는 정수로만 입력하세요!!😡😡😡 \n");
+			}
+			else {
+				e.printStackTrace();
+			}
+		} finally {
+			close();
+		}
+
+		return result;	
+	}
+
+
+	@Override
+	public int deleteBoard(String boardno) {
+		int result = 0;
+
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "JDBC_USER", "gclass");
+
+			// Transaction 처리를 위해서 수동 commit 으로 전환 시킨다.
+			conn.setAutoCommit(false);
+			
+			String sql = " delete from tbl_board "
+						+ " where boardno = ? ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, boardno);
+
+			result = pstmt.executeUpdate();
+
+			
+		} catch (ClassNotFoundException e) {
+			System.out.println(">>> ojdbc8.jar 파일이 없습니다. <<<");
+		} catch (SQLException e) {
+			if(e.getErrorCode() == 1722) {
+				System.out.println("글 번호는 정수로만 입력하세요!!😡😡😡 \n");
+			}
+			else {
+				e.printStackTrace();
+			}
+		} finally {
+			close();
+		}
+
+		return result;	
+	}// end of deleteBoard ------------------------------
 	
 			
 			

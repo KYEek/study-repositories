@@ -49,7 +49,6 @@ public class Product_imple implements Product {
 	//주문받기 1
 	@Override
 	public void order(int jumun_su) throws Jango_lack_Exception {
-		// TODO Auto-generated method stub
 		// order(int jumun_su) 메소드는 파라미터로 들어오는 jumun_su 의 값에 따라서 
 		// 사용자(개발자)가 만든 Jango_lack_Exception 익셉션을 유발 할 수 있다는 말이다. 
 		
@@ -68,7 +67,6 @@ public class Product_imple implements Product {
 	// 주문받기 2
 	@Override
 	public void jumun(int jumun_su) throws Jango_lack_Exception {
-		// TODO Auto-generated method stub
 		// order(int jumun_su) 메소드는 파라미터로 들어오는 jumun_su 의 값에 따라서 
 		// 사용자(개발자)가 만든 Jango_lack_Exception 익셉션을 유발 할 수 있다는 말이다. 
 		

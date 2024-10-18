@@ -6,7 +6,6 @@ import java.util.List;
 public class ArrayList_main_1 {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
 		/*
 		   == Array(배열) 와 Collection(자료구조)의 차이점은 ==     

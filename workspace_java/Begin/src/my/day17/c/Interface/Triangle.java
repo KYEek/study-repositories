@@ -5,19 +5,16 @@ public class Triangle implements Figure{
 
 	@Override
 	public double area(double x, double y) {
-		// TODO Area method
 		return x * y / 2;
 	}
 
 	@Override
 	public double circle_area(double r) {
-		// TODO circle_area(double r) method
 		return 0;
 	}
 
 	@Override
 	public double circle_area(double x, double y) {
-		// TODO circle_area(double x, double y) method
 		return 0;
 	}
 

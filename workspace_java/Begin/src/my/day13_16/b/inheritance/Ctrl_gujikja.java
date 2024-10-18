@@ -888,7 +888,6 @@ public class Ctrl_gujikja {
 						
 					}
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				

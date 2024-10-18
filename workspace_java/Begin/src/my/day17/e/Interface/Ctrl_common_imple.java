@@ -15,7 +15,6 @@ public class Ctrl_common_imple implements Ctrl_common{
 	// 구직자 및 구인회사 로그인 메소드
 	@Override
 	public CommonMember login(Scanner sc, CommonMember[] cmber_arr, int type) {
-		// TODO Auto-generated method stub
 		System.out.print(":D ID : ");
 		String id = sc.nextLine();
 		

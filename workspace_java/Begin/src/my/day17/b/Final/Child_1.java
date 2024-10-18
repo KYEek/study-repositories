@@ -13,7 +13,6 @@ public class Child_1 extends Parent_1 {
 	/*
 	@Override
 	void rule() {
-		// TODO Auto-generated method stub
 		System.out.println("사기치며 살자");
 	}
 	*/

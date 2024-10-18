@@ -34,6 +34,15 @@ public interface BoardDAO {
 	//원글에 대한 댓글을 가져오는 것(특정 게시글 글번호에 대한 tbl_comment 테이블과 tbl_member 테이블을 JOIN 해서 보여준다.)
 	List<CommentDTO>commentList(String boardno);
 	
+	// 글 수정 하기
+	int updateBoard(Map<String, String> paraMap);
+
+	
+	// 글 삭제 하기
+	int deleteBoard(String boardno);
+	
+
+	
 	
 
 }

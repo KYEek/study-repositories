@@ -66,7 +66,7 @@ public class BoardController {
 				updateBoard(member.getUserid(), sc);
 				break;
 			case "6":	//글삭제하기
-	
+				deleteBoard(member.getUserid(), sc);
 				break;
 			case "7":	//관리자(최근1주일간 일자별 게시글 작성건수) 유저(나가기)
 				if(!"admin".equals(member.getUserid())) 
@@ -121,6 +121,63 @@ public class BoardController {
 
 
 	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -379,33 +436,30 @@ public class BoardController {
 	
 	//			글 수정 해주는 메소드			//
 	private void updateBoard(String login_userid, Scanner sc) {
-		
+
 		System.out.println("\n >>> 글 수정하기 <<<");
-		
+
 		System.out.print("!!수정할 글 번호 : ");
 		String boardno = sc.nextLine();
-		
+
 		BoardDTO bdto = bdao.viewContents(boardno);
-		
-		if(bdto == null) {
+
+		if (bdto == null) {
 			// 수정할 글번호가 글목록에 존재하지 않는 경우
-	         System.out.println(">> 글번호 "+ boardno +"은 글목록에 존재하지 않습니다. << \n");
-		}
-		else {
+			System.out.println(">> 글번호 " + boardno + "은 글목록에 존재하지 않습니다. << \n");
+		} else {
 			// 수정할 글번호가 글목록에 존재하는 경우
-			if( !login_userid.equals(bdto.getFk_userid())) {
-				// 수정할 글번호가 다른 사용자가 쓴 글인 경우라면 
-	            System.out.println("[경고] 다른 사용자의 글은 수정 불가합니다.!! \n"); 
-			}
-			else {
+			if (!login_userid.equals(bdto.getFk_userid())) {
+				// 수정할 글번호가 다른 사용자가 쓴 글인 경우라면
+				System.out.println("[경고] 다른 사용자의 글은 수정 불가합니다.!! \n");
+			} else {
 				// 수정할 글번호가 내가 쓴 글인 경우라면
 				System.out.print("!!글암호 : ");
 				String boardpasswd = sc.nextLine();
-				if( !boardpasswd.equals(bdto.getBoardpasswd())) {
+				if (!boardpasswd.equals(bdto.getBoardpasswd())) {
 					// 글암호가 일치하지 않는 경우
 					System.out.println("[경고] 입력하신 글암호가 작성시 입력한 글암호와 일치하지 않으므로 수정 불가합니다.!! \n");
-				}
-				else {
+				} else {
 					// 글암호가 일치하는 경우
 
 					System.out.println("--------------------------------------");
@@ -415,51 +469,116 @@ public class BoardController {
 
 					System.out.print("▷ 글제목[최대 100글자, 변경하지 않으려면 그냥 엔터] : ");
 					String subject = sc.nextLine();
-					if(subject.isBlank()) {
+					if (subject.isBlank()) {
 						subject = bdto.getSubject();
 					}
-					
-					
+
 					System.out.print("▷ 글내용[최대 200글자, 변경하지 않으려면 그냥 엔터] : ");
 					String contents = sc.nextLine();
-					if(contents.isBlank()) {
+					if (contents.isBlank()) {
 						contents = bdto.getContents();
 					}
-					if(subject.length() > 100 || contents.length() > 200) {
+					if (subject.length() > 100 || contents.length() > 200) {
 						System.out.println("[경고] 글제목은 최대 100글자 이며, 글내용은 최대 200글자 이내이어야 합니다. \n");
-					}
-					else {
+					} else {
 						String yn = "";
 						do {
-						// ————————————————————————————————————————————————
+							// ————————————————————————————————————————————————
 							System.out.print("▷ 정말로 글수정 하시겠습니까?[Y/N] : ");
 							yn = sc.nextLine();
-	
+
 							if ("y".equalsIgnoreCase(yn)) {
 								Map<String, String> paraMap = new HashMap<>();
-								
+
 								paraMap.put("boardno", boardno);
 								paraMap.put("subject", subject);
 								paraMap.put("contents", contents);
-								int n = bdao.updateBoard();
+								int n = bdao.updateBoard(paraMap);
+
+								if (n == 1) {
+									System.out.println(" >> 글 수정 성공!!<< \n");
+								} else {
+									System.out.println(">>SQL 구문 오류 발생으로 인해 글 수정이 실패되었습니다...😭");
+								}
+
 							} else if ("n".equalsIgnoreCase(yn)) {
 								System.out.println(">> 글 수정을 취소하셨습니다. << \n");
-							}
-							else {
+							} else {
 								System.out.println(">> [경고] Y 또는 N 만 입력하세요!!");
 							}
-						// ————————————————————————————————————————————————
+							// ————————————————————————————————————————————————
 						} while (!("y".equalsIgnoreCase(yn) || "n".equalsIgnoreCase(yn)));
 					}
 				}
 			}
-			
+
 		}
-		
-		
-		
-	}
+
+	}// end of function-----------------------------------
+
+	//	글 삭제해주는 메소드			///
+	private void deleteBoard(String login_userid, Scanner sc) {
+		System.out.println("\n >>> 글 수정하기 <<<");
+
+		System.out.print("!!삭제할 글 번호 : ");
+		String boardno = sc.nextLine();
+
+		BoardDTO bdto = bdao.viewContents(boardno);
+
+		if (bdto == null) {
+			// 삭제할 글번호가 글목록에 존재하지 않는 경우
+			System.out.println(">> 글번호 " + boardno + "은 글목록에 존재하지 않습니다. << \n");
+		} else {
+			// 삭제할 글번호가 글목록에 존재하는 경우
+			if (!login_userid.equals(bdto.getFk_userid())) {
+				// 삭제할 글번호가 다른 사용자가 쓴 글인 경우라면
+				System.out.println("[경고] 다른 사용자의 글은 삭제 불가합니다.!! \n");
+			} else {
+				// 삭제할 글번호가 내가 쓴 글인 경우라면
+				System.out.print("!! 글암호 : ");
+				String boardpasswd = sc.nextLine();
+				if (!boardpasswd.equals(bdto.getBoardpasswd())) {
+					// 글암호가 일치하지 않는 경우
+					System.out.println("[경고] 입력하신 글암호가 작성시 입력한 글암호와 일치하지 않으므로 삭제 불가합니다.!! \n");
+				} else {
+					// 글암호가 일치하는 경우
+
+					System.out.println("--------------------------------------");
+					System.out.println("[삭제전 글제목] " + bdto.getSubject());
+					System.out.println("[삭제전 글내용] " + bdto.getContents());
+					System.out.println("--------------------------------------");
+
+					String yn = "";
+					do {
+						// ————————————————————————————————————————————————
+						System.out.print("▷ 정말로 글수정 하시겠습니까?[Y/N] : ");
+						yn = sc.nextLine();
+
+						if ("y".equalsIgnoreCase(yn)) {
+							
+							int n = bdao.deleteBoard(boardno);
+
+							if (n == 1) {
+								System.out.println(" >> 글 삭제 성공!!<< \n");
+							} else {
+								System.out.println(">>SQL 구문 오류 발생으로 인해 글 삭제가 실패되었습니다...😭");
+							}
+
+						} else if ("n".equalsIgnoreCase(yn)) {
+							System.out.println(">> 글 삭제를 취소하셨습니다. << \n");
+						} else {
+							System.out.println(">> [경고] Y 또는 N 만 입력하세요!!");
+						}
+						// ————————————————————————————————————————————————
+					} while (!("y".equalsIgnoreCase(yn) || "n".equalsIgnoreCase(yn)));
+					
+					
+				}
+			}
+
+		}
 	
+	}
 	
 	
 }
