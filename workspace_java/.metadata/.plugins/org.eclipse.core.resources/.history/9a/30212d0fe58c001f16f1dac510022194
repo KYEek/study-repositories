@@ -1,0 +1,5 @@
+package jdbc.day04.member.domain;
+
+public class CommentDTO {
+
+}

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import jdbc.day04.board.domain.BoardDTO;
+import jdbc.day04.member.domain.CommentDTO;
 import jdbc.day04.member.domain.MemberDTO;
 
 public class BoardDAO_imple implements BoardDAO {
@@ -124,17 +125,25 @@ public class BoardDAO_imple implements BoardDAO {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "JDBC_USER", "gclass");
 
-			String sql = " select boardno "
-					+ " , case when length(subject) > 15 then substr(subject, 1, 13)||'..' else subject end subject "
-					+ " , name, to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') writeday, viewcount "
-					+ " from tbl_board B join tbl_member M "
-					+ " on B.fk_userid = M.userid "
-					+ " order by boardno desc ";
+			String sql = " select boardno, case when cmtcnt is null then subject else subject|| ' [' ||cmtcnt || ']' end subject "
+						+ "            , name, writeday, viewcount "
+						+ "    from "
+						+ "    (select boardno "
+						+ "    , case when length(subject) > 15 then substr(subject, 1, 13)||'..' else subject end subject "
+						+ "    , name, to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') writeday, viewcount "
+						+ "    from tbl_board B join tbl_member M "
+						+ "    on B.fk_userid = M.userid) V1 "
+						+ "    left join "
+						+ "    (select fk_boardno, count(*) cmtcnt "
+						+ "    from tbl_comment "
+						+ "    group by fk_boardno) V2 "
+						+ "    on V1.boardno = V2.fk_boardno "
+						+ "    order by boardno desc ";
 			
 
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
-			int cnt = 0;
+			//int cnt = 0;
 			while (rs.next()) {
 				
 				BoardDTO board = new BoardDTO();
@@ -238,8 +247,195 @@ public class BoardDAO_imple implements BoardDAO {
 		
 		return bdto;
 	}// end of viewContents————————————————————————————————————————
+
+
+	
+	
+	//			댓글 쓰기			//
+	// === Transaction 처리 ===
+	//    (tbl_comment 테이블에 insert 가 성공되어지면 tbl_member 테이블의 point 컬럼에 10씩 증가 update 를 할 것이다.
+	//     그런데 insert 또는 update 가 하나라도 실패하면 모두 rollback 할 것이고,
+	//     insert 와 update 가 모두 성공해야만 commit 할 것이다.)
+	
+	// 댓글쓰기 Transaction 처리하여 성공되어지면 1을 리턴시켜 줄 것이고,
+	// 장애(오류)가 발생되어 실패하면 -1 리턴시켜 줄 것이다
+	@Override
+	public int writeComment(CommentDTO cmtdto) {
+
+		int result = 0;
+
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "JDBC_USER", "gclass");
+
+			// Transaction 처리를 위해서 수동 commit 으로 전환 시킨다.
+			conn.setAutoCommit(false);
+			
+			String sql = " insert into tbl_comment(commentno, fk_boardno, fk_userid, contents) "
+					+ " values(seq_comment.nextval, ?, ?, ?) ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, cmtdto.getFk_boardno());
+			pstmt.setString(2, cmtdto.getFk_userid());
+			pstmt.setString(3, cmtdto.getContents());
+
+			int n1 = pstmt.executeUpdate();
+
+			if( n1 == 1) {	// tbl_board 테이블에 insert가 성공되었다라면
+				sql = " update tbl_member set point = point + 5 "
+					+ " where userid = ? ";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, cmtdto.getFk_userid());
+				
+				int n2 = pstmt.executeUpdate();
+				
+				if(n2 == 1) {
+					conn.commit();
+					result = 1;
+				}
+				
+			}
+			
+		} catch (ClassNotFoundException e) {
+			System.out.println(">>> ojdbc8.jar 파일이 없습니다. <<<");
+		} catch (SQLException e) {
+			if(e.getErrorCode()==2290) {
+				System.out.println(">> 아이디 " +cmtdto.getFk_userid()+ "님의 포인트는 30을 초과할 수 없기 때문에 오류발생 하였습니다. <<");
+				try {
+					conn.rollback();
+					result = -1;
+				} catch (SQLException e1) {	}
+			}
+			else if(e.getErrorCode() == 2291) {
+				/*
+	              오류 보고 -
+	              ORA-02291: 무결성 제약조건(JDBC_USER.FK_TBL_COMMENT_FK_BOARDNO)이 위배되었습니다- 부모 키가 없습니다
+	            */
+				System.out.println(">> 입력하신 원글번호 " +cmtdto.getFk_boardno()+ "은(는) 게시글에 존재하지 않습니다 <<\n");
+				result = -1;
+			}
+			else {
+				e.printStackTrace();
+			}
+			
+		} finally {
+			close();
+		}
+
+		return result;	
+		
+	}
+
+	//원글에 대한 댓글을 가져오는 것(특정 게시글 글번호에 대한 tbl_comment 테이블과 tbl_member 테이블을 JOIN 해서 보여준다.)
+	@Override
+	public List<CommentDTO> commentList(String boardno) {
+		List<CommentDTO> commentList = new ArrayList<>();
+
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "JDBC_USER", "gclass");
+
+			String sql = " select C.contents, M.name, to_char(C.writeday, 'yyyy-mm-dd hh24:mi:ss') writeday "
+					+ "    from "
+					+ "    ( "
+					+ "    select * "
+					+ "    from tbl_comment  "
+					+ "    where fk_boardno = ? "
+					+ "    ) C join tbl_member M "
+					+ "    on C.fk_userid = M.userid "
+					+ "    order by commentno desc ";
+			
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, boardno);
+			rs = pstmt.executeQuery();
+			//int cnt = 0;
+			while (rs.next()) {
+				
+				CommentDTO cmtdto = new CommentDTO();
+				
+				cmtdto.setContents(rs.getString("contents"));
+				MemberDTO member = new MemberDTO();
+				
+				member.setName(rs.getString("name"));
+				cmtdto.setMember(member);
+				
+				cmtdto.setWriteday(rs.getString("writeday"));
+				
+				commentList.add(cmtdto);
+			}
+
+		} catch (ClassNotFoundException e) {
+			System.out.println(">>> ojdbc8.jar 파일이 없습니다. <<<");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+
+		return commentList;
+	}
+			
+	// 조회수 증가는 없고 단순히 글 내용만 보여주기
+	@Override
+	public BoardDTO viewContents(String boardno) {
+		
+		BoardDTO bdto = null;
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "JDBC_USER", "gclass");
+
+			String sql = " select subject, contents, name, viewcount, fk_userid, BOARDPASSWD "
+					+ " from  "
+					+ " ( "
+					+ "     select subject, contents, viewcount, fk_userid, BOARDPASSWD "
+					+ "     from  tbl_board "
+					+ "     where boardno = ? "
+					+ " ) B join tbl_member M "
+					+ " on B.fk_userid = M.userid ";
+			
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, boardno);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				bdto = new BoardDTO();
+				
+				bdto.setSubject(rs.getString("subject"));
+				bdto.setContents(rs.getString("contents"));
+				
+				MemberDTO mbrdto = new MemberDTO();
+				mbrdto.setName(rs.getString("name"));
+				bdto.setMbrdto(mbrdto);
+				bdto.setViewcount(rs.getInt("viewcount"));
+				bdto.setBoardpasswd(rs.getString("BOARDPASSWD"));	//글암호
+				
+				//————————————————————————————————
+				
+				
+			}
+
+		} catch (ClassNotFoundException e) {
+			System.out.println(">>> ojdbc8.jar 파일이 없습니다. <<<");
+		} catch (SQLException e) {
+			if(e.getErrorCode()==1722) {
+				System.out.println(">> [경고] 글번호는 정수만 가능합니다. << \n");
+			}
+			else {
+				e.printStackTrace();
+			}
 			
 			
+		} finally {
+			close();
+		}
+		
+		
+		
+		return bdto;
+	}// end of viewContents————————————————————————————————————————
+	
 			
 			
 			

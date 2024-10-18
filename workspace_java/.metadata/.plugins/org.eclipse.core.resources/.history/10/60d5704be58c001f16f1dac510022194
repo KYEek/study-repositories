@@ -1,0 +1,11 @@
+package jdbc.day04.member.domain;
+
+public class CommentDTO {
+	
+	//field
+	//insert 용
+	
+	
+	//select 용
+	
+}

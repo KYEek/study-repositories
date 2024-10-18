@@ -74,11 +74,66 @@ rollback;
     on B.fk_userid = M.userid
     order by boardno desc;
     
-    select subject, contents, name, viewcount
+    select subject, contents, name, viewcount, fk_userid
     from 
     (
-    select subject, contents, viewcount, fk_userid
-    from  tbl_board
-    where boardno = 5
+        select subject, contents, viewcount, fk_userid
+        from  tbl_board
+        where boardno = 5
     ) B join tbl_member M
     on B.fk_userid = M.userid;
+    
+    
+    
+    
+    
+    ---- *** 댓글 테이블 생성하기 *** ----
+    create table tbl_comment
+    (commentno   number         not null        -- 댓글번호
+    ,fk_boardno  number         not null        -- 원글의 글번호 
+    ,fk_userid   varchar2(30)   not null        -- 작성자 아이디
+    ,contents    Nvarchar2(100) not null        -- 댓글내용
+    ,writeday    date default sysdate not null  -- 작성일자
+    ,constraint PK_tbl_comment_commentno primary key(commentno)
+    ,constraint FK_tbl_comment_fk_boardno foreign key(fk_boardno) references tbl_board(boardno) on delete cascade  
+    ,constraint FK_tbl_comment_fk_userid foreign key(fk_userid) references tbl_member(userid) 
+    );
+    -- Table TBL_COMMENT이(가) 생성되었습니다.
+    
+    
+    
+    create sequence seq_comment
+    start with 1
+    increment by 1
+    nomaxvalue
+    nominvalue
+    nocycle
+    nocache;
+    -- Sequence SEQ_COMMENT이(가) 생성되었습니다.
+    
+    select *
+    from tbl_comment;
+    
+    
+    select fk_boardno, count(*) cmtcnt
+    from tbl_comment
+    group by fk_boardno;
+    
+    select boardno, case when cmtcnt is null then subject else subject|| ' [' ||cmtcnt || ']' end subject
+            , name, writeday, viewcount
+    from
+    (select boardno
+    , case when length(subject) > 15 then substr(subject, 1, 13)||'..' else subject end subject
+    , name, to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') writeday, viewcount
+    from tbl_board B join tbl_member M
+    on B.fk_userid = M.userid) V1
+    left join
+    (select fk_boardno, count(*) cmtcnt
+    from tbl_comment
+    group by fk_boardno) V2
+    on V1.boardno = V2.fk_boardno
+    order by boardno desc;
+    
+    select *
+    from tbl_comment
+    where fk_boardno = 1;

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import jdbc.day04.board.domain.BoardDTO;
+import jdbc.day04.member.domain.CommentDTO;
 import jdbc.day04.member.domain.MemberDTO;
 import jdbc.day04.board.model.*;
 
@@ -51,10 +52,18 @@ public class BoardController {
 				
 				break;
 			case "4":	//댓글쓰기
+				n = writeConmment(member, sc);
+				
+				if(n==1)
+					System.out.println(">> 글쓰기 성공!! <<");
+				else if(n==0)
+					System.out.println(">> 글쓰기 취소!! <<");
+				else if(n== -1)
+					System.out.println(">> 글쓰기 실패!! <<");
 				
 				break;
 			case "5":	//글수정하기
-	
+				updateBoard(member.getUserid(), sc);
 				break;
 			case "6":	//글삭제하기
 	
@@ -86,6 +95,55 @@ public class BoardController {
 
 	
 	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+	
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -180,7 +238,7 @@ public class BoardController {
 	
 	
 	
-	//	글 내용보기 해주는 메소드			//
+	//			글 내용보기 해주는 메소드			//
 	// == 현재 로그인 사용자가 자신이 쓴 글을 볼때는 조회수 증가가 없지만
 	//    다른 사용자가 쓴 글을 볼때는 조회수를 1증가 해주어야 한다.
 	private void viewContents(String login_userid, Scanner sc) {
@@ -209,7 +267,198 @@ public class BoardController {
 			System.out.println(">> 글번호 " + boardNo + "은(는) 글 목록에 존재하지 않습니다. << \n");
 		}
 		
+		//여기까지는 뭔글
+		//————————————————————————————————————————————
+		
+		System.out.println("[댓글]\n"+"-".repeat(50));
+		List<CommentDTO> commentList = bdao.commentList(boardNo);
+		// 원글에 대한 댓글을 가져오는 것(특정 게시글 글번호에 대한 tbl_comment 테이블과 tbl_member 테이블을 JOIN 해서 보여준다.)
+		
+		if(commentList.size() > 0) {
+			//원글에 대한 댓그링 존재하는 경우
+			StringBuilder sb = new StringBuilder();
+			
+			sb.append("댓글내용\t\t작성자명\t작성일자\n");
+			sb.append("-".repeat(50)+"\n");
+			
+			for(CommentDTO cmtdto : commentList) {
+				sb.append(cmtdto.getContents()+"\t\t"+cmtdto.getMember().getName()+"\t"+ cmtdto.getWriteday() +"\n");
+			}
+			System.out.println(sb);
+		}
+		else {
+			//원글에 대한 댓글이 존재하지 않는 경우
+			System.out.println("댓글 내용 없음😐 \n");
+			
+		}
+		
 	}//end of viewContents————————————————————————————————
+	
+	
+	//			댓글쓰기 해주는 메소드			//
+	private int writeConmment(MemberDTO member, Scanner sc) {
+		
+		int result = 0;
+		
+		System.out.println("\n>>> 댓글쓰기 <<<");
+		
+		System.out.println("1. 작성자명 : " + member.getName());
+		
+		System.out.print("2. 원글의 글번호 : ");
+		String s_fk_boardno = sc.nextLine();	// "돌똘이"와 같은 문자가 들어오면 안된다.!!
+		
+		String contents = null;
+		int fk_boardno = 0;
+		
+		
+		do {
+		//————————————————————————————————————————————————————————
+			try {
+				fk_boardno = Integer.parseInt(s_fk_boardno);
+				
+				if(fk_boardno < 1) 
+					System.out.println("!!!🤚경고 원글의 글 번호는 1 이상인 정수로만 입력하셔야 해요!!!");
+				else
+					break;
+				
+			} catch (NumberFormatException e) {
+				System.out.println("!!!🤚경고 원글의 글 번호는 정수로만 입력하셔야 해요!!!");
+			}
+		//————————————————————————————————————————————————————————
+		} while (true);
+		
+		
+		do {
+		//————————————————————————————————————————————————————————
+			System.out.print("3. 댓글 내용 : ");
+			contents = sc.nextLine();
+			
+			/*
+		        댓글의 내용을 입력할 때 그냥 엔터
+		        또는 공백만으로 입력하거나 
+		        또는 tbl_comment 테이블의 contents 컬럼의 크기(최대 100글자)보다 더 많은 글자를 입력하는 경우 
+			 */
+			if(contents.isBlank()) {	//그냥 엔터 또는 공백만으로 입력한 경우
+				System.out.println("!!!🤚경고 댓글 내용은 필수로 입력하셔야 해요!!!\n");
+			}
+			else if (contents.length() > 100) {
+				System.out.println("!!!🤚경고 댓글 내용은 최대 100글자 이내로 입력하셔야 해요!!!\n");
+			}
+			else {
+				break;
+			}
+		//————————————————————————————————————————————————————————
+		} while (true);
+		
+		do {
+		//————————————————————————————————————————————————————————
+			System.out.print("🤔정말로 댓글 쓰기를 하시겠습니까? [Y / N]\n");
+			String yn = sc.nextLine();
+			
+			if("y".equalsIgnoreCase(yn)) {
+				CommentDTO cmtdto = new CommentDTO();
+				cmtdto.setFk_boardno(fk_boardno);
+				cmtdto.setFk_userid(member.getUserid());
+				cmtdto.setContents(contents);
+				
+				
+				result = bdao.writeComment(cmtdto);
+				// 		 1 또는 -1(실패, 외래키 무결성)
+				break;
+			}
+			else if("n".equalsIgnoreCase(yn)) {
+				break;
+			}
+			else {
+				
+			}
+		//————————————————————————————————————————————————————————
+		} while(true);
+		return result;
+	}
+	
+	//			글 수정 해주는 메소드			//
+	private void updateBoard(String login_userid, Scanner sc) {
+		
+		System.out.println("\n >>> 글 수정하기 <<<");
+		
+		System.out.print("!!수정할 글 번호 : ");
+		String boardno = sc.nextLine();
+		
+		BoardDTO bdto = bdao.viewContents(boardno);
+		
+		if(bdto == null) {
+			// 수정할 글번호가 글목록에 존재하지 않는 경우
+	         System.out.println(">> 글번호 "+ boardno +"은 글목록에 존재하지 않습니다. << \n");
+		}
+		else {
+			// 수정할 글번호가 글목록에 존재하는 경우
+			if( !login_userid.equals(bdto.getFk_userid())) {
+				// 수정할 글번호가 다른 사용자가 쓴 글인 경우라면 
+	            System.out.println("[경고] 다른 사용자의 글은 수정 불가합니다.!! \n"); 
+			}
+			else {
+				// 수정할 글번호가 내가 쓴 글인 경우라면
+				System.out.print("!!글암호 : ");
+				String boardpasswd = sc.nextLine();
+				if( !boardpasswd.equals(bdto.getBoardpasswd())) {
+					// 글암호가 일치하지 않는 경우
+					System.out.println("[경고] 입력하신 글암호가 작성시 입력한 글암호와 일치하지 않으므로 수정 불가합니다.!! \n");
+				}
+				else {
+					// 글암호가 일치하는 경우
+
+					System.out.println("--------------------------------------");
+					System.out.println("[수정전 글제목] " + bdto.getSubject());
+					System.out.println("[수정전 글내용] " + bdto.getContents());
+					System.out.println("--------------------------------------");
+
+					System.out.print("▷ 글제목[최대 100글자, 변경하지 않으려면 그냥 엔터] : ");
+					String subject = sc.nextLine();
+					if(subject.isBlank()) {
+						subject = bdto.getSubject();
+					}
+					
+					
+					System.out.print("▷ 글내용[최대 200글자, 변경하지 않으려면 그냥 엔터] : ");
+					String contents = sc.nextLine();
+					if(contents.isBlank()) {
+						contents = bdto.getContents();
+					}
+					if(subject.length() > 100 || contents.length() > 200) {
+						System.out.println("[경고] 글제목은 최대 100글자 이며, 글내용은 최대 200글자 이내이어야 합니다. \n");
+					}
+					else {
+						String yn = "";
+						do {
+						// ————————————————————————————————————————————————
+							System.out.print("▷ 정말로 글수정 하시겠습니까?[Y/N] : ");
+							yn = sc.nextLine();
+	
+							if ("y".equalsIgnoreCase(yn)) {
+								Map<String, String> paraMap = new HashMap<>();
+								
+								paraMap.put("boardno", boardno);
+								paraMap.put("subject", subject);
+								paraMap.put("contents", contents);
+								int n = bdao.updateBoard();
+							} else if ("n".equalsIgnoreCase(yn)) {
+								System.out.println(">> 글 수정을 취소하셨습니다. << \n");
+							}
+							else {
+								System.out.println(">> [경고] Y 또는 N 만 입력하세요!!");
+							}
+						// ————————————————————————————————————————————————
+						} while (!("y".equalsIgnoreCase(yn) || "n".equalsIgnoreCase(yn)));
+					}
+				}
+			}
+			
+		}
+		
+		
+		
+	}
 	
 	
 	

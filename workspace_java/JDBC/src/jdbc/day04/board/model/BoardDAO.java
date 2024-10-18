@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import jdbc.day04.board.domain.BoardDTO;
+import jdbc.day04.member.domain.CommentDTO;
 
 public interface BoardDAO {
 	
@@ -22,5 +23,17 @@ public interface BoardDAO {
 	// == 현재 로그인 사용자가 자신이 쓴 글을 볼때는 조회수 증가가 없지만
 	//    다른 사용자가 쓴 글을 볼때는 조회수를 1증가 해주어야 한다.
 	BoardDTO viewContents(Map<String, String> paraMap);
+	
+	// 조회수 증가는 없고 단순히 글 내용만 보여주기
+	BoardDTO viewContents(String boardno);	//메소드의 오버로딩
+
+
+	// 댓글 쓰기
+	int writeComment(CommentDTO cmtdto);
+	
+	//원글에 대한 댓글을 가져오는 것(특정 게시글 글번호에 대한 tbl_comment 테이블과 tbl_member 테이블을 JOIN 해서 보여준다.)
+	List<CommentDTO>commentList(String boardno);
+	
+	
 
 }
