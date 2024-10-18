@@ -1,0 +1,2 @@
+// tbl_comment 테이블과 tbl_member 테이블을 JOIN. 글쓴이에 대한 모든 정보
+                              // MemberDTO member 은 오라클의 tbl_member 테이블(부모 테이블)에 해당함.

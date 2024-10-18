@@ -134,6 +134,17 @@ rollback;
     on V1.boardno = V2.fk_boardno
     order by boardno desc;
     
+    
+    select contents, name, to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') writeady
+    from
+    (
     select *
-    from tbl_comment
-    where fk_boardno = 1;
+    from tbl_comment 
+    where fk_boardno = 1
+    ) C join tbl_member M
+    on C.fk_userid = M.userid
+    order by commentno desc;
+    
+    
+    select subject, contents from tbl_board 
+                    where boardno = 1;
