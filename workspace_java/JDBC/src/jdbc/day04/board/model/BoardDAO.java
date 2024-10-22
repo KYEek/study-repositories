@@ -41,6 +41,14 @@ public interface BoardDAO {
 	// 글 삭제 하기
 	int deleteBoard(String boardno);
 	
+	
+	// 최근 1주일내에 작성된 게시글만 DB에서 가져온 결과물
+	Map<String, Integer> statics_by_week();
+
+	
+	// 이번달 일자별 게시글 작성건수
+	List<Map<String, String>> statics_by_currentMonth();
+	
 
 	
 	

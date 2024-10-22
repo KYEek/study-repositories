@@ -1,5 +1,7 @@
 package jdbc.day04.board.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,11 +74,13 @@ public class BoardController {
 				if(!"admin".equals(member.getUserid())) 
 					isExit = true;
 				else {
+					statics_by_week();
 					
 				}
 				break;
 			case "8":	//관리자 일 때 이번달 일자별 게시글 작성건수
 				if("admin".equals(member.getUserid())) {
+					statics_by_currentMonth();
 					break;
 				}
 			case "9":	//admin 일때 나가기
@@ -149,6 +153,330 @@ public class BoardController {
 
 
 	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -579,6 +907,233 @@ public class BoardController {
 		}
 	
 	}
+	
+	//	최근 1주일간 일자별 게시글 작성 건수 		//
+	private void statics_by_week() {
+		
+		System.out.println("\n"+"-".repeat(30)+" [최근 1주일간 일자별 게시글 작성건수] "+"-".repeat(30));
+		//만약 오늘이 2024-10-21 이라면
+		//------------------------------ [최근 1주일간 일자별 게시글 작성건수 ] ------------------------------ 
+		//전체	2024-10-15	2024-10-16	2024-10-17	2024-10-18	2024-10-19	2024-10-20	2024-10-21
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("전체\t");
+		
+		for(int i = 0; i<7; i++) {
+			sb.append(addDay(i-6) +"  ");		//	-6 -5 -4 -3 -2 -1 0 오늘 부터 6일전을 구하기 위해서 (i-6)을 해줘요 
+		}//end of for-------------------
+		
+		sb.append("\n"+ "-".repeat(91));
+		
+		System.out.println(sb.toString());// 여기까진 타이틀을 만들기 위한 거에요
+		
+		
+		
+		// 4번부터 여기에요
+		// 최근 1주일내에 작성된 게시글만 DB에서 가져온 결과물
+		Map<String, Integer> resultMap = bdao.statics_by_week();	//select을 해주는데 DTO를 만드는 것이 아니라 Map을 통해서 셀렉트해온 값을 저장해요 ** 기억해야 합니다 **
+		//Map은 1개 행으로 보면 된다 🤚필수 암기랍니다.
+		
+		
+		//7번부터 여기에요
+		String result = resultMap.get("total") + "\t" +
+		resultMap.get("previous6") + "\t" +
+		resultMap.get("previous5") + "\t" +
+		resultMap.get("previous4") + "\t" +
+		resultMap.get("previous3") + "\t" +
+		resultMap.get("previous2") + "\t" +
+		resultMap.get("previous1") + "\t" +
+		resultMap.get("today");
+		
+	System.out.println(result);
+		
+	}//end of statics_by_week
+
+
+
+
+
+
+
+	//		현재일로 부터 일수만큼 더하거나 빼주어서 날짜를 리턴시켜주는 메소드		//
+	private String addDay(int n) {
+		
+		Calendar currentDate = Calendar.getInstance();
+		//현재 시간을 얻기 위해서 만들었어요 Begin 의 day 11을 참조하면 돼요
+		
+		currentDate.add(Calendar.DATE, n);
+		// currentDate.add(Calendar.DATE, 1);
+	    // ==> currentDate(현재날짜) 에서 두번째 파라미터에 입력해준 숫자(그 단위는 첫번째 파라미터인 것이다. 지금은 Calendar.DATE 이므로 날짜수이다) 만큼 더한다. 
+	    // ==> 위의 결과는 currentDate 값은 1일 더한 값으로 변한다. 
+		
+		SimpleDateFormat sdfmt = new SimpleDateFormat("yyyy-MM-dd");
+		
+		return sdfmt.format(currentDate.getTime());	//캘린더 타입을 Date 타입으로 바꾸고 포맷에 맞추어 리턴해줘요
+		
+	}// end of addDay(int n)-----------------------------
+	
+	
+	
+
+	//		이번달 일자별 게시글 작성건수 			//
+	private void statics_by_currentMonth() {
+
+			/*
+			  아래와 같이 출력할 거에요
+			  
+			  >>> [2024년 10월 일자별 게시글 작성건수] <<<
+			  --------------------
+			  작성일자			작성건수
+			  --------------------
+			  2024-10-17	 3
+			  2024-10-21	 2
+			  전체			 5
+			  
+			  
+			  만약 글이 없으면 이렇게 나올거에요
+			  >>> [2024년 10월 일자별 게시글 작성건수] <<<
+			  게시된 글이 없습니다.
+			 
+			 */
+		
+		//11번은 여기부터
+		Calendar currentDate = Calendar.getInstance();
+		//현재 시간을 얻기 위해서 만들었어요 Begin 의 day 11을 참조하면 돼요
+		
+		SimpleDateFormat sdfmt = new SimpleDateFormat("yyyy년 MM월");
+		
+		String currentMonth = sdfmt.format(currentDate.getTime()); //현재 년도와 월을 저장해요
+		
+		System.out.println("\n>>> [" + currentMonth + " 일자별 게시글 작성건수] <<<");
+		
+		List<Map<String, String>> mapList = bdao.statics_by_currentMonth(); //map이 여러개 들어오기 위해서 list로 map을 만들었어요
+		
+		
+	}
+	//end of statics_by_currentMonth() ----------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
 	
 	
 }

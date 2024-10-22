@@ -6,8 +6,9 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value=""/>
+		<item key="selection" value="setAutoCommit"/>
 		<list key="findhistory">
+			<item value="setAutoCommit"/>
 			<item value="commit"/>
 			<item value="초기화"/>
 			<item value="last"/>
@@ -15,7 +16,6 @@
 			<item value="count"/>
 			<item value="// === 9. &quot;문자열&quot;.replaceAll(&quot;변경대상문자열&quot;, &quot;새로이변경될문자열&quot;) ===="/>
 			<item value="D"/>
-			<item value="split"/>
 		</list>
 		<list key="replacehistory">
 		</list>

@@ -1,7 +1,6 @@
 package jdbc.day04.member.model;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,13 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import jdbc.day04.board.dbconnection.MyDBConnection;
 import jdbc.day04.member.domain.MemberDTO;
 
 public class MemberDAO_imple implements MemberDAO {
 
 	
 		//field, attribute, property
-		private Connection conn;
+		private Connection conn = MyDBConnection.getConn();
 		private PreparedStatement pstmt;
 		private ResultSet rs;
 		
@@ -35,10 +35,6 @@ public class MemberDAO_imple implements MemberDAO {
 					pstmt.close();
 					pstmt = null;
 				}
-				if (conn != null) {
-					conn.close();
-					conn = null;
-				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -51,9 +47,7 @@ public class MemberDAO_imple implements MemberDAO {
 		int result = 0;
 
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "JDBC_USER", "gclass");
-
+			
 			String sql = " insert into tbl_member(userseq, userid, passwd, name, mobile) "
 					+ " values (userseq.nextval, ?, ?, ?, ?) ";
 			pstmt = conn.prepareStatement(sql);
@@ -64,9 +58,7 @@ public class MemberDAO_imple implements MemberDAO {
 
 			result = pstmt.executeUpdate();
 
-		} catch (ClassNotFoundException e) {
-			System.out.println(">>> ojdbc8.jar 파일이 없습니다. <<<");
-		} catch (SQLException e) {
+		}  catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			close();
@@ -83,9 +75,7 @@ public class MemberDAO_imple implements MemberDAO {
 		MemberDTO member = null;
 
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "JDBC_USER", "gclass");
-
+			
 			String sql = " select userseq, userid, name, mobile, point, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') as registerday, status "
 					+ " from tbl_member "
 					+ " where status = 1 and userid = ? and passwd = ? ";
@@ -109,9 +99,7 @@ public class MemberDAO_imple implements MemberDAO {
 			}
 			
 		
-		} catch (ClassNotFoundException e) {
-			System.out.println(">>> ojdbc8.jar 파일이 없습니다. <<<");
-		} catch (SQLException e) {
+		}  catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			close();
@@ -128,9 +116,7 @@ public class MemberDAO_imple implements MemberDAO {
 		List<MemberDTO> memberList = null;
 
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "JDBC_USER", "gclass");
-
+			
 			String sql = " select userseq, userid, name, mobile, point, to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') as registerday, status "
 					+ " from tbl_member "
 					+ " where user != 'admin' ";
@@ -175,9 +161,7 @@ public class MemberDAO_imple implements MemberDAO {
 				memberList.add(member);
 			}
 
-		} catch (ClassNotFoundException e) {
-			System.out.println(">>> ojdbc8.jar 파일이 없습니다. <<<");
-		} catch (SQLException e) {
+		}  catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			close();

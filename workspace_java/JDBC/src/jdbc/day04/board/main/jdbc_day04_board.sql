@@ -148,3 +148,26 @@ rollback;
     
     select subject, contents from tbl_board 
                     where boardno = 1;
+                    
+                    
+    
+    select count(*) as total    --전체 글의 개수가 몇개인지 구해줘요
+            ,sum(decode(to_date(to_char(sysdate,'yyyymmdd'),'yyyymmdd') - to_date(to_char(writeday,'yyyymmdd'),'yyyymmdd'), 6, 1,0)) as previous6    --6일전
+            ,sum(decode(to_date(to_char(sysdate,'yyyymmdd'),'yyyymmdd') - to_date(to_char(writeday,'yyyymmdd'),'yyyymmdd'), 5, 1,0)) as previous5    --5일전
+            ,sum(decode(to_date(to_char(sysdate,'yyyymmdd'),'yyyymmdd') - to_date(to_char(writeday,'yyyymmdd'),'yyyymmdd'), 4, 1,0)) as previous4    --4일전
+            ,sum(decode(to_date(to_char(sysdate,'yyyymmdd'),'yyyymmdd') - to_date(to_char(writeday,'yyyymmdd'),'yyyymmdd'), 3, 1,0)) as previous3    --3일전
+            ,sum(decode(to_date(to_char(sysdate,'yyyymmdd'),'yyyymmdd') - to_date(to_char(writeday,'yyyymmdd'),'yyyymmdd'), 2, 1,0)) as previous2    --2일전
+            ,sum(decode(to_date(to_char(sysdate,'yyyymmdd'),'yyyymmdd') - to_date(to_char(writeday,'yyyymmdd'),'yyyymmdd'), 1, 1,0)) as previous1    --1일전 작성일과의 차이를 구하고 1(어제)면 1, 아니면 0
+            ,sum(decode(to_date(to_char(sysdate,'yyyymmdd'),'yyyymmdd') - to_date(to_char(writeday,'yyyymmdd'),'yyyymmdd'), 0, 1,0)) as today    --오늘과 작성일과의 차이를 구하고 0(오늘)이면 1, 아니면 0
+            --그리고 그렇게 구해진 날자를 sum함수로 그 날짜에 글이 몇개인지 구해줘요
+    from tbl_board
+    where to_date(to_char(sysdate,'yyyymmdd'),'yyyymmdd') - to_date(to_char(writeday,'yyyymmdd'),'yyyymmdd') < 7;     --날짜에서 시분초는 제외하고 날짜만 보기 위해서 to_char를 했어요 그리고 다시 날짜로 바꾸기 위해 to_date를 했어요 그리고 작성일과의 날짜가 7일 이내인 것을 조건으로 했어요
+    
+    
+    
+    select to_char(writeday, 'yyyy-mm-dd') as writeday
+            , grouping(to_char(writeday, 'yyyy-mm-dd'))
+            , count(*) as cnt
+    from tbl_board
+    where to_char(writeday, 'yyyymm') = to_char(sysdate, 'yyyymm')
+    group by rollup(to_char(writeday, 'yyyy-mm-dd'));

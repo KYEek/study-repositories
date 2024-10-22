@@ -1,14 +1,15 @@
 package jdbc.day04.board.model;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jdbc.day04.board.dbconnection.MyDBConnection;
 import jdbc.day04.board.domain.BoardDTO;
 import jdbc.day04.member.domain.CommentDTO;
 import jdbc.day04.member.domain.MemberDTO;
@@ -19,7 +20,7 @@ public class BoardDAO_imple implements BoardDAO {
 	
 	
 	// field, attribute, property
-	private Connection conn;
+	private Connection conn = MyDBConnection.getConn();
 	private PreparedStatement pstmt;
 	private ResultSet rs;
 
@@ -37,10 +38,6 @@ public class BoardDAO_imple implements BoardDAO {
 			if (pstmt != null) {
 				pstmt.close();
 				pstmt = null;
-			}
-			if (conn != null) {
-				conn.close();
-				conn = null;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -62,8 +59,6 @@ public class BoardDAO_imple implements BoardDAO {
 		int result = 0;
 
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "JDBC_USER", "gclass");
 
 			// Transaction 처리를 위해서 수동 commit 으로 전환 시킨다.
 			conn.setAutoCommit(false);
@@ -93,9 +88,7 @@ public class BoardDAO_imple implements BoardDAO {
 				
 			}
 			
-		} catch (ClassNotFoundException e) {
-			System.out.println(">>> ojdbc8.jar 파일이 없습니다. <<<");
-		} catch (SQLException e) {
+		}catch (SQLException e) {
 			if(e.getErrorCode()==2290) {
 				System.out.println(">> 아이디 " +bdto.getFk_userid()+ "님의 포인트는 30을 초과할 수 없기 때문에 오류발생 하였습니다. <<");
 			}
@@ -109,7 +102,14 @@ public class BoardDAO_imple implements BoardDAO {
 			catch (SQLException e1) {	}
 			
 		} finally {
+
+			try {
+				conn.setAutoCommit(true);
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+			}
 			close();
+			
 		}
 
 		return result;
@@ -122,9 +122,7 @@ public class BoardDAO_imple implements BoardDAO {
 		List<BoardDTO> boardList = new ArrayList<>();
 
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "JDBC_USER", "gclass");
-
+			
 			String sql = " select boardno, case when cmtcnt is null then subject else subject|| ' [' ||cmtcnt || ']' end subject "
 						+ "            , name, writeday, viewcount "
 						+ "    from "
@@ -161,9 +159,7 @@ public class BoardDAO_imple implements BoardDAO {
 				boardList.add(board);
 			}
 
-		} catch (ClassNotFoundException e) {
-			System.out.println(">>> ojdbc8.jar 파일이 없습니다. <<<");
-		} catch (SQLException e) {
+		}  catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			close();
@@ -182,9 +178,7 @@ public class BoardDAO_imple implements BoardDAO {
 		BoardDTO bdto = null;
 		
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "JDBC_USER", "gclass");
-
+			
 			String sql = " select subject, contents, name, viewcount, fk_userid "
 					+ " from  "
 					+ " ( "
@@ -228,9 +222,7 @@ public class BoardDAO_imple implements BoardDAO {
 				
 			}
 
-		} catch (ClassNotFoundException e) {
-			System.out.println(">>> ojdbc8.jar 파일이 없습니다. <<<");
-		} catch (SQLException e) {
+		}  catch (SQLException e) {
 			if(e.getErrorCode()==1722) {
 				System.out.println(">> [경고] 글번호는 정수만 가능합니다. << \n");
 			}
@@ -265,9 +257,6 @@ public class BoardDAO_imple implements BoardDAO {
 		int result = 0;
 
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "JDBC_USER", "gclass");
-
 			// Transaction 처리를 위해서 수동 commit 으로 전환 시킨다.
 			conn.setAutoCommit(false);
 			
@@ -295,8 +284,6 @@ public class BoardDAO_imple implements BoardDAO {
 				
 			}
 			
-		} catch (ClassNotFoundException e) {
-			System.out.println(">>> ojdbc8.jar 파일이 없습니다. <<<");
 		} catch (SQLException e) {
 			if(e.getErrorCode()==2290) {
 				System.out.println(">> 아이디 " +cmtdto.getFk_userid()+ "님의 포인트는 30을 초과할 수 없기 때문에 오류발생 하였습니다. <<");
@@ -318,7 +305,14 @@ public class BoardDAO_imple implements BoardDAO {
 			}
 			
 		} finally {
+
+			try {
+				conn.setAutoCommit(true);
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+			}
 			close();
+			
 		}
 
 		return result;	
@@ -331,8 +325,6 @@ public class BoardDAO_imple implements BoardDAO {
 		List<CommentDTO> commentList = new ArrayList<>();
 
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "JDBC_USER", "gclass");
 
 			String sql = " select C.contents, M.name, to_char(C.writeday, 'yyyy-mm-dd hh24:mi:ss') writeday "
 					+ "    from "
@@ -364,9 +356,7 @@ public class BoardDAO_imple implements BoardDAO {
 				commentList.add(cmtdto);
 			}
 
-		} catch (ClassNotFoundException e) {
-			System.out.println(">>> ojdbc8.jar 파일이 없습니다. <<<");
-		} catch (SQLException e) {
+		}  catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			close();
@@ -382,8 +372,6 @@ public class BoardDAO_imple implements BoardDAO {
 		BoardDTO bdto = null;
 		
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "JDBC_USER", "gclass");
 
 			String sql = " select subject, contents, fk_userid, BOARDPASSWD "
 					+ " from tbl_board "
@@ -407,8 +395,6 @@ public class BoardDAO_imple implements BoardDAO {
 				
 			}
 
-		} catch (ClassNotFoundException e) {
-			System.out.println(">>> ojdbc8.jar 파일이 없습니다. <<<");
 		} catch (SQLException e) {
 			if(e.getErrorCode()==1722) {
 				System.out.println(">> [경고] 글번호는 정수만 가능합니다. << \n");
@@ -434,8 +420,6 @@ public class BoardDAO_imple implements BoardDAO {
 		int result = 0;
 
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "JDBC_USER", "gclass");
 
 			// Transaction 처리를 위해서 수동 commit 으로 전환 시킨다.
 			conn.setAutoCommit(false);
@@ -450,8 +434,6 @@ public class BoardDAO_imple implements BoardDAO {
 			result = pstmt.executeUpdate();
 
 			
-		} catch (ClassNotFoundException e) {
-			System.out.println(">>> ojdbc8.jar 파일이 없습니다. <<<");
 		} catch (SQLException e) {
 			if(e.getErrorCode() == 1722) {
 				System.out.println("글 번호는 정수로만 입력하세요!!😡😡😡 \n");
@@ -460,7 +442,14 @@ public class BoardDAO_imple implements BoardDAO {
 				e.printStackTrace();
 			}
 		} finally {
+
+			try {
+				conn.setAutoCommit(true);
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+			}
 			close();
+			
 		}
 
 		return result;	
@@ -472,8 +461,6 @@ public class BoardDAO_imple implements BoardDAO {
 		int result = 0;
 
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", "JDBC_USER", "gclass");
 
 			// Transaction 처리를 위해서 수동 commit 으로 전환 시킨다.
 			conn.setAutoCommit(false);
@@ -486,9 +473,7 @@ public class BoardDAO_imple implements BoardDAO {
 			result = pstmt.executeUpdate();
 
 			
-		} catch (ClassNotFoundException e) {
-			System.out.println(">>> ojdbc8.jar 파일이 없습니다. <<<");
-		} catch (SQLException e) {
+		}  catch (SQLException e) {
 			if(e.getErrorCode() == 1722) {
 				System.out.println("글 번호는 정수로만 입력하세요!!😡😡😡 \n");
 			}
@@ -496,11 +481,131 @@ public class BoardDAO_imple implements BoardDAO {
 				e.printStackTrace();
 			}
 		} finally {
+
+			try {
+				conn.setAutoCommit(true);
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+			}
 			close();
+			
 		}
 
 		return result;	
 	}// end of deleteBoard ------------------------------
+
+	
+	
+	
+	
+	
+	// 최근 1주일내에 작성된 게시글만 DB에서 가져온 결과물
+	@Override
+	public Map<String, Integer> statics_by_week() {
+		
+		Map<String, Integer> resultMap = new HashMap<>();
+		
+		
+		
+		try {
+
+			String sql = " select count(*) as total "
+					+ "            ,sum(decode(to_date(to_char(sysdate,'yyyymmdd'),'yyyymmdd') - to_date(to_char(writeday,'yyyymmdd'),'yyyymmdd'), 6, 1,0)) as previous6 "
+					+ "            ,sum(decode(to_date(to_char(sysdate,'yyyymmdd'),'yyyymmdd') - to_date(to_char(writeday,'yyyymmdd'),'yyyymmdd'), 5, 1,0)) as previous5 "
+					+ "            ,sum(decode(to_date(to_char(sysdate,'yyyymmdd'),'yyyymmdd') - to_date(to_char(writeday,'yyyymmdd'),'yyyymmdd'), 4, 1,0)) as previous4 "
+					+ "            ,sum(decode(to_date(to_char(sysdate,'yyyymmdd'),'yyyymmdd') - to_date(to_char(writeday,'yyyymmdd'),'yyyymmdd'), 3, 1,0)) as previous3 "
+					+ "            ,sum(decode(to_date(to_char(sysdate,'yyyymmdd'),'yyyymmdd') - to_date(to_char(writeday,'yyyymmdd'),'yyyymmdd'), 2, 1,0)) as previous2 "
+					+ "            ,sum(decode(to_date(to_char(sysdate,'yyyymmdd'),'yyyymmdd') - to_date(to_char(writeday,'yyyymmdd'),'yyyymmdd'), 1, 1,0)) as previous1 "
+					+ "            ,sum(decode(to_date(to_char(sysdate,'yyyymmdd'),'yyyymmdd') - to_date(to_char(writeday,'yyyymmdd'),'yyyymmdd'), 0, 1,0)) as today "
+					+ "    from tbl_board "
+					+ "    where to_date(to_char(sysdate,'yyyymmdd'),'yyyymmdd') - to_date(to_char(writeday,'yyyymmdd'),'yyyymmdd') < 7 ";
+			
+
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+
+			rs.next();	//결과가 0이든 뭐든 나오기 때문에 if절 필요없어요
+			
+			resultMap.put("total", rs.getInt("total"));
+			resultMap.put("previous6", rs.getInt("previous6"));
+			resultMap.put("previous5", rs.getInt("previous5"));
+			resultMap.put("previous4", rs.getInt("previous4"));
+			resultMap.put("previous3", rs.getInt("previous3"));
+			resultMap.put("previous2", rs.getInt("previous2"));
+			resultMap.put("previous1", rs.getInt("previous1"));
+			resultMap.put("today", rs.getInt("today"));
+			//맵에 select해온 결과들을 저장해요
+				
+
+		}  catch (SQLException e) {
+				e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return resultMap;		//맵을 반환해줘요
+	}//end of public Map<String, Integer> statics_by_week()-----------------------------
+
+
+	
+	
+	// 		이번달 일자별 게시글 작성건수		//
+	@Override
+	public List<Map<String, String>> statics_by_currentMonth() {
+
+		List<Map<String, String>> mapList = new ArrayList<>();
+
+		try {
+
+			String sql = " select decode(grouping(to_char(writeday, 'yyyy-mm-dd')), 0, to_char(writeday, 'yyyy-mm-dd'), '전체') as writeday "
+					+ "            , count(*) as cnt "
+					+ "    from tbl_board "
+					+ "    where to_char(writeday, 'yyyymm') = to_char(sysdate, 'yyyymm') "
+					+ "    group by rollup(to_char(writeday, 'yyyy-mm-dd')) ";
+			
+
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+
+			while(rs.next()) {	//결과가 없거나 복수개 일 수 있으니깐 while이에요
+				Map<String, String> map = new HashMap<> (); //list에 넣을 Map을 만들어 줘요 테이블의 한 행을 만들어 준다고 생각하면 돼요
+				
+				map.put("writeday", rs.getString("writeday"));
+				//map.put("cnt", String.valueOf(rs.getInt("cnt")));	//rs.getInt가 int 타입이여서 valueOf로 형변환 해줘요
+				//또는
+				map.put("cnt",rs.getString("cnt"));	//그냥 getString으로 String 타입으로 불러와도 상관없어요
+				
+				mapList.add(map);	//list에 map을 담아줘요
+				
+			}// end of while----------------------------
+			
+			if(mapList.size() > 0) {		//리스트에 값이 있는지 없는지를 비교해요
+				StringBuilder sb = new StringBuilder();
+				sb.append("-".repeat(25)+"\n");
+				sb.append("작성일자 \t  작성건수 \n");
+				sb.append("-".repeat(25)+"\n");
+				
+				for(Map<String, String> map : mapList) {
+					sb.append(map.get("writeday") + "\t  " + map.get("cnt") +"\n");
+				}//end of for--------------------------------
+				
+				System.out.println(sb.toString());
+				
+			}
+			else {
+				System.out.println("게시된 글이 없습니다");
+			}
+				
+
+		} catch (SQLException e) {
+				e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return mapList;		//리스트를 반환해줘요
+		
+	}// end of statics_by_currentMonth--------------------------
 	
 			
 			

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import jdbc.day04.board.controller.BoardController;
+import jdbc.day04.board.dbconnection.MyDBConnection;
 import jdbc.day04.member.domain.MemberDTO;
 import jdbc.day04.member.model.*;
 
@@ -47,6 +48,7 @@ public class MemberController {
 							isSuccess_Login = true;
 						break;
 					case "3": // 프로그램 종료
+						MyDBConnection.closeConnection();
 		
 						return;	//menu_Start(Scanner sc) 이 메서드를 종료함
 					default:
