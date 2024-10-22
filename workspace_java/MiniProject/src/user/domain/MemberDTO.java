@@ -191,6 +191,10 @@ public class MemberDTO {
 			return false;
 			
 		} 
+		else if(user_jubun.charAt(7) < 1 && user_jubun.charAt(7) > 4) {		//주번이 7자리가  1,2,3,4 가 아니면 
+			System.out.println("주민번호 7번째 자리를 올바로 입력하세요");
+			return false;
+		}
 		else {
 			this.user_jubun = user_jubun;
 			return true;
