@@ -20,7 +20,7 @@ commit;
 
 
 
-select * from user_constraints where table_name = 'Tbl_Users;
+select * from user_tab_columns where table_name = 'TBL_USERS';
 
 select * from user_sequences;   
 
