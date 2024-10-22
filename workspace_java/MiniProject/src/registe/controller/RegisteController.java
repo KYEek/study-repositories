@@ -130,8 +130,52 @@ public class RegisteController {
 	
 	// 일반회원 계정 생성 메서드
 	private void registeMember(Scanner sc) {
-		
+
 		MemberDTO member = new MemberDTO();
+		
+		// 입력 받는 부분
+		System.out.print("아이디 입력 : ");
+		member.setUser_id(sc.nextLine());
+		System.out.print("비밀번호 입력 : ");
+		member.setUser_passwd(sc.nextLine());
+		System.out.print("이름 입력 : ");
+		member.setUser_name(sc.nextLine());
+		System.out.print("주민번호 앞 7자리 입력 : ");
+		member.setUser_jubun(sc.nextLine());
+		System.out.print("이메일 입력 : ");
+		member.setUser_email(sc.nextLine());
+		System.out.print("전화번호 입력 : ");
+		member.setUser_tel(sc.nextLine());
+		System.out.print("주소 입력 : ");
+		member.setUser_address(sc.nextLine());
+		System.out.println("\n 업종 종류");
+		System.out.println("-----------------");
+		System.out.println("업종 코드 \t 업종명\t");
+		System.out.println("-----------------");
+		System.out.print("업종코드 입력 : ");
+		member.setFk_job_tcode(Integer.parseInt(sc.nextLine()));
+
+		// n은 결과값이 어떻게 되었는지 확인 하기 위한 변수 -1이면 sql이 실행되지 않음 0이면 취소 1이면 성공
+		int n = -1;
+
+		// y/n 입력 장소
+		System.out.print("입력 하시겠습니까?[Y/N]");
+		String yn = sc.nextLine();
+
+		if ("y".equalsIgnoreCase(yn))
+			n = mdao.registeMember(member);
+		else if ("n".equalsIgnoreCase(yn))
+			n = 0;
+		else
+			System.out.println("올바른 값을 입력하세요.");
+
+		if (n == 1) {
+			System.out.println("값이 정상적으로 입력이 되었습니다.");
+		} else if (n == 0) {
+			System.out.println("입력을 취소했습니다.");
+		} else if (n == -1) {
+			System.out.println("입력이 정상적으로 되지 않았습니다.");
+		}
 		
 	}//end of method ------------------------------------------------------
 

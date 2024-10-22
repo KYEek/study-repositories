@@ -51,10 +51,10 @@ public class CompanyDTO {
 		return com_no;
 	}
 	
-	//회사넘버는 바뀌어서는 안되기 때문에 삭제함
-//	public void setCom_no(int com_no) {
-//		this.com_no = com_no;
-//	}
+	
+	public void setCom_no(int com_no) {
+		this.com_no = com_no;
+	}
 	
 	
 	public String getCom_id() {

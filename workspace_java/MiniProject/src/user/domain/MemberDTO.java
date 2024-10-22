@@ -49,11 +49,10 @@ public class MemberDTO {
 		return user_no;
 	}
 	
-	//회원번호는 바뀌어서는 안되기 때문에 삭제함
-//	public void setUser_no(int user_no) {
-//		
-//		this.user_no = user_no;
-//	}
+	public void setUser_no(int user_no) {
+		
+		this.user_no = user_no;
+	}
 	
 	
 	
@@ -62,15 +61,15 @@ public class MemberDTO {
 	}
 	public boolean setUser_id(String user_id) {
 		
-		
-		if(user_no < 5 && user_no > 20) {
-			System.out.println("아이디는 5글자 이상 20글자 이하여야 합니다.");
+//		
+//		if(user_no < 5 && user_no > 20) {
+//			System.out.println("아이디는 5글자 이상 20글자 이하여야 합니다.");
 			this.user_id = user_id;
-			return false;
-		}
-		else {
+//			return false;
+//		}
+//		else {
 			return true;
-		}
+//		}
 		
 	}//end of setUser_id---------------------------------------------
 	
@@ -85,50 +84,51 @@ public class MemberDTO {
 	}
 
 	public boolean setUser_passwd(String user_passwd) {
-		// user_passwd ==> Ab3$
-		boolean correct_pw = true;
-		if (user_passwd == null)
-			correct_pw = false;
-
-		// 예를 들어서
-		// 입력받은 user_passwd 가 Ab3$ 이라면
-		// 입력받은 user_passwd 가 Ab3$fsafawewfwga$%$sdADF 이라면
-		if (user_passwd.length() < 8 || user_passwd.length() > 20)
-			correct_pw = false;
-
-		// 이제 부터는 입력받은 user_passwd의 글자수가 8글자 이상 15글자 이하인 경우이다
-		// 예를들어서
-		// 입력받은 user_passwd 가 C5d#하하호호 이라면 C5d#하하s@! 이라면
-		// 또는
-		// 입력받은 user_passwd 가 C5dawxab 이라면 c5dawxab# 이라면
-		// 입력받은 user_passwd 가 C5dawxab@ 이라면 c5dawxab#T 이라면
-		// find_korean 은 한글이 발견 되면 false가 되어서 실패한다 기본은 없는 상태이기 때문에 true.
-		boolean find_upper = false, find_lawer = false, find_number = false, find_special = false, find_korean = true;
-
-		for (int i = 0; i < user_passwd.length(); i++) {
-			char ch = user_passwd.charAt(i);
-
-			if ('가' <= ch && ch <= '힣')
-				find_korean = false;
-			else if (Character.isUpperCase(ch))
-				find_upper = true;
-			else if (Character.isLowerCase(ch))
-				find_lawer = true;
-			else if (Character.isDigit(ch))
-				find_number = true;
-			else
-				find_special = true;
-
-		}
-
-		if (find_lawer && find_number && find_special && find_upper && find_korean) { // 모든 조건을 충족 한다면
+//		// user_passwd ==> Ab3$
+//		boolean correct_pw = true;
+//		if (user_passwd == null)
+//			correct_pw = false;
+//
+//		// 예를 들어서
+//		// 입력받은 user_passwd 가 Ab3$ 이라면
+//		// 입력받은 user_passwd 가 Ab3$fsafawewfwga$%$sdADF 이라면
+//		if (user_passwd.length() < 8 || user_passwd.length() > 20)
+//			correct_pw = false;
+//
+//		// 이제 부터는 입력받은 user_passwd의 글자수가 8글자 이상 15글자 이하인 경우이다
+//		// 예를들어서
+//		// 입력받은 user_passwd 가 C5d#하하호호 이라면 C5d#하하s@! 이라면
+//		// 또는
+//		// 입력받은 user_passwd 가 C5dawxab 이라면 c5dawxab# 이라면
+//		// 입력받은 user_passwd 가 C5dawxab@ 이라면 c5dawxab#T 이라면
+//		// find_korean 은 한글이 발견 되면 false가 되어서 실패한다 기본은 없는 상태이기 때문에 true.
+//		boolean find_upper = false, find_lawer = false, find_number = false, find_special = false, find_korean = true;
+//
+//		for (int i = 0; i < user_passwd.length(); i++) {
+//			char ch = user_passwd.charAt(i);
+//
+//			if ('가' <= ch && ch <= '힣')
+//				find_korean = false;
+//			else if (Character.isUpperCase(ch))
+//				find_upper = true;
+//			else if (Character.isLowerCase(ch))
+//				find_lawer = true;
+//			else if (Character.isDigit(ch))
+//				find_number = true;
+//			else
+//				find_special = true;
+//
+//		}
+//
+//		if (find_lawer && find_number && find_special && find_upper && find_korean) { // 모든 조건을 충족 한다면
 			this.user_passwd = user_passwd;
-			correct_pw = true;
-		} else {
-			System.out.println("비밀번호는 8글자 이상 20글자 이하의 영어 대소문자, 숫자 기호를 포함해야 합니다.");
-			correct_pw = false;
-		}
-		return correct_pw;
+			return true;
+//			correct_pw = true;
+//		} else {
+//			System.out.println("비밀번호는 8글자 이상 20글자 이하의 영어 대소문자, 숫자 기호를 포함해야 합니다.");
+//			correct_pw = false;
+//		}
+//		return correct_pw;
 
 	}// end of setUser_passwd---------------------------------------------
 	
@@ -177,28 +177,28 @@ public class MemberDTO {
 	}
 
 	public boolean setUser_jubun(String user_jubun) {
-		
-		//숫자만 입력했는지 검사 하는 try catch
-		try {
-			Integer.parseInt(user_jubun);
-		} catch (NumberFormatException e){
-			System.out.println("숫자만 입력하십시오");
-			return false;		//숫자가 아니면 false 반환 
-		}
-		
-		if (user_jubun.length() != 7) {			//주번이 7자가 아니면 
-			System.out.println("주민번호는 7자만 입력하십시오");
-			return false;
-			
-		} 
-		else if(user_jubun.charAt(7) < 1 && user_jubun.charAt(7) > 4) {		//주번이 7자리가  1,2,3,4 가 아니면 
-			System.out.println("주민번호 7번째 자리를 올바로 입력하세요");
-			return false;
-		}
-		else {
+//		
+//		//숫자만 입력했는지 검사 하는 try catch
+//		try {
+//			Integer.parseInt(user_jubun);
+//		} catch (NumberFormatException e){
+//			System.out.println("숫자만 입력하십시오");
+//			return false;		//숫자가 아니면 false 반환 
+//		}
+//		
+//		if (user_jubun.length() != 7) {			//주번이 7자가 아니면 
+//			System.out.println("주민번호는 7자만 입력하십시오");
+//			return false;
+//			
+//		} 
+//		else if(user_jubun.charAt(7) < 1 && user_jubun.charAt(7) > 4) {		//주번이 7자리가  1,2,3,4 가 아니면 
+//			System.out.println("주민번호 7번째 자리를 올바로 입력하세요");
+//			return false;
+//		}
+//		else {
 			this.user_jubun = user_jubun;
 			return true;
-		}
+//		}
 
 	}// end of user_jubun----------------------------------------------
 	

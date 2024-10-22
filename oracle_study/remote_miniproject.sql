@@ -20,7 +20,7 @@ commit;
 
 
 
-select * from user_constraints where constraint_type ='C';
+select * from user_constraints where table_name = 'Tbl_Users;
 
 select * from user_sequences;   
 
@@ -44,7 +44,7 @@ update tbl_companies set com_president = '이건희', com_tel = '02-1111-4444' w
 rollback;
 
 -- 일반 회원 로그인
-select user_no, user_id, user_passwd, user_name, user_jubun, user_email, user_tel, user_address, user_regi, user_status, fk_job_tcode, job_code, job_type
+select user_no, user_id, user_passwd, user_name, user_jubun, user_email, user_tel, user_address, user_regi, user_status, fk_job_tcode, job_type
 from TBL_USERS join TBL_JOB_TYPES on FK_JOB_TCODE = JOB_CODE
 where user_id ='ronaldo' and user_passwd = 'qwer1234$' and user_status = 1;
 
@@ -58,5 +58,6 @@ where COM_ID = 'samsungelctronic' and COM_PASSWD = 'qwer1234$' and com_status = 
 select admin_id, admin_passwd, admin_name from TBL_admin
 where admin_ID = 'admin' and admin_passwd = 'qwer1234$';
 
-
+select admin_id, admin_passwd, admin_name from TBL_admin
+where admin_ID = 'admin' and admin_passwd = 'qwer1234$';
 
