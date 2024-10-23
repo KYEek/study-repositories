@@ -2,6 +2,7 @@ package controlmyinfo;
 
 import java.util.Scanner;
 
+import main.Main;
 import user.domain.*;
 
 public class Myinfo_Controller {
@@ -56,8 +57,13 @@ public class Myinfo_Controller {
 				break;
 
 			case "3": // 회원 탈퇴
-				leave_account(company);
-				break;
+				boolean is_delete = leave_account(company, sc);		//만약 회원탈퇴 여부를 판단하기 위한 변수
+				if(is_delete) {			//만약 회원탈퇴가 성공했다면
+					company = null;		//로그인 된 company 값을 초기화 해주고
+					Main.main(null);	//메인으로 돌아간다
+				}
+				
+				break;	//회원탈퇴를 하지 않으면 계속 반복
 
 			case "4": // 돌아가기
 				
@@ -143,8 +149,13 @@ public class Myinfo_Controller {
 				break;
 
 			case "3": // 회원 탈퇴
-				leave_account(member);
-				break;
+				boolean is_delete = leave_account(member, sc);		//만약 회원탈퇴 여부를 판단하기 위한 변수
+				if(is_delete) {			//만약 회원탈퇴가 성공했다면
+					member = null;		//로그인 된 member 값을 초기화 해주고
+					Main.main(null);	//메인으로 돌아간다
+				}
+				
+				break;	//회원탈퇴를 하지 않으면 계속 반복
 
 			case "4": // 돌아가기
 				
@@ -520,14 +531,76 @@ public class Myinfo_Controller {
 	
 
 	// 개인 회원 탈퇴
-	private void leave_account(MemberDTO member) {
+	private boolean leave_account(MemberDTO member, Scanner sc) {
+		
+		
+		int n = 0;
+		// y 또는 n 이 들어오기 전 까지 반복
+		while (true) {
+			// 수정전 확인 질문
 
+			System.out.print("정말 회원 탈퇴 하시겠습니까?[Y/N] : ");
+			String yn = sc.nextLine();
+
+			// y면 sql실행, n이면 취소 후 메소드 끝내기, 잘못 넣으면
+			if ("y".equalsIgnoreCase(yn)) {
+				n = ctlinfo.delete_account(member);
+				break;
+			}
+			else if ("n".equalsIgnoreCase(yn)) {
+				System.out.println("취소했습니다.");
+				return false;
+			} else
+				System.out.println("올바른 값을 입력하세요.");
+		}
+		
+		if(n == 1) {
+			System.out.println("회원 탈퇴를 했습니다. 다시 오길 바래요🤗");
+			return true;
+		}
+		else {
+			System.out.println("탈퇴 실패했습니다.😭");
+			return false;
+		}
+		
+		
 	}//end of method---------------------------------------------------------------------------------------------------------------------------
 		
 	
 	// 기업 회원 탈퇴
-	private void leave_account(CompanyDTO company) {
+	private boolean leave_account(CompanyDTO company, Scanner sc) {
 
+		
+		
+		int n = 0;
+		// y 또는 n 이 들어오기 전 까지 반복
+		while (true) {
+			// 수정전 확인 질문
+
+			System.out.print("정말 회원 탈퇴 하시겠습니까?[Y/N] : ");
+			String yn = sc.nextLine();
+
+			// y면 sql실행, n이면 취소 후 메소드 끝내기, 잘못 넣으면
+			if ("y".equalsIgnoreCase(yn)) {
+				n = ctlinfo.delete_account(company);
+				break;
+			}
+			else if ("n".equalsIgnoreCase(yn)) {
+				System.out.println("취소했습니다.");
+				return false;
+			} else
+				System.out.println("올바른 값을 입력하세요.");
+		}
+		
+		if(n == 1) {
+			System.out.println("회원 탈퇴를 했습니다. 다시 오길 바래요🤗");
+			return true;
+		}
+		else {
+			System.out.println("탈퇴 실패했습니다.😭");
+			return false;
+		}
+		
 	}//end of method---------------------------------------------------------------------------------------------------------------------------
 
 }

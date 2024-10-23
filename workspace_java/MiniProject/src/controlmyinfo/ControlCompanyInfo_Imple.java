@@ -119,7 +119,7 @@ public class ControlCompanyInfo_Imple implements ControlCompanyInfo {
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, passwd);
-			pstmt.setString(2, member.getUser_passwd());
+			pstmt.setInt(2, member.getUser_no());
 			
 			
 			// sql 실행
@@ -142,7 +142,7 @@ public class ControlCompanyInfo_Imple implements ControlCompanyInfo {
 	public int update_passwd(CompanyDTO company, String passwd) {
 		
 		
-		String sql = " update tbl_users set user_passwd = ? where user_no = ? ";
+		String sql = " update TBL_COMPANIES set com_passwd = ? where com_no = ? ";
 
 		// 결과 성공 여부 반환을 위한 변수
 		int result = 0;
@@ -150,7 +150,7 @@ public class ControlCompanyInfo_Imple implements ControlCompanyInfo {
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, passwd);
-			pstmt.setString(2, company.getCom_passwd());
+			pstmt.setInt(2, company.getCom_no());
 
 			// sql 실행
 			result = pstmt.executeUpdate();
@@ -163,5 +163,62 @@ public class ControlCompanyInfo_Imple implements ControlCompanyInfo {
 
 		return result;
 	}//end of method ----------------------------------------------------------------------------
+
+
+	
+	
+	//일반회원 계정탈퇴
+	@Override
+	public int delete_account(MemberDTO member) {
+		
+		
+		String sql = " update tbl_users set user_status = 0 where user_no = ? ";
+
+		// 결과 성공 여부 반환을 위한 변수
+		int result = 0;
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, member.getUser_no());
+
+			// sql 실행
+			result = pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+
+		return result;
+		
+	}
+
+
+	
+	//기업회원 계정탈퇴
+	@Override
+	public int delete_account(CompanyDTO company) {
+		
+		String sql = " update tbl_companies set com_status = 0 where com_no = ? ";
+
+		// 결과 성공 여부 반환을 위한 변수
+		int result = 0;
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, company.getCom_no());
+
+			// sql 실행
+			result = pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+
+		return result;
+	}
 
 }

@@ -25,6 +25,14 @@ public interface ControlCompanyInfo {
 	int update_passwd(CompanyDTO company, String passwd);
 
 	
+	//멤버 회원탈퇴 메서드
+	int delete_account(MemberDTO member);
+
+	
+	//기업 회원탈퇴 메서드
+	int delete_account(CompanyDTO company);
+
+	
 	
 
 }

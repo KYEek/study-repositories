@@ -68,8 +68,8 @@ where admin_ID = 'admin' and admin_passwd = 'qwer1234$';
 update tbl_users set user_status = 0 where user_no = 14;
 update tbl_users set user_passwd = 'Qwer1234!' where user_no = 14;
 -- 기업 탈퇴, 비번 변경
-update tbl_companies set com_status = 0 where com_no = 1006;
-update tbl_companies set com_passwd = 'Qwer1234!' where com_no = 1006;
+update tbl_companies set com_status = 1 where com_no = 1006;
+update tbl_companies set com_passwd = 'qwer1234!' where com_no = 1006;
 
 rollback;
 commit;

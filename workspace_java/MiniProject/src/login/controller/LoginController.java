@@ -8,6 +8,7 @@ import user.domain.CompanyDTO;
 import user.domain.MemberDTO;
 import company.model.*;
 import controlmyinfo.*;
+import main.Main;
 import member.model.*;
 import admin.model.*;
 
@@ -90,6 +91,11 @@ public class LoginController {
 				
 				is_exit = false;				//반복문 탈출을 위한 변수 true 면 탈출 false 면 남아있기
 				while(!is_exit) {
+					
+					if(Main.check_delete == false) {
+						return;		//만약 방급 회원 탈퇴를 했다면 메서드 종료
+					}
+					
 					
 					if (user_condition == 1) {	//유저 상태 변수로 일반(1), 기업(2), 관리자(3) 별로 보여줌
 						// 일반 회원 메뉴 화면
@@ -250,7 +256,6 @@ public class LoginController {
 		}
 		else {						//로그인 성공 시
 			System.out.println("로그인 성공했습니다.");
-			System.out.println(company.getCom_id());	//테스트용
 			menu_select = 1;
 			user_condition = 2;
 			return true;
@@ -278,7 +283,6 @@ public class LoginController {
 		}
 		else {						//로그인 성공 시
 			System.out.println("로그인 성공했습니다.");
-			System.out.println(member.getUser_id());	//테스트용
 			menu_select = 1;
 			user_condition = 1;	
 			return true;
