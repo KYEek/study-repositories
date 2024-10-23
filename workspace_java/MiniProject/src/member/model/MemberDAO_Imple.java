@@ -42,7 +42,7 @@ public class MemberDAO_Imple implements MemberDAO {
 	public int registeMember(MemberDTO member) {
 		
 		String sql = " insert into tbl_users(USER_NO, USER_ID, USER_PASSWD, USER_NAME, USER_JUBUN, USER_EMAIL, USER_TEL, USER_ADDRESS, FK_JOB_TCODE)\r\n"
-				+ "values(USER_SEQ.nextval, 'kangdw', 'qwer1234$', '강동원', '93002281', 'gangdw@naver.com', '010-2234-5567', '서울시 마포구 창전동', 1); ";
+				+ "values(USER_SEQ.nextval, ?, ?, ?, ?, ?, ?, ?, ?) ";
 		
 		//결과 성공 여부 반환을 위한 변수
 		int result = 0;

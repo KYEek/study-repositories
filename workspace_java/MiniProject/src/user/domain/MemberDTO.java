@@ -62,14 +62,47 @@ public class MemberDTO {
 	public boolean setUser_id(String user_id) {
 		
 //		
-//		if(user_no < 5 && user_no > 20) {
+//		if(user_id.length() < 5 && user_id.length() > 20) {
 //			System.out.println("아이디는 5글자 이상 20글자 이하여야 합니다.");
-			this.user_id = user_id;
 //			return false;
 //		}
-//		else {
+//		if(user_id.isBlank()) {
+//			System.out.println("공백은 안됩니다");
+//			return false;
+//		}
+//		
+//		boolean check_alphabet = false;		//영어가 있는지 파악하는 변수
+//		for(char i:user_id.toCharArray()) {
+//			if(i >= '!' && i<= '/') {
+//				System.out.println("기호가 있으면 안됩니다.");
+//				return false;	//기호가 있으면 false
+//			}
+//			
+//			if(i >= 10000) {
+//				System.out.println("한글이 있으면 안됩니다.");
+//				return false;	//한글이 있으면 실패
+//			}
+//			
+//			if(i >= 'a' && i <='z') {
+//				check_alphabet = true;
+//				break;//5글자 이내고 20글자 이하의 한글과 기호가 없는 글자 중에 영어가 있으면 ok
+//			}
+//			else {
+//				check_alphabet = false;	//숫자만 있으면 실패
+//				break;
+//			}
+//		}//end of for-----------------------------
+//		
+//		//아이디에 알파벳이 있으면 true 리턴, 숫자만 있으면 false 리턴
+//		if(check_alphabet) {
+			this.user_id = user_id;
 			return true;
 //		}
+//		else {
+//			System.out.println("숫자만 입력은 안됩니다.");
+//			return false;	//숫자만 있으면 실패
+//		}
+		
 		
 	}//end of setUser_id---------------------------------------------
 	
@@ -86,14 +119,14 @@ public class MemberDTO {
 	public boolean setUser_passwd(String user_passwd) {
 //		// user_passwd ==> Ab3$
 //		boolean correct_pw = true;
-//		if (user_passwd == null)
-//			correct_pw = false;
+//		if (user_passwd.isBlank())
+//			return false;
 //
 //		// 예를 들어서
 //		// 입력받은 user_passwd 가 Ab3$ 이라면
 //		// 입력받은 user_passwd 가 Ab3$fsafawewfwga$%$sdADF 이라면
 //		if (user_passwd.length() < 8 || user_passwd.length() > 20)
-//			correct_pw = false;
+//			return false;
 //
 //		// 이제 부터는 입력받은 user_passwd의 글자수가 8글자 이상 15글자 이하인 경우이다
 //		// 예를들어서
@@ -122,13 +155,13 @@ public class MemberDTO {
 //
 //		if (find_lawer && find_number && find_special && find_upper && find_korean) { // 모든 조건을 충족 한다면
 			this.user_passwd = user_passwd;
-			return true;
 //			correct_pw = true;
 //		} else {
 //			System.out.println("비밀번호는 8글자 이상 20글자 이하의 영어 대소문자, 숫자 기호를 포함해야 합니다.");
 //			correct_pw = false;
 //		}
 //		return correct_pw;
+			return true;
 
 	}// end of setUser_passwd---------------------------------------------
 	
@@ -142,28 +175,31 @@ public class MemberDTO {
 		return user_name;
 	}
 	public boolean setUser_name(String user_name) {
-		//이름에 기호가 있는 지 검사하기 위한 변수
-		boolean check_symbol = true;
-		//이름에 기호를 검사하는 반복문
-		for(char i:user_name.toCharArray()) {
-			if(i >= '!' && i<= '/') {
-				check_symbol = false;	//기호가 있으면 false
-			}
-		}
-		
-		if(user_name.length()< 2 || user_name.length() > 20)
-		{
-			System.out.println("이름은 2글자 이하 20글자 이상이어야 합니다.");
-			return false;	//실패로 반환
-		}
-		else if(check_symbol == false) {
-			System.out.println("기호가 포함이 되면 안됩니다..");
-			return false;	//실패로 반환
-		}
-		else {
+//		//이름에 기호가 있는 지 검사하기 위한 변수
+//		boolean check_symbol = true;
+//		//이름에 기호를 검사하는 반복문
+//		for(char i:user_name.toCharArray()) {
+//			if(i >= '!' && i<= '/') {
+//				check_symbol = false;	//기호가 있으면 false
+//			}
+//		}
+//		
+//		//길이 파악 부분
+//		if(user_name.length()< 2 || user_name.length() > 20)
+//		{
+//			System.out.println("이름은 2글자 이하 20글자 이상이어야 합니다.");
+//			return false;	//실패로 반환
+//		}
+//		
+//		//기호가 포함여부로 실행
+//		if(!check_symbol) {
+//			System.out.println("기호가 포함이 되면 안됩니다..");
+//			return false;	//실패로 반환
+//		}
+//		else {
 			this.user_name = user_name;
 			return true;	//이름을 저장하고 참을 반환
-		}
+//		}
 	}//end of setUser_name ---------------------------------------------------
 	
 	
@@ -177,7 +213,7 @@ public class MemberDTO {
 	}
 
 	public boolean setUser_jubun(String user_jubun) {
-//		
+		
 //		//숫자만 입력했는지 검사 하는 try catch
 //		try {
 //			Integer.parseInt(user_jubun);
@@ -210,9 +246,25 @@ public class MemberDTO {
 		return user_email;
 	}
 	public boolean setUser_email(String uesr_email) {
-		//TODO 여기 부터 작성해야 함.
 		
+//		//길이검사
+//		if(user_email.length() < 3 || user_email.length() > 30) {
+//			System.out.println("올바른 값을 입력하세요");
+//			return false;
+//		}
+//		
+//		//한글 검사
+//		for(char i:user_name.toCharArray()) {
+//			
+//			if(i >= '가' && i <= '힣') {
+//				System.out.println("한글이 있으면 안됩니다.");
+//				return false;	//한글이 있으면 실패
+//			}
+//			
+//			
+//		}//end of for-----------------------------
 		
+		//길이가 맞고 한글이 없으면 통과!
 		this.user_email = uesr_email;
 		return true;
 	}
@@ -222,6 +274,21 @@ public class MemberDTO {
 		return user_tel;
 	}
 	public boolean setUser_tel(String user_tel) {
+		
+//		//일반회원은 전화번호 길이가 11글자인지 확인
+//		if(user_tel.length() != 11) {
+//			System.out.println("올바른 전화번호 값을 입력하세요");
+//			return false;
+//		}
+//		try {
+//			Integer.parseInt(user_tel);
+//		} catch(NumberFormatException e) {
+//			//문자가 포합되어 있다면 실행
+//			System.out.println("문자를 넣으면 안됩니다.");
+//			return false;
+//		}
+//		
+		
 		this.user_tel = user_tel;
 		return true;
 	}
@@ -264,6 +331,7 @@ public class MemberDTO {
 	public String getJob_type() {
 		return job_type;
 	}
+	//잡타입은 그냥 가지고 오는 거니깐 그냥 내비둠
 	public void setJob_type(String job_type) {
 		this.job_type = job_type;
 	}

@@ -34,7 +34,7 @@ public class CompanyDTO {
 	private String com_intro;		//기업소개
 	private String com_email;		//기업이메일
 	private String com_president;	//대표이사명
-	private int com_revenue;    	//매출
+	private long com_revenue;    	//매출
 	private String com_tel;			//전화번호
 	private String com_address;		//소재지
 	private int fk_job_tcode;		//업종코드
@@ -52,112 +52,126 @@ public class CompanyDTO {
 	}
 	
 	
-	public void setCom_no(int com_no) {
+	public boolean setCom_no(int com_no) {
 		this.com_no = com_no;
+		return true;
 	}
 	
 	
 	public String getCom_id() {
 		return com_id;
 	}
-	public void setCom_id(String com_id) {
+	public boolean setCom_id(String com_id) {
 		this.com_id = com_id;
+		return true;
 	}
 	
 	
 	public String getCom_passwd() {
 		return com_passwd;
 	}
-	public void setCom_passwd(String com_passwd) {
+	public boolean setCom_passwd(String com_passwd) {
 		this.com_passwd = com_passwd;
+		return true;
 	}
 	
 	
 	public String getCom_name() {
 		return com_name;
 	}
-	public void setCom_name(String com_name) {
+	public boolean setCom_name(String com_name) {
 		this.com_name = com_name;
+		return true;
 	}
 	
 	
 	public String getCom_intro() {
 		return com_intro;
 	}
-	public void setCom_intro(String com_intro) {
+	public boolean setCom_intro(String com_intro) {
 		this.com_intro = com_intro;
+		return true;
 	}
 	
 	
 	public String getCom_email() {
 		return com_email;
 	}
-	public void setCom_email(String com_email) {
+	public boolean setCom_email(String com_email) {
 		this.com_email = com_email;
+		return true;
 	}
 	
 	
 	public String getCom_president() {
 		return com_president;
 	}
-	public void setCom_president(String com_president) {
+	public boolean setCom_president(String com_president) {
 		this.com_president = com_president;
+		return true;
 	}
 	
 	
-	public int getCom_revenue() {
+	public long getCom_revenue() {
 		return com_revenue;
 	}
-	public void setCom_revenue(int com_revenue) {
+	public boolean setCom_revenue(long com_revenue) {
 		this.com_revenue = com_revenue;
+		return true;
 	}
 	
 	
 	public String getCom_tel() {
 		return com_tel;
 	}
-	public void setCom_tel(String com_tel) {
+	public boolean setCom_tel(String com_tel) {
 		this.com_tel = com_tel;
+		return true;
 	}
 	
 	
 	public String getCom_address() {
 		return com_address;
 	}
-	public void setCom_address(String com_address) {
+	public boolean setCom_address(String com_address) {
 		this.com_address = com_address;
+		return true;
 	}
 	
 	
 	public int getFk_job_tcode() {
 		return fk_job_tcode;
 	}
-	public void setFk_job_tcode(int fk_job_tcode) {
+	public boolean setFk_job_tcode(int fk_job_tcode) {
 		this.fk_job_tcode = fk_job_tcode;
+		return true;
 	}
 	
 	
 	public String getCom_regi() {
 		return com_regi;
 	}
-	public void setCom_regi(String com_regi) {
+	public boolean setCom_regi(String com_regi) {
 		this.com_regi = com_regi;
+		return true;
 	}
 	
 	
 	public int getCom_status() {
 		return com_status;
 	}
-	public void setCom_status(int com_status) {
+	public boolean setCom_status(int com_status) {
 		this.com_status = com_status;
+		return true;
 	}
 	
 	
 	public String getJob_type() {
 		return job_type;
 	}
-	public void setJob_type(String job_type) {
+	public boolean setJob_type(String job_type) {
 		this.job_type = job_type;
+		return true;
 	}
 	
 	

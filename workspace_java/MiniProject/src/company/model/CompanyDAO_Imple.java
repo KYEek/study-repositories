@@ -57,7 +57,7 @@ public class CompanyDAO_Imple implements CompanyDAO {
 			pstmt.setString(4, company.getCom_intro());
 			pstmt.setString(5, company.getCom_email());
 			pstmt.setString(6, company.getCom_president());
-			pstmt.setInt(7, company.getCom_revenue());
+			pstmt.setLong(7, company.getCom_revenue());
 			pstmt.setString(8, company.getCom_tel());
 			pstmt.setString(9, company.getCom_address());
 			pstmt.setInt(10, company.getFk_job_tcode());
@@ -113,11 +113,11 @@ public class CompanyDAO_Imple implements CompanyDAO {
 				company.setCom_no(rs.getInt("com_no"));
 				company.setCom_id(rs.getString("com_id"));
 				company.setCom_passwd(rs.getString("com_passwd"));
-				company.setCom_name(rs.getString("com_intro"));
+				company.setCom_name(rs.getString("com_name"));
 				company.setCom_intro(rs.getString("com_intro"));
 				company.setCom_email(rs.getString("com_email"));
 				company.setCom_president(rs.getString("com_president"));
-				company.setCom_revenue(rs.getInt("com_revenue"));
+				company.setCom_revenue(rs.getLong("com_revenue"));
 				company.setCom_tel(rs.getString("com_tel"));
 				company.setCom_address(rs.getString("com_address"));
 				company.setFk_job_tcode(rs.getInt("fk_job_tcode"));

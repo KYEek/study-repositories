@@ -7,6 +7,7 @@ import java.util.Scanner;
 import user.domain.CompanyDTO;
 import user.domain.MemberDTO;
 import company.model.*;
+import controlmyinfo.*;
 import member.model.*;
 import admin.model.*;
 
@@ -21,6 +22,13 @@ public class LoginController {
 	AdminDAO admin = new AdminDAO_Imple();		//admin dao
 	int user_condition = 0;	//현재 로그인한 유저가 누구인지 확인을 위한 것 1은 일반, 2는 기업, 3은 관리자
 	int menu_select = 0; //메뉴가 어디가 어디에 표시되게 할지 선택하는 변수
+	
+	
+	//임시로 내 정부 관리 메뉴를 위해서 만듬
+	Myinfo_Controller info_control = new Myinfo_Controller();
+	ControlCompanyInfo ctlcpinfo = new ControlCompanyInfo_Imple();
+	//---------------------------------
+	
 	
 	// 로그인 메뉴 표시를 위한 메소드
 	public void login_menu(Scanner sc) {
@@ -138,16 +146,18 @@ public class LoginController {
 						} else { // 관리자 회원일 시
 
 						}
+						break;
 						
 						
 					case "4": // 4번 메뉴 선택시
 						if (user_condition == 1) { // 일반 회원일 시
-
+							info_control.info_menu(member ,sc);
 						} else if (user_condition == 2) { // 기업 회원일 시
-
+							info_control.info_menu(company ,sc);
 						} else { // 관리자 회원일 시
 
 						}
+						break;
 
 					case "5": 		//로그아웃
 						
@@ -198,7 +208,7 @@ public class LoginController {
 
 		System.out.print("아이디 입력 : ");
 		login.put("userid", sc.nextLine()); // 아이디 입력
-		System.out.print("비밀번호 입력:");
+		System.out.print("비밀번호 입력 : ");
 		login.put("passwd", sc.nextLine()); // 비번 입력
 
 		boolean result = admin.login(login); // 성공되면 ture 실패면 null
@@ -228,7 +238,7 @@ public class LoginController {
 		
 		System.out.print("아이디 입력 : ");
 		login.put("userid", sc.nextLine()); 	//아이디 입력
-		System.out.print("비밀번호 입력:");
+		System.out.print("비밀번호 입력 : ");
 		login.put("passwd", sc.nextLine());		//비번 입력
 		
 		company = cdao.login(login);			//성공되면 company에 변수가 있고 없으면 null
@@ -256,7 +266,7 @@ public class LoginController {
 		
 		System.out.print("아이디 입력 : ");
 		login.put("userid", sc.nextLine()); 	//아이디 입력
-		System.out.print("비밀번호 입력:");
+		System.out.print("비밀번호 입력 : ");
 		login.put("passwd", sc.nextLine());		//비번 입력
 		
 		member = mdao.login(login);			//성공되면 company에 변수가 있고 없으면 null

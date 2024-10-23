@@ -37,7 +37,11 @@ insert into tbl_users(USER_NO, USER_ID, USER_PASSWD, USER_NAME, USER_JUBUN, USER
 values(USER_SEQ.nextval, 'kangdw', 'qwer1234$', '강동원', '93002281', 'gangdw@naver.com', '010-2234-5567', '서울시 마포구 창전동', 1);
 
 
+update tbl_users set USER_NAME = '메시', USER_TEL = '010-2312-4123', USER_ADDRESS = '강남구', FK_JOB_TCODE = 5 where user_no = '9999';   --개인 업데이트
+update tbl_companies set com_name = '삼전', com_TEL = '043-232-4123', com_ADDRESS = '강남구',com_president = '연규영' ,com_revenue = 2000000, FK_JOB_TCODE = 5 where com_no = 1004; --기업 업데이트
 
+
+rollback;
 commit;
 
 update tbl_companies set com_president = '이건희', com_tel = '02-1111-4444' where com_no = 1004;
@@ -60,4 +64,12 @@ where admin_ID = 'admin' and admin_passwd = 'qwer1234$';
 
 select admin_id, admin_passwd, admin_name from TBL_admin
 where admin_ID = 'admin' and admin_passwd = 'qwer1234$';
+-- 개인 탈퇴, 비번 변경
+update tbl_users set user_status = 0 where user_no = 14;
+update tbl_users set user_passwd = 'Qwer1234!' where user_no = 14;
+-- 기업 탈퇴, 비번 변경
+update tbl_companies set com_status = 0 where com_no = 1006;
+update tbl_companies set com_passwd = 'Qwer1234!' where com_no = 1006;
 
+rollback;
+commit;
