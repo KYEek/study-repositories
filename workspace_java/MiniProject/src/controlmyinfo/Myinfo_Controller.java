@@ -152,7 +152,8 @@ public class Myinfo_Controller {
 				boolean is_delete = leave_account(member, sc);		//만약 회원탈퇴 여부를 판단하기 위한 변수
 				if(is_delete) {			//만약 회원탈퇴가 성공했다면
 					member = null;		//로그인 된 member 값을 초기화 해주고
-					Main.main(null);	//메인으로 돌아간다
+					Main.check_delete = false;
+					return;	//메서드 종료
 				}
 				
 				break;	//회원탈퇴를 하지 않으면 계속 반복
