@@ -8,7 +8,7 @@ import user.domain.*;
 public class Myinfo_Controller {
 	
 	//임플 변수 생성
-	ControlCompanyInfo ctlinfo = new ControlCompanyInfo_Imple();
+	Control_Info ctlinfo = new Control_Info_Imple();
 	
 
 	// 기업 정보 수정 메뉴

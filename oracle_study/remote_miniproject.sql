@@ -57,6 +57,8 @@ select com_no, com_id, com_passwd, com_name, com_intro, com_email, com_president
 from TBL_companies join TBL_JOB_TYPES on FK_JOB_TCODE = JOB_CODE 
 where COM_ID = 'samsungelctronic' and COM_PASSWD = 'qwer1234$' and com_status = 1;
 
+select * from tbl_companies where com_id = 'amazon' and com_status = 1;
+
 
 -- 관리자 로그인
 select admin_id, admin_passwd, admin_name from TBL_admin
@@ -78,6 +80,90 @@ select user_id
 from tbl_users
 where user_name = '이지은' and user_email = 'iu@gmail.com' and user_status = 1;
 
+select * from tbl_companies where com_id = 'iu';
+
 
 rollback;
 commit;
+
+
+
+-- 아이디 찾기
+select user_id from tbl_users where user_name = '호날두' and user_email = 'ronaldo7@naver.com';
+select com_id from tbl_companies where com_name = '아마존' and com_email = 'amazon@gmail.com';
+
+--비번 변경
+update tbl_users set user_passwd = 'aa' where user_id = 'ronaldo' and user_name = '호날두' and user_email = 'ronaldo7@naver.com';
+update tbl_companies set com_passwd = 'aa' where com_id ='amazon' and com_name = '아마존' and com_email = 'amazon@gmail.com';
+
+
+--아이디 비교 
+select * from tbl_users where user_id = 'iu';
+select * from tbl_companies where com_id = 'amazon';
+select * from tbl_education;
+
+
+
+SELECT user_name, age, gender, user_email, edu_degree, major_name, res_career
+FROM
+(
+SELECT user_name, age, gender, user_email, edu_degree, fk_major_code, res_career, fk_edu_code
+FROM
+(
+SELECT user_name, func_age(user_jubun) AS age, func_gender(user_jubun) AS gender, user_email, fk_edu_code, fk_major_code, res_career
+FROM tbl_resumes R JOIN tbl_users U
+ON R.fk_user_no = U.user_no
+WHERE fk_major_code = 1
+)A JOIN tbl_education E
+ON A.fk_edu_code = E.edu_code
+)B JOIN tbl_major M
+ON B.fk_major_code = M.major_code
+UNION 
+SELECT user_name, age, gender, user_email, edu_degree, major_name, res_career
+FROM
+(
+SELECT user_name, age, gender, user_email, edu_degree, fk_major_code, res_career
+FROM
+(
+SELECT user_name, func_age(user_jubun) AS age, func_gender(user_jubun) AS gender, user_email, fk_edu_code, fk_major_code, res_career
+FROM tbl_resumes R JOIN tbl_users U
+ON R.fk_user_no = U.user_no
+WHERE fk_major_code = 1
+)A JOIN tbl_education E
+ON A.fk_edu_code = E.edu_code
+)B JOIN tbl_major M
+ON B.fk_major_code = M.major_code;
+
+
+
+
+
+
+SELECT user_name, age, gender, user_email, edu_degree, fk_major_code, res_career, fk_edu_code
+FROM
+(
+SELECT user_name, func_age(user_jubun) AS age, func_gender(user_jubun) AS gender, user_email, fk_edu_code, fk_major_code, res_career
+FROM tbl_resumes R JOIN tbl_users U
+ON R.fk_user_no = U.user_no
+WHERE fk_major_code = 1
+)A JOIN tbl_education E
+ON A.fk_edu_code = E.edu_code;
+
+select user_name, age, gender, A.user_email, fk_major_code, res_career, fk_edu_code
+from
+(
+    SELECT user_email, max(fk_edu_code)
+    FROM tbl_resumes R JOIN tbl_users U
+    ON R.fk_user_no = U.user_no
+    WHERE fk_major_code = 1
+    group by user_email
+)a join
+(
+    SELECT user_name, func_age(user_jubun) AS age, func_gender(user_jubun) AS gender, user_email, fk_edu_code, fk_major_code, res_career
+    FROM tbl_resumes R JOIN tbl_users U
+    ON R.fk_user_no = U.user_no
+    WHERE fk_major_code = 1
+) B
+on a.user_email = b.user_email;
+
+select * from tbl_companies where com_no = 1001;

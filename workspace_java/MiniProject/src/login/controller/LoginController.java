@@ -27,7 +27,7 @@ public class LoginController {
 	
 	//임시로 내 정부 관리 메뉴를 위해서 만듬
 	Myinfo_Controller info_control = new Myinfo_Controller();
-	ControlCompanyInfo ctlcpinfo = new ControlCompanyInfo_Imple();
+	Control_Info ctlcpinfo = new Control_Info_Imple();
 	//---------------------------------
 	
 	
@@ -59,18 +59,18 @@ public class LoginController {
 					//메뉴 번호 스위치문
 					switch (menuNum) {
 					case "1":		//개인 회원 로그인
-						is_exit= loginMember(sc);
-						
+						loginMember(sc);
+						is_exit = true;	//올바른 값이 입력이 되면 
 						break;
 						
 					case "2":		//기업회원 로그인
-						is_exit= loginCompany(sc);
-						
+						loginCompany(sc);
+						is_exit = true;
 						break;
 						
 					case "3": 		// 관리자 로그인
-						is_exit= loginAdmin(sc);
-						
+						loginAdmin(sc);
+						is_exit = true;
 						break;
 		
 					case "4": 		// 돌아가기

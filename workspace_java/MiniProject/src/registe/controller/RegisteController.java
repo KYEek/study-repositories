@@ -49,6 +49,7 @@ public class RegisteController {
 				
 				
 				is_exit = true;// 전 메뉴로 돌아가기
+				break;
 	
 			default:		//
 				System.out.println("올바른 값을 입력하세요!!");

@@ -61,47 +61,47 @@ public class MemberDTO {
 	}
 	public boolean setUser_id(String user_id) {
 		
-//		
-//		if(user_id.length() < 5 && user_id.length() > 20) {
-//			System.out.println("아이디는 5글자 이상 20글자 이하여야 합니다.");
-//			return false;
-//		}
-//		if(user_id.isBlank()) {
-//			System.out.println("공백은 안됩니다");
-//			return false;
-//		}
-//		
-//		boolean check_alphabet = false;		//영어가 있는지 파악하는 변수
-//		for(char i:user_id.toCharArray()) {
-//			if(i >= '!' && i<= '/') {
-//				System.out.println("기호가 있으면 안됩니다.");
-//				return false;	//기호가 있으면 false
-//			}
-//			
-//			if(i >= 10000) {
-//				System.out.println("한글이 있으면 안됩니다.");
-//				return false;	//한글이 있으면 실패
-//			}
-//			
-//			if(i >= 'a' && i <='z') {
-//				check_alphabet = true;
-//				break;//5글자 이내고 20글자 이하의 한글과 기호가 없는 글자 중에 영어가 있으면 ok
-//			}
-//			else {
-//				check_alphabet = false;	//숫자만 있으면 실패
-//				break;
-//			}
-//		}//end of for-----------------------------
-//		
-//		//아이디에 알파벳이 있으면 true 리턴, 숫자만 있으면 false 리턴
-//		if(check_alphabet) {
+		
+		if(user_id.length() < 5 && user_id.length() > 20) {
+			System.out.println("아이디는 5글자 이상 20글자 이하여야 합니다.");
+			return false;
+		}
+		if(user_id.isBlank()) {
+			System.out.println("공백은 안됩니다");
+			return false;
+		}
+		
+		boolean check_alphabet = false;		//영어가 있는지 파악하는 변수
+		for(char i:user_id.toCharArray()) {
+			if(i >= '!' && i<= '/') {
+				System.out.println("기호가 있으면 안됩니다.");
+				return false;	//기호가 있으면 false
+			}
+			
+			if(i >= 10000) {
+				System.out.println("한글이 있으면 안됩니다.");
+				return false;	//한글이 있으면 실패
+			}
+			
+			if(i >= 'a' && i <='z') {
+				check_alphabet = true;
+				break;//5글자 이내고 20글자 이하의 한글과 기호가 없는 글자 중에 영어가 있으면 ok
+			}
+			else {
+				check_alphabet = false;	//숫자만 있으면 실패
+				break;
+			}
+		}//end of for-----------------------------
+		
+		//아이디에 알파벳이 있으면 true 리턴, 숫자만 있으면 false 리턴
+		if(check_alphabet) {
 			this.user_id = user_id;
 			return true;
-//		}
-//		else {
-//			System.out.println("숫자만 입력은 안됩니다.");
-//			return false;	//숫자만 있으면 실패
-//		}
+		}
+		else {
+			System.out.println("숫자만 입력은 안됩니다.");
+			return false;	//숫자만 있으면 실패
+		}
 		
 		
 	}//end of setUser_id---------------------------------------------
