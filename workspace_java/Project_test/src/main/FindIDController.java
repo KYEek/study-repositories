@@ -2,10 +2,10 @@ package main;
 
 import java.util.Scanner;
 
-import main.company.model.*;
-import main.member.model.*;
-import main.user.domain.CompanyDTO;
-import main.user.domain.MemberDTO;
+import company.model.*;
+import member.model.*;
+import user.domain.CompanyDTO;
+import user.domain.MemberDTO;
 
 public class FindIDController {
 

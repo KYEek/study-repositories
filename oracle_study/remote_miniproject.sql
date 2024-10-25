@@ -1,6 +1,9 @@
 select *
 from tab;
 
+select *
+from tbl_resumes;
+
 
 
 select * from user_cons_columns where table_name = 'TBL_APPLYS';
@@ -28,6 +31,11 @@ select * from TBL_COMPANIES;
 select * from TBL_JOB_TYPES;
 select * from tbl_users;
 select * from tbl_admin;
+
+delete from tbl_users where user_id = 'iu';
+delete from tbl_companies where com_id = 'amazon'; 
+
+update tbl_companies set com_passwd = 'lg12345$' where com_no = 1002;
 
 
 insert into tbl_companies(COM_NO, COM_ID, COM_PASSWD, COM_NAME, COM_INTRO, COM_EMAIL, COM_PRESIDENT, COM_REVENUE, COM_TEL, COM_ADDRESS, FK_JOB_TCODE)
@@ -76,9 +84,9 @@ update tbl_companies set com_passwd = 'qwer1234!' where com_no = 1006;
 update tbl_users set user_status = 1 where user_no = 14;
 update tbl_companies set com_status = 1 where com_no = 1006;
 
-select user_id
-from tbl_users
-where user_name = '이지은' and user_email = 'iu@gmail.com' and user_status = 1;
+select com_id
+from tbl_companies
+where com_name = '아마존' and com_email = 'amazon@naver.com' and com_status = 1;
 
 select * from tbl_companies where com_id = 'iu';
 
@@ -93,7 +101,7 @@ select user_id from tbl_users where user_name = '호날두' and user_email = 'ro
 select com_id from tbl_companies where com_name = '아마존' and com_email = 'amazon@gmail.com';
 
 --비번 변경
-update tbl_users set user_passwd = 'aa' where user_id = 'ronaldo' and user_name = '호날두' and user_email = 'ronaldo7@naver.com';
+update tbl_users set user_passwd = 'qwer1234$' where user_id = 'leejy' and user_name = '이지은' and user_email = 'leejy@naver.com';
 update tbl_companies set com_passwd = 'aa' where com_id ='amazon' and com_name = '아마존' and com_email = 'amazon@gmail.com';
 
 
@@ -103,6 +111,10 @@ select * from tbl_companies where com_id = 'amazon';
 select * from tbl_education;
 
 
+update tbl_users set user_status = 1 where user_id = 'leejy' and user_name = '이지은' and user_email = 'leejy@naver.com';
+update tbl_companies set com_status = 1 where com_id ='amazon' and com_name = '아마존' and com_email = 'amazon@naver.com';
+
+commit;
 
 SELECT user_name, age, gender, user_email, edu_degree, major_name, res_career
 FROM

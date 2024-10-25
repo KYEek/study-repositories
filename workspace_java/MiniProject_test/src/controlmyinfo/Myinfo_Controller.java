@@ -8,7 +8,7 @@ import user.domain.*;
 public class Myinfo_Controller {
 	
 	//임플 변수 생성
-	ControlCompanyInfo ctlinfo = new ControlCompanyInfo_Imple();
+	Control_Info ctlinfo = new Control_Info_Imple();
 	
 
 	// 기업 정보 수정 메뉴
@@ -60,7 +60,8 @@ public class Myinfo_Controller {
 				boolean is_delete = leave_account(company, sc);		//만약 회원탈퇴 여부를 판단하기 위한 변수
 				if(is_delete) {			//만약 회원탈퇴가 성공했다면
 					company = null;		//로그인 된 company 값을 초기화 해주고
-					Main.main(null);	//메인으로 돌아간다
+					Main.check_delete = false;
+					return;
 				}
 				
 				break;	//회원탈퇴를 하지 않으면 계속 반복
@@ -131,6 +132,8 @@ public class Myinfo_Controller {
 			System.out.println("연락처 : " + member.getUser_tel());
 			System.out.println("주소 : " + member.getUser_address());
 			System.out.println("희망업종 : " + member.getFk_job_tcode());
+			//TODO 희망업종 이름으로 표시되게 하기
+			
 			
 			// 로그인 메뉴 표시
 			System.out.println("\n\n" + "—".repeat(17) + "로그인" + "—".repeat(17));
@@ -193,7 +196,6 @@ public class Myinfo_Controller {
 		boolean is_success = false;
 		
 		MemberDTO temp_member = new MemberDTO();
-		temp_member = member;
 
 		System.out.println("\n\n변경할 정보 입력 (변경 하지 않으려면 엔터를 입력 하세요)");
 		System.out.println("———————————————————————————————————————————————");
@@ -204,11 +206,12 @@ public class Myinfo_Controller {
 			System.out.print("이름 : ");
 
 			String input = sc.nextLine();		//입력 받기			
-			if(input.isEmpty()) {				//값이 비어있으면 그냥 넘어가기
+			if(input.isEmpty()) {				//값이 비어있으면 기존값 넣기
+				temp_member.setUser_name(member.getUser_name());
 				break;
 			}
 			
-			is_success = member.setUser_name(input);
+			is_success = temp_member.setUser_name(input);
 		} while (!is_success);//------------------------------------------ end of while
 
 		// 연락처 변경
@@ -216,11 +219,12 @@ public class Myinfo_Controller {
 			System.out.print("연락처 : ");
 			
 			String input = sc.nextLine();		//입력 받기			
-			if(input.isEmpty()) {				//값이 비어있으면 그냥 넘어가기
+			if(input.isEmpty()) {				//값이 비어있으면 기존값 넣기
+				temp_member.setUser_tel(member.getUser_tel());
 				break;
 			}
 			
-			is_success = member.setUser_tel(input);
+			is_success = temp_member.setUser_tel(input);
 		} while (!is_success);//------------------------------------------ end of while
 
 		// 주소 변경
@@ -228,11 +232,12 @@ public class Myinfo_Controller {
 			System.out.print("주소 : ");
 			
 			String input = sc.nextLine();		//입력 받기			
-			if(input.isEmpty()) {				//값이 비어있으면 그냥 넘어가기
+			if(input.isEmpty()) {				//값이 비어있으면 기존값 넣기
+				temp_member.setUser_address(member.getUser_address());
 				break;
 			}
 			
-			is_success = member.setUser_address(input);
+			is_success = temp_member.setUser_address(input);
 		} while (!is_success);//------------------------------------------ end of while
 		
 		
@@ -246,29 +251,44 @@ public class Myinfo_Controller {
 			
 			
 			String input = sc.nextLine();		//입력 받기			
-			if(input.isEmpty()) {				//값이 비어있으면 그냥 넘어가기
+			if(input.isEmpty()) {				//값이 비어있으면 기존값 넣기
+				temp_member.setFk_job_tcode(member.getFk_job_tcode());
 				break;
 			}
 	
 			try {
-				is_success = member.setFk_job_tcode(Integer.parseInt(input));
+				int inputnum = Integer.parseInt(input);
+				if(inputnum < 1 || inputnum > 5) {
+					System.out.println("범위 안에 있는 값에서 선택 하세요");
+				}
+				else {
+					is_success = temp_member.setFk_job_tcode(inputnum);
+				}
 			} catch (NumberFormatException e) {
+				
 				System.out.println("숫자만 입력하세요");
 			}//-------------------end of try catch
 			
+			
+			
+			
 		} while(!is_success);//------------------------------------------ end of while
 		
-		int n = ctlinfo.updateinfo(temp_member);
+		int n = 0 ;
 		
 		// y 또는 n 이 들어오기 전 까지 반복
 		while (true) {
 			// 수정전 확인 질문
 			System.out.print("수정 하시겠습니까?[Y/N] : ");
 			String yn = sc.nextLine();
-
+			System.out.println(temp_member.getUser_name());
 			// y면 sql실행, n이면 취소 후 메소드 끝내기, 잘못 넣으면
 			if ("y".equalsIgnoreCase(yn)) {
-				n = ctlinfo.updateinfo(temp_member);
+				member.setUser_name(temp_member.getUser_name());
+				member.setUser_tel(temp_member.getUser_tel());
+				member.setUser_address(temp_member.getUser_address());
+				member.setFk_job_tcode(temp_member.getFk_job_tcode());
+				n = ctlinfo.updateinfo(member);
 				break;
 			}
 			else if ("n".equalsIgnoreCase(yn)) {
@@ -303,7 +323,6 @@ public class Myinfo_Controller {
 		boolean is_success = false;
 		
 		CompanyDTO temp_company = new CompanyDTO();
-		temp_company = company;		//임시 변수로 기존 company 변수의 값을 옮겨와서 성공하면 기존 company에 복사 실패면 기존 컴퍼니는 그대로 있다.
 		
 		System.out.println("\n\n변경할 정보 입력 (변경 하지 않으려면 엔터를 입력 하세요)");
 		System.out.println("———————————————————————————————————————————————");
@@ -315,6 +334,7 @@ public class Myinfo_Controller {
 			
 			String input = sc.nextLine();		//입력 받기			
 			if(input.isEmpty()) {				//값이 비어있으면 그냥 넘어가기
+				temp_company.setCom_name(company.getCom_name());
 				break;
 			}
 			
@@ -327,6 +347,7 @@ public class Myinfo_Controller {
 			
 			String input = sc.nextLine();		//입력 받기		
 			if(input.isEmpty()) {				//값이 비어있으면 그냥 넘어가기
+				temp_company.setCom_tel(company.getCom_tel());
 				break;
 			}
 			
@@ -338,6 +359,7 @@ public class Myinfo_Controller {
 			System.out.print("주소 : ");
 			String input = sc.nextLine();			
 			if(input.isEmpty()) {				//값이 비어있으면 그냥 넘어가기
+				temp_company.setCom_address(company.getCom_address());
 				break;
 			}
 			is_success = temp_company.setCom_address(input);
@@ -348,6 +370,7 @@ public class Myinfo_Controller {
 			System.out.print("매출액 : ");
 			String input = sc.nextLine();			
 			if(input.isEmpty()) {				//값이 비어있으면 그냥 넘어가기
+				temp_company.setCom_revenue(company.getCom_revenue());
 				break;
 			}
 			is_success = temp_company.setCom_revenue(Long.parseLong(input));		//값이 있으면 값을 입력
@@ -358,6 +381,7 @@ public class Myinfo_Controller {
 			System.out.print("대표자명 : ");
 			String input = sc.nextLine();			
 			if(input.isEmpty()) {				//값이 비어있으면 그냥 넘어가기
+				temp_company.setCom_president(company.getCom_president());
 				break;
 			}
 			is_success = temp_company.setCom_president(input);		//값이 있으면 값을 입력
@@ -371,17 +395,31 @@ public class Myinfo_Controller {
 		System.out.println("1. IT    2. 제조   3. 서비스   4. 경영   5. 교육");
 		do {
 			System.out.print("업종코드 입력 : ");
-			String input = sc.nextLine();			
-			if(input.isEmpty()) {
+			
+			
+			String input = sc.nextLine();		//입력 받기			
+			if(input.isEmpty()) {				//값이 비어있으면 그냥 넘어가기
+				temp_company.setFk_job_tcode(company.getFk_job_tcode());
 				break;
 			}
+	
 			try {
-				is_success = temp_company.setFk_job_tcode(Integer.parseInt(input));		//값이 있으면 값을 입력
+				int inputnum = Integer.parseInt(input);
+				if(inputnum < 1 || inputnum > 5) {
+					System.out.println("범위 안에 있는 값에서 선택 하세요");
+				}
+				else {
+					is_success = temp_company.setFk_job_tcode(inputnum);
+				}
 			} catch (NumberFormatException e) {
+				
 				System.out.println("숫자만 입력하세요");
-			} // -------------------end of try catch
-
-		} while (!is_success);// ------------------------------------------ end of while
+			}//-------------------end of try catch
+			
+			
+			
+			
+		} while(!is_success);//------------------------------------------ end of while
 
 		int n = 0;
 		// y 또는 n 이 들어오기 전 까지 반복
@@ -392,7 +430,13 @@ public class Myinfo_Controller {
 
 			// y면 sql실행, n이면 취소 후 메소드 끝내기, 잘못 넣으면
 			if ("y".equalsIgnoreCase(yn)) {
-				n = ctlinfo.updateinfo(temp_company);
+				company.setCom_name(temp_company.getCom_name());
+				company.setCom_tel(temp_company.getCom_tel());
+				company.setCom_address(temp_company.getCom_address());
+				company.setCom_revenue(temp_company.getCom_revenue());
+				company.setCom_president(temp_company.getCom_president());
+				company.setFk_job_tcode(temp_company.getFk_job_tcode());
+				n = ctlinfo.updateinfo(company);
 				break;
 			}
 			else if ("n".equalsIgnoreCase(yn)) {
@@ -432,9 +476,13 @@ public class Myinfo_Controller {
 	// 개인 비밀번호 변경
 	private void update_mypasswd(MemberDTO member, Scanner sc) {
 		
-		System.out.print("바꿀 비밀번호를 입력하십시오 : ");
-		String passwd = sc.nextLine();
+		MemberDTO check_passwd = new MemberDTO();		//비밀번호 무결성 검사를 위한 변수
 		
+		String passwd="";	// 비밀번호 입력을 위한 변수
+		do {
+			System.out.print("바꿀 비밀번호를 입력하십시오 : ");
+			passwd = sc.nextLine();
+		} while(!check_passwd.setUser_passwd(passwd));		//set에서 무결성 검사를 합니다.
 		int n = 0;
 		// y 또는 n 이 들어오기 전 까지 반복
 		while (true) {
@@ -477,8 +525,13 @@ public class Myinfo_Controller {
 	// 기업 비밀번호 변경
 	private void update_mypasswd(CompanyDTO company, Scanner sc) {
 		
-		System.out.print("바꿀 비밀번호를 입력하십시오 : ");
-		String passwd = sc.nextLine();
+		CompanyDTO check_passwd = new CompanyDTO();		//비밀번호 무결성 검사를 위한 변수
+		
+		String passwd="";	// 비밀번호 입력을 위한 변수
+		do {
+			System.out.print("바꿀 비밀번호를 입력하십시오 : ");
+			passwd = sc.nextLine();
+		} while(!check_passwd.setCom_passwd(passwd));		//set에서 무결성 검사를 합니다.
 		
 		int n = 0;
 		// y 또는 n 이 들어오기 전 까지 반복

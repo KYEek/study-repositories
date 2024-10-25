@@ -4,49 +4,51 @@ import service.JobPostDAO_imple;
 import java.util.List;
 import java.util.Scanner;
 import member.domain.JobPostDTO;
-import member.domain.MemberDTO;
+import main.user.domain.*;
+
 public class JobPostController {
+	
        private JobPostDAO jobPostService = new JobPostDAO_imple();
   
     // 사용자 메뉴 선택을 처리하는 메소드
-    public void menuJobPost(MemberDTO member, Scanner scanner) {
-        do {
-            System.out.println(">> ---- 메뉴 [일반회원 " + member.getUser_name() + " 로그인 중..] ---- <<");
-            System.out.println("-----------------------------------------------------");
-            System.out.println("1. 이력서 관리  2. 채용 공고  3. 기업정보 조회");
-            System.out.println("4. 내 정보 관리  5. 로그아웃");
-            System.out.println("-----------------------------------------------------");
-            System.out.print("▶ 메뉴 번호를 입력하세요: ");
-
-            String choice = scanner.nextLine();
-            scanner.nextLine();  // 다음 줄을 읽기 위해 추가
-
-            switch (choice) {
-                case "1":
-                    // 이력서 관리 
-                    break;
-               
-                case "2":
-                    JobPostMenu(scanner);
-                    break;
-                
-                case "3":
-                    // 기업정보 조회
-                    break;
-                
-                case "4":
-                    // 내 정보 
-                    break;
-                
-                case "5":
-                    System.out.println(">> ---- 로그아웃 되었습니다!! ---- <<");
-                    return;  // 메소드 종료 (로그아웃)
-                
-                default:
-                    System.out.println("\n [경고]:잘못된 선택입니다! 다시 시도하세요.\n");
-            }
-        } while(true);
-    }
+//    public void menuJobPost(MemberDTO member, Scanner scanner) {
+//        do {
+//            System.out.println(">> ---- 메뉴 [일반회원 " + member.getUser_name() + " 로그인 중..] ---- <<");
+//            System.out.println("-----------------------------------------------------");
+//            System.out.println("1. 이력서 관리  2. 채용 공고  3. 기업정보 조회");
+//            System.out.println("4. 내 정보 관리  5. 로그아웃");
+//            System.out.println("-----------------------------------------------------");
+//            System.out.print("▶ 메뉴 번호를 입력하세요: ");
+//
+//            String choice = scanner.nextLine();
+//            scanner.nextLine();  // 다음 줄을 읽기 위해 추가
+//
+//            switch (choice) {
+//                case "1":
+//                    // 이력서 관리 
+//                    break;
+//               
+//                case "2":
+//                    JobPostMenu(scanner);
+//                    break;
+//                
+//                case "3":
+//                    // 기업정보 조회
+//                    break;
+//                
+//                case "4":
+//                    // 내 정보 
+//                    break;
+//                
+//                case "5":
+//                    System.out.println(">> ---- 로그아웃 되었습니다!! ---- <<");
+//                    return;  // 메소드 종료 (로그아웃)
+//                
+//                default:
+//                    System.out.println("\n [경고]:잘못된 선택입니다! 다시 시도하세요.\n");
+//            }
+//        } while(true);
+//    }
 
     // 채용 공고 관련 메뉴를 처리하는 메소드
     public void JobPostMenu(MemberDTO member, Scanner scanner) {
@@ -58,12 +60,12 @@ public class JobPostController {
             System.out.print("▶ 메뉴 번호를 입력하세요: ");
 
             String choice = scanner.nextLine();
-            scanner.nextLine();
 
             switch (choice) {
                
             case "1":
-                   showJobPostMenu();  // 공고 조회 메뉴
+                   showJobPostMenu(scanner);  // 공고 조회 메뉴 
+                   
                    break;
                 
             case "2": // 공고 지원 로직
@@ -81,12 +83,44 @@ public class JobPostController {
     }
     
     
+    // 채용 공고 관련 메뉴를 처리하는 메소드
+    public void JobPostMenu(Scanner scanner) {
+       do { 
+            System.out.println("\n>> ---- 채용 공고 ---- <<");
+            System.out.println("--------------------------------------------");
+            System.out.println("1. 공고 조회    2. 공고 지원    3. 돌아가기");
+            System.out.println("--------------------------------------------");
+            System.out.print("▶ 메뉴 번호를 입력하세요: ");
+
+            String choice = scanner.nextLine();
+            scanner.nextLine();
+
+            switch (choice) {
+               
+            case "1":
+                   showJobPostMenu(scanner);  // 공고 조회 메뉴
+                   break;
+                
+            case "2": // 공고 지원 로직
+                  applyshowjobPostMenu(); // 공고 지원 메뉴
+                   break;
+                
+            case "3":
+            
+                   return;  // 채용 공고 메뉴 종료
+                
+            default:
+                 System.out.println("\n [경고]:잘못된 선택입니다! 다시 시도하세요.\n");
+            }
+        } while(true); 
+    }
+   
     
 
 
-    public void showJobPostMenu() {
-        Scanner scanner = new Scanner(System.in);
-        int menuChoice;
+    public void showJobPostMenu(Scanner scanner ) {
+         
+         int menuChoice;
 
         do {
             System.out.println("\n>> ----  공고 조회 ---- <<");
@@ -107,36 +141,101 @@ public class JobPostController {
                 System.out.print("상세 조회를 하시겠습니까? [Y/N]: ");
                 scanner.nextLine(); // 버퍼 비우기
 
+              
+
+                String continueChoice = scanner.nextLine();
+                if (continueChoice.equalsIgnoreCase("Y")) {
+                    showJobPostDetailMenu(scanner);  // 상세 조회 메소드 호출
+                }
+                break;
+
+                case 2: // 조건검색조회
+                   showConditionSearchMenu(scanner);
+                   break;
+
+                case 3:
+                   /// 내가 지원한 공고 조회
+                   
+                   displayAppliedJobPosts(scanner);
+                   break;
+
+                   case 4:
+                     // 돌아가기
+                  
+                   return;
+
+                   default:
+                        System.out.println("\n [경고]:잘못된 선택입니다! 다시 시도하세요.\n");
+            }
+        } while (menuChoice != 4);  // 메뉴 번호가 4가 아닐 경우 반복
+    }
+   
+
+/*
+    public void showJobPostMenu(Scanner scanner) {
+        
+        String menuChoice;
+
+        do {
+            System.out.println("\n>> ----  공고 조회 ---- <<");
+            System.out.println("-----------------------------------------------------------------");
+            System.out.println("  1. 공고리스트(상세)조회  2. 조건 검색 조회");
+            System.out.println("  3. 내가 지원한 공고 조회   4.돌아가기 ");
+            System.out.println("-----------------------------------------------------------------");
+            System.out.print("▶ 메뉴 번호를 입력하세요: ");
+            menuChoice = scanner.nextLine();
+
+            switch (menuChoice) {
+            case "1": // 공고 상세 조회
+                 // 전체 공고 리스트 출력
+                displayAllJobPosts();
+
+                // 사용자에게 상세 조회 여부 물어보기
+                System.out.print("상세 조회를 하시겠습니까? [Y/N]: ");
+
                 String continueChoice = scanner.nextLine();
                 if (continueChoice.equalsIgnoreCase("Y")) {
                     showJobPostDetailMenu(scanner);  // 상세 조회 메서드 호출
                 }
                 break;
 
-                case 2: // 조건검색조회
+                case "2": // 조건검색조회
                 	showConditionSearchMenu(scanner);
                     break;
 
-                case 3:
+                case "3":
                 	/// 내가 지원한 공고 조회
                 	
                 	displayAppliedJobPosts(scanner);
                     break;
 
-                case 4:
+                case "4":
                 	  // 돌아가기
-                    System.out.println("메뉴를 종료합니다.");
-                    break;
+                
+                	return;
 
        
 
                 default:
-                	  System.out.println("\n [경고]:잘못된 선택입니다! 다시 시도하세요.\n");
-            }
-        } while (menuChoice != 4); // 메뉴 번호가 4가 아닐 경우 반복
-    }
+                	   
+                	   System.out.println("\n [경고]:잘못된 선택입니다! 다시 시도하세요.\n");               	  
+                	  /*
+						>> ----  공고 조회 ---- <<
+						-----------------------------------------------------------------
+						  1. 공고리스트(상세)조회  2. 조건 검색 조회
+						  3. 내가 지원한 공고 조회   4.돌아가기 
+						-----------------------------------------------------------------
+						▶ 메뉴 번호를 입력하세요: 
+						 [경고]:잘못된 선택입니다! 다시 시도하세요.
+						 왜 다시 공고조회가 되는지 의문
+						 
+                      */ 
+                	    
+  //          }
+//        } while (menuChoice != "4"); // 메뉴 번호가 4가 아닐 경우 반복
+  //  }
    
-   
+
    
 private void displayAllJobPosts() {
     List<JobPostDTO> jobPosts = jobPostService.getAllJobPosts();  // 모든 공고를 조회
@@ -177,7 +276,6 @@ private void displayAllJobPosts() {
 //    상세 공고 번호 입력시 상세 공고를 볼 수 있는 메소드
 private void displayJobPostDetail(JobPostDTO jobPost) {
 	if (jobPost != null) {
-		System.out.println("                                ↓");
 		System.out.printf("%-10s %-10s %-30s%n", "기업명", "직종명", "공고 제목");
 		System.out.println("-------------------------------------------");
 		System.out.printf("%-10s %-10s %-30s%n", jobPost.getCom_name() != null ? jobPost.getCom_name() : "N/A", // 기업명
@@ -186,7 +284,7 @@ private void displayJobPostDetail(JobPostDTO jobPost) {
 		System.out.println("---------------------------------------------");
 		System.out.println("내용: " + (jobPost.getPost_contents() != null ? jobPost.getPost_contents() : "내용 없음")); // 공고
 																													 // 내용
-		System.out.println("▶  (뒤로가려면 엔터를 누르십시오)");
+		// System.out.println("▶  (뒤로가려면 엔터를 누르십시오)");
 	} else {
 		System.out.println("해당 공고를 찾을 수 없습니다.");
 	}
@@ -233,8 +331,8 @@ private void showConditionSearchMenu(Scanner scanner) {
     System.out.println("-------------------------------------------------");
    
     // 조건 검색을 실행하는 로직 추가
-    List<JobPostDTO> filteredPosts = jobPostService.searchJobPosts(jop_postno, com_name, wage, job_type);
-    displayFilteredJobPosts(filteredPosts);
+   // List<JobPostDTO> filteredPosts = jobPostService.searchJobPosts(jop_postno, com_name, wage, job_type);
+   // displayFilteredJobPosts(filteredPosts);
 
     
     System.out.println("▶  (뒤로가려면 엔터를 누르십시오) ");
@@ -272,7 +370,7 @@ private void displayFilteredJobPosts(List<JobPostDTO> jobPosts) {
         }
         System.out.println(sb.toString());
     }
-   }
+}
 
     
     
@@ -343,6 +441,19 @@ private void applyshowjobPostMenu() {
              // 지원할 이력서 번호 입력
              System.out.print("▶ 지원할 이력서 번호 입력: ");
              int resume_no = scanner.nextInt(); // 입력 대기
+
+             System.out.println("정말로 공고에 지원하시겠습니까? [Y/N]: ");
+             String yn = scanner.nextLine(); 
+             
+             if ("y".equalsIgnoreCase(yn)) {
+            	 
+             } else if 
+            	
+                ("n".equalsIgnoreCase(yn)) {
+             } else {
+            	  System.out.println("제대로 입력하세요!!!!");
+             }
+             
 
              // 추가 처리 로직 (공고 지원)
              break;

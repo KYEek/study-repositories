@@ -8,13 +8,8 @@ import user.domain.CompanyDTO;
 import user.domain.MemberDTO;
 import company.model.*;
 import controlmyinfo.*;
-import job_posts.domain.JobpostDTO;
-import jobpost.controller.JobPostController;
 import main.Main;
 import member.model.*;
-import resume.controller.ResumeController;
-import review.controller.MbrReviewController;
-import admin.controller.AdminController;
 import admin.model.*;
 
 
@@ -23,22 +18,16 @@ public class LoginController {
 	
 	MemberDTO member = null;	//멤버 변수
 	CompanyDTO company = null; //컴퍼니 변수
-	JobpostDTO jobpost = new JobpostDTO();
-	JobPostController jobPostController = new JobPostController();  
 	CompanyDAO cdao = new CompanyDAO_Imple();	//컴퍼니 dao
 	MemberDAO mdao = new MemberDAO_Imple();		//멤버 dao
 	AdminDAO admin = new AdminDAO_Imple();		//admin dao
 	int user_condition = 0;	//현재 로그인한 유저가 누구인지 확인을 위한 것 1은 일반, 2는 기업, 3은 관리자
 	int menu_select = 0; //메뉴가 어디가 어디에 표시되게 할지 선택하는 변수
-	ResumeController resume = new ResumeController();
 	
-	
-	AdminController adctrl = new AdminController();
-	MbrReviewController mreview = new MbrReviewController();
 	
 	//임시로 내 정부 관리 메뉴를 위해서 만듬
 	Myinfo_Controller info_control = new Myinfo_Controller();
-	ControlCompanyInfo ctlcpinfo = new ControlCompanyInfo_Imple();
+	Control_Info ctlcpinfo = new Control_Info_Imple();
 	//---------------------------------
 	
 	
@@ -46,7 +35,7 @@ public class LoginController {
 	public void login_menu(Scanner sc) {
 		
 		
-		
+		menu_select = 0;	//회원 탈퇴 후 메인 메뉴 돌아온 후 다시 처음 메뉴를 보여주기 위해서
 		
 		String menuNum = null;		//메뉴 번호를 입력 받기 위한 변수
 		boolean is_exit = false;	//반복문 탈출을 위한 변수 true 면 탈출 false 면 남아있기
@@ -71,7 +60,6 @@ public class LoginController {
 					switch (menuNum) {
 					case "1":		//개인 회원 로그인
 						loginMember(sc);
-						menu_select = 1;
 						is_exit = true;	//올바른 값이 입력이 되면 
 						break;
 						
@@ -121,10 +109,8 @@ public class LoginController {
 					}
 					else {
 						// 관리자 회원 메뉴 화면
-						adctrl.admin_menu(sc);
-						menu_select = 0;
-						break;
-						
+						System.out.println("\n\n"+"—".repeat(17) + "메뉴 [관리자] 님이 로그인중]" +"—".repeat(17));
+						System.out.println("1.이력서 2.로그아웃");
 					}
 					
 					
@@ -136,7 +122,7 @@ public class LoginController {
 					switch (menuNum) {
 					case "1":		//1번 메뉴 선택시
 						if(user_condition == 1) { 			//일반 회원일 시
-							resume.resume_menu(sc, member);
+							
 						}
 						else if(user_condition == 2) {		//기업 회원일 시
 							
@@ -150,7 +136,6 @@ public class LoginController {
 					case "2": // 2번 메뉴 선택시
 						if (user_condition == 1) { // 일반 회원일 시
 
-							jobPostController.JobPostMenu(sc);
 						} else if (user_condition == 2) { // 기업 회원일 시
 
 						} else { // 관리자 회원일 시
@@ -161,7 +146,7 @@ public class LoginController {
 						
 					case "3": // 3번 메뉴 선택시
 						if (user_condition == 1) { // 일반 회원일 시
-							mreview.Company_review_memu(sc, company, member, jobpost);
+
 						} else if (user_condition == 2) { // 기업 회원일 시
 
 						} else { // 관리자 회원일 시
@@ -186,7 +171,6 @@ public class LoginController {
 						menu_select = 0;	//반복문 탈출 후 첫번째 메뉴를 표시해주기 위해서 설정
 						
 						// 로그 아웃시 각 유저에 대한 정보 초기화
-						admin =  null;
 						member = null;
 						company = null;
 						

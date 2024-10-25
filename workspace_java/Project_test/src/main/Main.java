@@ -3,8 +3,8 @@ package main;
 import java.util.Scanner;
 
 import common.ProjectDBConnection;
-import main.login.controller.LoginController;
-import main.registe.controller.RegisteController;
+import login.controller.LoginController;
+import registe.controller.RegisteController;
 
 public class Main {
 
@@ -19,14 +19,14 @@ public class Main {
 		LoginController loginCtl = new LoginController();
 		FindIDController findID = new FindIDController();
 
-		Main.check_delete = true;		// 메인 메뉴로 돌아오면 메뉴들을 반복 하기 위해서 true로 설정
+		
 		
 		String menuNum = null;//메뉴 번호 입력 받기 위한 변수
 		
 		boolean is_exit = false;	//반복문 탈출을 위한 변수 true 면 탈출 false 면 남아있기
 		while(!is_exit) {
 			
-
+			Main.check_delete = true;		// 메인 메뉴로 돌아오면 메뉴들을 반복 하기 위해서 true로 설정
 			
 			//시작메뉴 프린트 아웃
 			System.out.println("\n"+"—".repeat(17) + "시작메뉴" +"—".repeat(17));

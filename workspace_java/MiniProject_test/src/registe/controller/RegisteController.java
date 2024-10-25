@@ -49,6 +49,7 @@ public class RegisteController {
 				
 				
 				is_exit = true;// 전 메뉴로 돌아가기
+				break;
 	
 			default:		//
 				System.out.println("올바른 값을 입력하세요!!");
@@ -121,14 +122,30 @@ public class RegisteController {
 		System.out.println("1. IT    2. 제조   3. 서비스   4. 경영   5. 교육");
 		do {
 			System.out.print("업종코드 입력 : ");
+			
+			
+			String input = sc.nextLine();		//입력 받기			
+			if(input.isEmpty()) {				//값이 비어있으면 그냥 넘어가기
+				break;
+			}
+	
 			try {
-				check_current = company.setFk_job_tcode(Integer.parseInt(sc.nextLine()));
+				int inputnum = Integer.parseInt(input);
+				if(inputnum < 1 || inputnum > 5) {
+					System.out.println("범위 안에 있는 값에서 선택 하세요");
+				}
+				else {
+					check_current = company.setFk_job_tcode(inputnum);
+				}
 			} catch (NumberFormatException e) {
 				
-				System.out.println("숫자를 입력하세요.");
-				check_current = false;
-			}
-		} while (!check_current);
+				System.out.println("숫자만 입력하세요");
+			}//-------------------end of try catch
+			
+			
+			
+			
+		} while(!check_current);//------------------------------------------ end of while
 
 		// n은 결과값이 어떻게 되었는지 확인 하기 위한 변수 -1이면 sql이 실행되지 않음 0이면 취소 1이면 성공
 		int n = -1;
@@ -201,15 +218,26 @@ public class RegisteController {
 		System.out.println("업종 종류\t");
 		System.out.println("-------------------------------------------");
 		System.out.println("1. IT    2. 제조   3. 서비스   4. 경영   5. 교육");
-		while (!check_currect) {
+		do {
 			System.out.print("업종코드 입력 : ");
-			try {
-			check_currect = member.setFk_job_tcode(Integer.parseInt(sc.nextLine()));
-			} catch (NumberFormatException e) {
-				System.out.println("숫자를 입력하세요.");
-				check_currect = false;
+
+			String input = sc.nextLine(); // 입력 받기
+			if (input.isEmpty()) { // 값이 비어있으면 그냥 넘어가기
+				break;
 			}
-		}
+
+			try {
+				int inputnum = Integer.parseInt(input);
+				if (inputnum < 1 || inputnum > 5) {
+					System.out.println("범위 안에 있는 값에서 선택 하세요");
+				} else {
+					check_currect = member.setFk_job_tcode(inputnum);
+				}
+			} catch (NumberFormatException e) {
+
+				System.out.println("숫자만 입력하세요");
+			} // -------------------end of try catch
+		} while (!check_currect);
 		// n은 결과값이 어떻게 되었는지 확인 하기 위한 변수 -1이면 sql이 실행되지 않음 0이면 취소 1이면 성공
 		int n = -1;
 

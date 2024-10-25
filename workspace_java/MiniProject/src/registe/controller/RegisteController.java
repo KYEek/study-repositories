@@ -2,6 +2,7 @@ package registe.controller;
 
 import java.util.Scanner;
 
+import admin.util.Util;
 import company.model.CompanyDAO;
 import company.model.CompanyDAO_Imple;
 import user.domain.CompanyDTO;
@@ -78,7 +79,12 @@ public class RegisteController {
 		boolean check_current = false; // 입력값이 맞는지 체크
 		do {
 			System.out.print("아이디 입력 : ");
-			check_current = company.setCom_id(sc.nextLine());
+			String inputID = sc.nextLine();
+			check_current = company.setCom_id(inputID);
+			if (cdao.compareID(company)) {
+				check_current = false;
+				System.out.println("존재하는 아이디 입니다.");
+			}
 		} while (!check_current);
 		do {
 			System.out.print("비밀번호 입력 : ");
@@ -122,14 +128,30 @@ public class RegisteController {
 		System.out.println("1. IT    2. 제조   3. 서비스   4. 경영   5. 교육");
 		do {
 			System.out.print("업종코드 입력 : ");
+			
+			
+			String input = sc.nextLine();		//입력 받기			
+			if(input.isEmpty()) {				//값이 비어있으면 그냥 넘어가기
+				break;
+			}
+	
 			try {
-				check_current = company.setFk_job_tcode(Integer.parseInt(sc.nextLine()));
+				int inputnum = Integer.parseInt(input);
+				if(inputnum < 1 || inputnum > 5) {
+					System.out.println("범위 안에 있는 값에서 선택 하세요");
+				}
+				else {
+					check_current = company.setFk_job_tcode(inputnum);
+				}
 			} catch (NumberFormatException e) {
 				
-				System.out.println("숫자를 입력하세요.");
-				check_current = false;
-			}
-		} while (!check_current);
+				System.out.println("숫자만 입력하세요");
+			}//-------------------end of try catch
+			
+			
+			
+			
+		} while(!check_current);//------------------------------------------ end of while
 
 		// n은 결과값이 어떻게 되었는지 확인 하기 위한 변수 -1이면 sql이 실행되지 않음 0이면 취소 1이면 성공
 		int n = -1;
@@ -178,10 +200,17 @@ public class RegisteController {
 			System.out.print("이름 입력 : ");
 			check_currect = member.setUser_name(sc.nextLine());
 		}
-		check_currect = false;		//성공여부 초기화
+		check_currect = false;		//성공여부 초기화	
 		while(!check_currect) {
 			System.out.print("주민번호 앞 7자리 입력 : ");
-			check_currect = member.setUser_jubun(sc.nextLine());
+			String jubun = sc.nextLine();
+			check_currect = Util.check_jubun(jubun);			//주민번호 체크 후 참일경우 값을 입력
+			if(check_currect) {
+				check_currect = member.setUser_jubun(jubun);
+			}
+			else {
+				System.out.println("올바른 날자를 입력하세요");
+			}
 		}
 		check_currect = false;		//성공여부 초기화
 		while(!check_currect) {
@@ -202,15 +231,26 @@ public class RegisteController {
 		System.out.println("업종 종류\t");
 		System.out.println("-------------------------------------------");
 		System.out.println("1. IT    2. 제조   3. 서비스   4. 경영   5. 교육");
-		while (!check_currect) {
+		do {
 			System.out.print("업종코드 입력 : ");
-			try {
-			check_currect = member.setFk_job_tcode(Integer.parseInt(sc.nextLine()));
-			} catch (NumberFormatException e) {
-				System.out.println("숫자를 입력하세요.");
-				check_currect = false;
+
+			String input = sc.nextLine(); // 입력 받기
+			if (input.isEmpty()) { // 값이 비어있으면 그냥 넘어가기
+				break;
 			}
-		}
+
+			try {
+				int inputnum = Integer.parseInt(input);
+				if (inputnum < 1 || inputnum > 5) {
+					System.out.println("범위 안에 있는 값에서 선택 하세요");
+				} else {
+					check_currect = member.setFk_job_tcode(inputnum);
+				}
+			} catch (NumberFormatException e) {
+
+				System.out.println("숫자만 입력하세요");
+			} // -------------------end of try catch
+		} while (!check_currect);
 		// n은 결과값이 어떻게 되었는지 확인 하기 위한 변수 -1이면 sql이 실행되지 않음 0이면 취소 1이면 성공
 		int n = -1;
 

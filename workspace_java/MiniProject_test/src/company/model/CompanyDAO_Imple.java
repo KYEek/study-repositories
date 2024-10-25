@@ -139,6 +139,122 @@ public class CompanyDAO_Imple implements CompanyDAO {
 		return company;
 	}
 
+
+
+
+
+	//아이디 찾기 메서드
+	@Override
+	public String find_ID(CompanyDTO company ) {
+
+
+		String sql = " select com_id from tbl_companies where com_name = ? and com_email = ? and com_status = 1 ";
+
+
+		String result = null; // 결과를 저장하는 문자열, 실패시 널을 반환
+
+		try {
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, company.getCom_name()); // 입력받은 이름 설정
+			pstmt.setString(2, company.getCom_email()); // 입력받은 이메일 설정
+			rs = pstmt.executeQuery();
+
+			// 있는지 검사
+			if (rs.next()) {
+
+				result = rs.getString("com_id"); // 결과값 저장
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+
+		return result;
+		
+	}//end of find_ID-----------------------------------------------------------------------
+
+
+
+
+
+	//아이디 비교 메서드
+	@Override
+	public boolean compareID(CompanyDTO company) {
+		
+		String sql = " select * from tbl_companies where com_id = ? and com_status = 1 ";
+
+		
+		boolean result = false; // 아이디가 있는지 없는지 비교
+
+		try {
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, company.getCom_id()); // 입력받은 아이디 설정
+			rs = pstmt.executeQuery();
+
+			// 있는지 검사
+			if (rs.next()) {
+
+				result = true;
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+
+		return result;
+		
+		
+		
+	}
+
+
+
+
+
+	//비밀번호 초기화
+	@Override
+	public int reset_passwd(CompanyDTO company) {
+
+		String sql = " update tbl_companies set com_passwd = ? where com_id =? and com_name = ? and com_email = ? and com_status = 1 ";
+		
+		//결과 성공 여부 반환을 위한 변수
+		int result = 0;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, company.getCom_passwd());
+			pstmt.setString(2, company.getCom_id());
+			pstmt.setString(3, company.getCom_name());
+			pstmt.setString(4, company.getCom_email());
+			
+			
+			// sql 실행
+			result = pstmt.executeUpdate();
+			
+			
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return result;
+		
+	}
+
+	
+	
+	
 	
 	
 }
