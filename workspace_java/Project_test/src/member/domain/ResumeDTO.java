@@ -1,6 +1,4 @@
-package resume.domain;
-
-import main.user.domain.MemberDTO;
+package member.domain;
 
 public class ResumeDTO {// resumeDTO 는 tbl_resumes 테이블에 해당.
 	
@@ -17,17 +15,9 @@ public class ResumeDTO {// resumeDTO 는 tbl_resumes 테이블에 해당.
 	private int fk_work_tcode;		// 고용형태코드
 	
 	
-	///// select 용 field
-	private MemberDTO mbdto;		// !!! JOIN 해서 SELECT 하는 용도, 자식(board) 테이블에 부모(member) 테이블을 객체를 가져옴 !!!
-	private int age;
-	private String gender;
-	private String  edu_degree;
-	private String major_name;
-	private String work_type;
 	
 	// method, operation, 기능
-
-
+	
 	// 이력서 번호
 	public int getResume_no() {
 		return resume_no;
@@ -117,65 +107,6 @@ public class ResumeDTO {// resumeDTO 는 tbl_resumes 테이블에 해당.
 		this.fk_work_tcode = fk_work_tcode;
 	}
 	
-	
-	// 멤버불러오기
-	public MemberDTO getMbdto() {
-		return mbdto;
-	}
-	public void setMbdto(MemberDTO mbdto) {
-		this.mbdto = mbdto;
-	}
-	
-	
-	// 나이
-	public int getAge() {
-		return age;
-	}
-	public void setAge(int age) {
-		this.age = age;
-	}
 		
-	
-	// 성별
-	public String getGender() {
-		return gender;
-	}
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
-	
-	
-	// 학력
-	public String getEdu_degree() {
-		return edu_degree;
-	}
-	public void setEdu_degree(String edu_degree) {
-		this.edu_degree = edu_degree;
-	}
-	
-	
-	// 전공
-	public String getMajor_name() {
-		return major_name;
-	}
-	public void setMajor_name(String major_name) {
-		this.major_name = major_name;
-	}
-	
-	
-	// 고용형태
-	public String getWork_type() {
-		return work_type;
-	}
-	public void setWork_type(String work_type) {
-		this.work_type = work_type;
-	}
-	
-	/////////////////////////
-	public String resumeInfo() {
-		// 이력서번호  작성자명  나이  제목  작성일자
-		return resume_no +"\t"+ mbdto.getUser_name() +"\t"+ age +"\t"+ res_title +"\t\t"+ res_regiday+"\n";
-	}// end of public String boardInfo() ----------------------------
-	
 	
 }

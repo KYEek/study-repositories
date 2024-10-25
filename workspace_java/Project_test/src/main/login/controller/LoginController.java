@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+import jobpost.controller.JobPostController;
 import main.user.domain.CompanyDTO;
 import main.user.domain.MemberDTO;
 import resume.controller.ResumeController;
@@ -24,7 +25,8 @@ public class LoginController {
 	AdminDAO admin = new AdminDAO_Imple();		//admin dao
 	int user_condition = 0;	//현재 로그인한 유저가 누구인지 확인을 위한 것 1은 일반, 2는 기업, 3은 관리자
 	int menu_select = 0; //메뉴가 어디가 어디에 표시되게 할지 선택하는 변수
-	ResumeController resume = new ResumeController();
+	JobPostController jpctrl = new JobPostController();
+	
 	
 	//임시로 내 정부 관리 메뉴를 위해서 만듬
 	Myinfo_Controller info_control = new Myinfo_Controller();
@@ -123,7 +125,7 @@ public class LoginController {
 					switch (menuNum) {
 					case "1":		//1번 메뉴 선택시
 						if(user_condition == 1) { 			//일반 회원일 시
-							resume.resume_menu(sc, member);
+							
 						}
 						else if(user_condition == 2) {		//기업 회원일 시
 							
@@ -136,7 +138,7 @@ public class LoginController {
 						
 					case "2": // 2번 메뉴 선택시
 						if (user_condition == 1) { // 일반 회원일 시
-
+							jpctrl.JobPostMenu(member, sc);
 						} else if (user_condition == 2) { // 기업 회원일 시
 
 						} else { // 관리자 회원일 시
