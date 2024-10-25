@@ -36,8 +36,9 @@ delete from tbl_users where user_id = 'iu';
 delete from tbl_companies where com_id = 'amazon'; 
 
 update tbl_companies set com_passwd = 'lg12345$' where com_no = 1002;
+update tbl_companies set com_passwd = 'kt12345$' where com_no = 1003;
 
-
+commit;
 insert into tbl_companies(COM_NO, COM_ID, COM_PASSWD, COM_NAME, COM_INTRO, COM_EMAIL, COM_PRESIDENT, COM_REVENUE, COM_TEL, COM_ADDRESS, FK_JOB_TCODE)
 values(COM_SEQ.nextval, 'samsungelctronic', 'qwer1234$', '삼성전자', '갤럭시생성중', 'samsung@samsung.com', '이재용', 1000000000, '010-3434-4343', '서울시 강남구', 2);
 
@@ -179,3 +180,6 @@ from
 on a.user_email = b.user_email;
 
 select * from tbl_companies where com_no = 1001;
+
+create sequence user_delete_seq start with -1 increment by -1;
+create sequence com_delete_seq start with -1 increment by -1;
