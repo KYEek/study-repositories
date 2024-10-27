@@ -172,7 +172,7 @@ public class Control_Info_Imple implements Control_Info {
 	public int delete_account(MemberDTO member) {
 		
 		
-		String sql = " update tbl_users set user_status = 0 where user_no = ? ";
+		String sql = " update tbl_users set user_status = 0, user_id = user_delete_seq.nextval where user_no = ? ";
 
 		// 결과 성공 여부 반환을 위한 변수
 		int result = 0;
@@ -200,7 +200,7 @@ public class Control_Info_Imple implements Control_Info {
 	@Override
 	public int delete_account(CompanyDTO company) {
 		
-		String sql = " update tbl_companies set com_status = 0 where com_no = ? ";
+		String sql = " update tbl_companies set com_status = 0, com_id = com_delete_seq.nextval where com_no = ? ";
 
 		// 결과 성공 여부 반환을 위한 변수
 		int result = 0;

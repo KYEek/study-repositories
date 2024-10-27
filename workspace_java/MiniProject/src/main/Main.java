@@ -29,7 +29,7 @@ public class Main {
 			Main.check_delete = true;		// 메인 메뉴로 돌아오면 메뉴들을 반복 하기 위해서 true로 설정
 			
 			//시작메뉴 프린트 아웃
-			System.out.println("\n"+"—".repeat(17) + "시작메뉴" +"—".repeat(17));
+			System.out.println("\n"+"—".repeat(25) + "시작메뉴" +"—".repeat(25));
 			System.out.println("1. 회원가입  2.로그인  3.아이디찾기  4.프로그램 종료");
 			System.out.print("😁메뉴 번호 입력 : ");
 			menuNum = sc.nextLine();

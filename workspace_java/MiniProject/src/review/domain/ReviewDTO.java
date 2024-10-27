@@ -65,11 +65,7 @@ public class ReviewDTO {
 	
 	public String reviewInfo() {	// 공고번호 회사이름   후기내용   조회수	평점   후기등록일  
 		
-		String result = String.format("%-10s", review_no) + String.format("%-10s", company.getCom_name()) +  String.format("%-20s", review_contents) +
-				        String.format("%-10s", viewcount) + String.format("%-10s", review_score) + String.format("%-10s", review_regidate) ;
-		
-		return result;
-		//return review_no + "\t" + company.getCom_name() + "\t" + review_contents + "\t\t\t" + viewcount +"회" + "\t\t" + review_score+ "점" + "\t" + review_regidate;
+		return review_no + "\t" + company.getCom_name() + "\t" + viewcount + "회"+"\t" + review_score + "점" + "\t" + review_regidate + "\t "+ review_contents ;
 	}
 	
 	public String rankInfo() {	// 후기번호	기업명	후기내용		조회수	평점		작성일   

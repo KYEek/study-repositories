@@ -41,7 +41,10 @@ public interface MbrReviewDAO {
 	int searchPostno(MemberDTO member, String com_no);
 
 	// 순위높은 평점조회 
-	List<String> rankList();
+	List<String> descRankList();
+	
+	// 순위낮은 평점조회 
+	List<String> ascRankList();
 
 	// 글삭제하기   
 	int deleteBoard(String deleteno);
@@ -51,6 +54,10 @@ public interface MbrReviewDAO {
 
 	// 회사별평점평균
 	List<String> avgCom();
+	
+	// 평점조건검색 
+	List<String> hopeList(String reviewno);
+
 	
 	
 

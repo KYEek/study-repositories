@@ -43,4 +43,12 @@ public interface AdminDAO {
 	// 마감된이벤트조회(select)
 	List<EventDTO> view_ended_event();
 
+	// 구직자보유포인트랭킹조회 (select)
+	List<Map<String, String>> have_point_ranking(int i);
+
+	// 게임별이용횟수조회 (select)
+	List<Map<String, String>> play_game_statistics();
+
+	// 월간후기작성건수통계 (select)
+	Map<String, Integer> monthly_reviews_statistics();
 }

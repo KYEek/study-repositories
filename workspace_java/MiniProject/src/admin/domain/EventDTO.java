@@ -3,11 +3,11 @@ package admin.domain;
 public class EventDTO {
 
 	// field
-	private int event_no;			// 이벤트번호
-	private String event_name;		// 이벤트명
-	private String event_start;		// 이벤트시작일
-	private String event_end;		// 이벤트종료일
-	private String event_contents;	// 이벤트내용
+	private int event_no;			// 게임번호
+	private String event_name;		// 게임명
+	private String event_start;		// 게임시작일
+	private String event_end;		// 게임종료일
+	private String event_contents;	// 게임내용
 	
 	// select용
 	private String during_days;		// 남은일수

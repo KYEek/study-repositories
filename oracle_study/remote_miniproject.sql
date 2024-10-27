@@ -5,6 +5,10 @@ select *
 from tbl_resumes;
 
 
+select *
+from user_constraints where table_name = 'TBL_COMMENT';
+
+
 
 select * from user_cons_columns where table_name = 'TBL_APPLYS';
 select * from user_constraints where table_name =  'tbl_applys';
@@ -76,10 +80,10 @@ where admin_ID = 'admin' and admin_passwd = 'qwer1234$';
 select admin_id, admin_passwd, admin_name from TBL_admin
 where admin_ID = 'admin' and admin_passwd = 'qwer1234$';
 -- 개인 탈퇴, 비번 변경
-update tbl_users set user_status = 0 where user_no = 14;
+update tbl_users set user_status = 0, user_id = -1 where user_no = 17;
 update tbl_users set user_passwd = 'Qwer1234!' where user_no = 14;
 -- 기업 탈퇴, 비번 변경
-update tbl_companies set com_status = 1 where com_no = 1006;
+update tbl_companies set com_status = 1, com_id = -1 where com_no = 1008;
 update tbl_companies set com_passwd = 'qwer1234!' where com_no = 1006;
 
 update tbl_users set user_status = 1 where user_no = 14;
@@ -183,3 +187,11 @@ select * from tbl_companies where com_no = 1001;
 
 create sequence user_delete_seq start with -1 increment by -1;
 create sequence com_delete_seq start with -1 increment by -1;
+
+select *   from user_sequences ;
+
+select user_status from tbl_users where user_id = 'ronaldo'; 
+select com_status from tbl_companies where com_id = 'tesla';
+
+update tbl_users set user_id = 'leejy', user_status = 1 where user_no = 17;
+update tbl_companies set com_id = 'amazon', com_status = 1 where com_name = '아마존';

@@ -393,7 +393,7 @@ public class AdminDAO_Imple implements AdminDAO {
 		List<EventDTO> event_list = new ArrayList<>();
 		
 		try {
-			String sql 	= " SELECT event_no, event_name, TO_CHAR(event_end, 'yyyy-mm-dd') AS event_end "
+			String sql 	= " SELECT event_no, event_name, event_contents, TO_CHAR(event_end, 'yyyy-mm-dd') AS event_end "
 						+ "		 , TO_DATE(TO_CHAR(event_end, 'yyyy-mm-dd'), 'yyyy-mm-dd') - TO_DATE(TO_CHAR(sysdate, 'yyyy-mm-dd'), 'yyyy-mm-dd') as during_days "
 						+ "	  FROM tbl_events "
 						+ "  WHERE TO_DATE(TO_CHAR(event_end, 'yyyy-mm-dd'), 'yyyy-mm-dd') - TO_DATE(TO_CHAR(sysdate, 'yyyy-mm-dd'), 'yyyy-mm-dd') > 0 AND event_status = 1 ";
@@ -407,6 +407,7 @@ public class AdminDAO_Imple implements AdminDAO {
 				
 				edto.setEvent_no(rs.getInt("event_no"));
 				edto.setEvent_name(rs.getString("event_name"));
+				edto.setEvent_contents(rs.getString("event_contents"));
 				edto.setEvent_end(rs.getString("event_end"));
 				edto.setDuring_days(rs.getString("during_days"));
 				
@@ -465,5 +466,159 @@ public class AdminDAO_Imple implements AdminDAO {
 		
 		return event_list;
 	}// end of public List<EventDTO> view_ended_event()
-		
+
+	// 구직자보유포인트랭킹조회 (select)
+	@Override
+	public List<Map<String, String>> have_point_ranking(int i) {
+		List<Map<String, String>> rank_list = new ArrayList<>();
+
+		try {
+			String sql;
+
+			if (i == 1) {		// 일반회원
+				sql 	= " SELECT user_no, user_name, func_age(user_jubun) AS age, func_gender(user_jubun) AS gender, user_point "
+						+ "		 , rank() over(order by user_point desc) AS rank "
+						+ "	  FROM tbl_users "
+						+ "  WHERE user_status = 1 ";
+
+				pstmt = conn.prepareStatement(sql);        // 쿼리문 세팅
+				rs = pstmt.executeQuery();
+
+				while(rs.next()) {
+					Map<String, String> map = new HashMap<>();
+
+					map.put("user_no", rs.getString("user_no"));
+					map.put("user_name", rs.getString("user_name"));
+					map.put("age", rs.getString("age"));
+					map.put("gender", rs.getString("gender"));
+					map.put("user_point", rs.getString("user_point"));
+					map.put("rank", rs.getString("rank"));
+
+					rank_list.add(map);
+				}// end of while(rs.next()) -----------------
+			}
+			else {				// 기업회원
+				sql 	= " SELECT com_no, com_name, com_president, com_point, rank() over(order by com_point desc) AS rank "
+						+ "	  FROM tbl_companies "
+						+ "  WHERE com_status = 1 ";
+
+				pstmt = conn.prepareStatement(sql);        // 쿼리문 세팅
+				rs = pstmt.executeQuery();
+
+				while(rs.next()) {
+					Map<String, String> map = new HashMap<>();
+
+					map.put("com_no", rs.getString("com_no"));
+					map.put("com_name", rs.getString("com_name"));
+					map.put("com_president", rs.getString("com_president"));
+					map.put("com_point", rs.getString("com_point"));
+					map.put("rank", rs.getString("rank"));
+
+					rank_list.add(map);
+
+				}// end of while(rs.next()) -----------------
+			}// end of if~else --------------------
+
+		} catch (SQLException e) {
+			if (e.getErrorCode() == 1407) {
+				System.out.println(">> 데이터 미입력으로 정보 변경 없음. <<");
+			}
+			else { e.printStackTrace(); }
+		} finally {
+			close();
+		}
+
+		return rank_list;
+
+	}// end of public List<Map<String, String>> gujikja_game_ranking(int i)
+
+
+	// 게임별이용횟수조회 (select)
+	@Override
+	public List<Map<String, String>> play_game_statistics() {
+
+		List<Map<String, String>> event_list = new ArrayList<>();
+
+		try {
+			String sql 	= " SELECT B.event_no, B.event_name, B.event_contents, A.count, rank() over(order by A.count desc) AS rank " +
+						  "   FROM " +
+						  " ( " +
+						  " 	SELECT fk_event_no, COUNT(*) AS count " +
+						  "  	  FROM tbl_event_play " +
+						  " 	GROUP BY fk_event_no " +
+						  " ) A JOIN " +
+						  " ( " +
+						  " 	SELECT event_no, event_name, event_contents " +
+						  "   	  FROM tbl_events " +
+						  "  	 WHERE event_status = 1 " +
+						  " ) B " +
+						  " 	ON A.fk_event_no = B.event_no";
+
+			pstmt = conn.prepareStatement(sql);        // 쿼리문 세팅
+			rs = pstmt.executeQuery();
+
+			while(rs.next()) {
+				Map<String, String> map = new HashMap<>();
+
+				map.put("event_no", rs.getString("event_no"));
+				map.put("event_name", rs.getString("event_name"));
+				map.put("event_contents", rs.getString("event_contents"));
+				map.put("count", rs.getString("count"));
+				map.put("rank", rs.getString("rank"));
+
+				event_list.add(map);
+			}// end of while(rs.next()) -----------------
+
+		} catch (SQLException e) {
+			if (e.getErrorCode() == 1407) {
+				System.out.println(">> 데이터 미입력으로 정보 변경 없음. <<");
+			}
+			else { e.printStackTrace(); }
+		} finally {
+			close();
+		}
+
+		return event_list;
+
+	}// end of public List<Map<String, String>> play_game_statistics() --------------------------
+
+	// 월간후기작성건수통계 (select)
+	@Override
+	public Map<String, Integer> monthly_reviews_statistics() {
+		Map<String, Integer> map = null;
+
+		try {
+			String sql 	= " SELECT COUNT(*) AS total "
+					+ "		 , SUM(CASE WHEN TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, -3), 'yyyymm'), 'yyyymm') - TO_DATE(TO_CHAR(review_regidate, 'yyyymm'),'yyyymm') = 0 THEN 1 ELSE 0 END) AS before_3months "
+					+ "		 , SUM(CASE WHEN TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, -2), 'yyyymm'), 'yyyymm') - TO_DATE(TO_CHAR(review_regidate, 'yyyymm'),'yyyymm') = 0 THEN 1 ELSE 0 END) AS before_2months "
+					+ "		 , SUM(CASE WHEN TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'yyyymm'), 'yyyymm') - TO_DATE(TO_CHAR(review_regidate, 'yyyymm'),'yyyymm') = 0 THEN 1 ELSE 0 END) AS before_1months "
+					+ "		 , SUM(CASE WHEN TO_DATE(TO_CHAR(sysdate, 'yyyymm'), 'yyyymm') - TO_DATE(TO_CHAR(review_regidate, 'yyyymm'),'yyyymm') = 0 THEN 1 ELSE 0 END) AS this_month "
+					+ "   FROM tbl_reviews "
+					+ "  WHERE TO_CHAR(review_regidate, 'yyyy-mm') BETWEEN TO_CHAR((ADD_MONTHS(review_regidate, -3)), 'yyyy-mm') AND TO_CHAR(SYSDATE, 'yyyy-mm') ";
+
+			pstmt = conn.prepareStatement(sql);		// 쿼리문 세팅
+			rs = pstmt.executeQuery();				// 쿼리 실행
+
+			// 쿼리결과 세팅
+			if (rs.next()) {
+				map = new HashMap<>();
+
+				map.put("total", rs.getInt("total"));
+				map.put("before_3months", rs.getInt("before_3months"));
+				map.put("before_2months", rs.getInt("before_2months"));
+				map.put("before_1months", rs.getInt("before_1months"));
+				map.put("this_month", rs.getInt("this_month"));
+
+			}// end of while (rs.next()) ----------------------
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+
+		return map;
+
+	}// end of public Map<String, Integer> monthly_reviews_statistics() ----------------------------------
+
 }

@@ -3,6 +3,7 @@ package review.model;
 import java.util.List;
 import java.util.Map;
 
+import comment.domain.CommentDTO;
 import user.domain.CompanyDTO;
 import review.domain.ReviewDTO;
 
@@ -16,5 +17,9 @@ public interface CompanyReviewDAO {
 
 	// 우리회사리뷰인지판단 
 	boolean compareNo(String review_no, CompanyDTO company);
+
+	
+
+
 	
 }

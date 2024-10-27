@@ -34,7 +34,7 @@ public class FindIDController {
 				while (!is_exit) {
 
 					// 시작메뉴 프린트 아웃
-					System.out.println("\n" + "—".repeat(17) + "아이디 찾기" + "—".repeat(17));
+					System.out.println("\n" + "—".repeat(20) + "아이디 찾기" + "—".repeat(20));
 					System.out.println("1. 개인회원  2.기업회원  3.돌아가기 ");
 					System.out.print("😁메뉴 번호 입력 : ");
 					menuNum = sc.nextLine();
@@ -74,7 +74,7 @@ public class FindIDController {
 				while (!is_exit) {
 
 					// 시작메뉴 프린트 아웃
-					System.out.println("\n" + "—".repeat(17) + "아이디 찾기" + "—".repeat(17));
+					System.out.println("\n" + "—".repeat(20) + "아이디 찾기" + "—".repeat(20));
 					System.out.println("1. 아이디 찾기  2.비밀번호 변경  3.돌아가기 ");
 					System.out.print("😁메뉴 번호 입력 : ");
 					menuNum = sc.nextLine();

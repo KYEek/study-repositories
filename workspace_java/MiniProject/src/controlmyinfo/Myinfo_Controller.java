@@ -41,7 +41,7 @@ public class Myinfo_Controller {
 			
 			
 			//로그인 메뉴 표시
-			System.out.println("\n\n" + "—".repeat(17) + "로그인" + "—".repeat(17));
+			System.out.println("\n\n" + "—".repeat(25) + "내 정보 관리" + "—".repeat(25));
 			System.out.println("1.내정보 수정  2.비밀번호 수정  3.회원 탈퇴  4.돌아가기");
 			System.out.print("😁메뉴 번호 입력 : ");
 			menuNum = sc.nextLine();
@@ -123,7 +123,27 @@ public class Myinfo_Controller {
 		// 비밀 번호가 맞는 다면 실행
 		// 무한 반복에 4번 입력이면 함수 끝내기
 		while (true) {
+			
+			String jobcode = "";
+			
+			switch (member.getFk_job_tcode()) {
+			case 1:
+				jobcode = "IT";
+				break;
+			case 2:
+				jobcode = "제조";
+				break;
+			case 3:
+				jobcode = "서비스";
+				break;
+			case 4:
+				jobcode = "경영";
+				break;
 
+			default:
+				jobcode = "교육";
+				break;
+			}
 			
 			//내정보 표시
 			System.out.println("\n\n개인정보");
@@ -131,12 +151,12 @@ public class Myinfo_Controller {
 			System.out.println("이름 : " + member.getUser_name());
 			System.out.println("연락처 : " + member.getUser_tel());
 			System.out.println("주소 : " + member.getUser_address());
-			System.out.println("희망업종 : " + member.getFk_job_tcode());
+			System.out.println("희망업종 : " + jobcode);
 			//TODO 희망업종 이름으로 표시되게 하기
 			
 			
 			// 로그인 메뉴 표시
-			System.out.println("\n\n" + "—".repeat(17) + "로그인" + "—".repeat(17));
+			System.out.println("\n\n" + "—".repeat(17) + "내 정보 관리" + "—".repeat(17));
 			System.out.println("1.내정보 수정  2.비밀번호 수정  3.회원 탈퇴  4.돌아가기");
 			System.out.print("😁메뉴 번호 입력 : ");
 			menuNum = sc.nextLine();

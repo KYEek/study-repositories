@@ -159,7 +159,7 @@ public class MemberDTO {
 			this.user_passwd = user_passwd;
 			correct_pw = true;
 		} else {
-			System.out.println("비밀번호는 8글자 이상 20글자 이하의 영어 대소문자, 숫자 기호를 포함해야 합니다.");
+			System.out.println("비밀번호는 8글자 이상 20글자 이하의 영어, 숫자 기호를 포함해야 합니다.");
 			correct_pw = false;
 		}
 		return correct_pw;

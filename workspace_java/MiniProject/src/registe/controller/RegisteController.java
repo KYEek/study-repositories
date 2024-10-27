@@ -76,17 +76,21 @@ public class RegisteController {
 
 		// 입력 받는 부분
 
+		System.out.println(" ".repeat(20) +"회원가입을 시작 하겠습니다");
+		System.out.println("—".repeat(40));
 		boolean check_current = false; // 입력값이 맞는지 체크
 		do {
 			System.out.print("아이디 입력 : ");
 			String inputID = sc.nextLine();
-			check_current = company.setCom_id(inputID);
-			if (cdao.compareID(company)) {
-				check_current = false;
+			if (cdao.compareID(company)) {				//중복된 아이디 검사
 				System.out.println("존재하는 아이디 입니다.");
+				continue;
 			}
+			check_current = company.setCom_id(inputID);
 		} while (!check_current);
 		do {
+			System.out.println("————————————————————————————————————————————————————");
+			System.out.println("비밀번호는 8글자 이상 20글자 이하의 영어, 숫자 기호를 포함해야 합니다");
 			System.out.print("비밀번호 입력 : ");
 			check_current = company.setCom_passwd(sc.nextLine());
 		} while (!check_current);
@@ -99,7 +103,7 @@ public class RegisteController {
 			check_current = company.setCom_intro(sc.nextLine());
 		} while (!check_current);
 		do {
-			System.out.print("기업 연락처 입력 : ");
+			System.out.print("기업 연락처 입력(기호를 포함하세요) : ");
 			check_current = company.setCom_tel(sc.nextLine());
 		} while (!check_current);
 		do {
@@ -111,7 +115,7 @@ public class RegisteController {
 			check_current = company.setCom_president(sc.nextLine());
 		} while (!check_current);
 		do {
-			System.out.print("매출 입력 : ");
+			System.out.print("매출 입력(천원단위) : ");
 			try {
 				check_current = company.setCom_revenue(Long.parseLong(sc.nextLine()));
 			} catch (NumberFormatException e) {
@@ -124,7 +128,7 @@ public class RegisteController {
 			check_current = company.setCom_address(sc.nextLine());
 		} while (!check_current);
 		System.out.println("업종 종류\t");
-		System.out.println("-------------------------------------------");
+		System.out.println("———————————————————————————————————————————");
 		System.out.println("1. IT    2. 제조   3. 서비스   4. 경영   5. 교육");
 		do {
 			System.out.print("업종코드 입력 : ");
@@ -184,6 +188,9 @@ public class RegisteController {
 
 		MemberDTO member = new MemberDTO();
 		
+		System.out.println(" ".repeat(20) +"회원가입을 시작 하겠습니다");
+		System.out.println("—".repeat(40));
+		
 		// 입력 받는 부분
 		boolean check_currect = false;		//입력값이 맞는지 체크
 		while(!check_currect) {
@@ -192,6 +199,8 @@ public class RegisteController {
 		}
 		check_currect = false;		//성공여부 초기화
 		while(!check_currect) {
+			System.out.println("————————————————————————————————————————————————————");
+			System.out.println("비밀번호는 8글자 이상 20글자 이하의 영어, 숫자 기호를 포함해야 합니다");
 			System.out.print("비밀번호 입력 : ");
 			check_currect = member.setUser_passwd(sc.nextLine());
 		}
@@ -219,7 +228,7 @@ public class RegisteController {
 		}
 		check_currect = false;		//성공여부 초기화
 		while(!check_currect) {
-			System.out.print("전화번호 입력 : ");
+			System.out.print("전화번호 입력 (-기호를 포함하세요): ");
 			check_currect = member.setUser_tel(sc.nextLine());
 		}
 		check_currect = false;		//성공여부 초기화
@@ -229,7 +238,7 @@ public class RegisteController {
 		}
 		check_currect = false;		//성공여부 초기화
 		System.out.println("업종 종류\t");
-		System.out.println("-------------------------------------------");
+		System.out.println("———————————————————————————————————————————");
 		System.out.println("1. IT    2. 제조   3. 서비스   4. 경영   5. 교육");
 		do {
 			System.out.print("업종코드 입력 : ");

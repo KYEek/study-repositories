@@ -84,20 +84,21 @@ public class MbrReviewDAO_imple implements MbrReviewDAO {
 			String sql =  " with "
 						+ " A as "
 						+ " (  "
-						+ " select  fk_work_tcode, fk_job_postno, fk_user_no, applys_date "
+						+ " select  fk_work_tcode, fk_job_postno, fk_user_no "
 						+ " from tbl_applys A join tbl_resumes B "
 						+ " on A.fk_resume_no = B.resume_no "
-						+ " )  "
+						+ " ) "
 						+ " , B as "
 						+ " ( "
-						+ " select com_id, com_no, com_name, post_title, fk_work_tcode, job_postno	 "
+						+ " select com_id, com_no, com_name, fk_work_tcode "
 						+ " from tbl_companies A join tbl_job_posts B "
 						+ " on A.com_no = B.fk_com_no "
 						+ " ) "
-						+ " select job_postno, com_no, com_name, post_title, applys_date "
+						+ " select distinct com_no, com_name "
 						+ " from A join B "
 						+ " on A.fk_work_tcode = B.fk_work_tcode "
-						+ " where fk_user_no = ? ";
+						+ " where fk_user_no = ? "
+						+ " order by com_no ";
 	 
 			
 			pstmt = conn.prepareStatement(sql);
@@ -108,16 +109,11 @@ public class MbrReviewDAO_imple implements MbrReviewDAO {
 				
 				jobpost = new JobpostDTO();
 				company = new CompanyDTO();
-				apply = new ApplysDTO();
-				
-				jobpost.setJob_postno(rs.getInt("job_postno"));		// 공고번호
-				jobpost.setPost_title(rs.getString("post_title"));
 				
 				company.setCom_name(rs.getString("com_name"));	// 회사이름
 				company.setCom_no(rs.getInt("com_no"));
 				jobpost.setCompany(company);
-				
-				apply.setApplys_date(rs.getString("applys_date"));	//  지원날짜 
+
 				jobpost.setApply(apply);
 	
 				viewBoardList.add(jobpost);
@@ -177,7 +173,7 @@ public class MbrReviewDAO_imple implements MbrReviewDAO {
 					   + " from tbl_reviews A join tbl_companies B "
 					   + " on A.fk_com_no = B.com_no "
 					   + " where com_no = ? "
-					   + " order by review_regidate ";
+					   + " order by review_regidate desc ";
  
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, com_no);	// 회사번호    
@@ -237,7 +233,7 @@ public class MbrReviewDAO_imple implements MbrReviewDAO {
 						+ " ) A join tbl_companies B "
 						+ " on A.fk_com_no = B.com_no "
 						+ " where A.user_id = ? and review_status = 1"
-						+ " order by review_regidate " ; 
+						+ " order by review_regidate desc, review_no " ; 
  
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, member.getUser_id());	// 내이름으로입력    
@@ -379,7 +375,7 @@ public class MbrReviewDAO_imple implements MbrReviewDAO {
 		
 	}
 
-
+	// 수정할 후기 보여주기 
 	@Override
 	public ReviewDTO ViewReview(Map<String, String> paraMap) {
 		ReviewDTO review = null;
@@ -466,9 +462,59 @@ public class MbrReviewDAO_imple implements MbrReviewDAO {
 	}
 
 
-	// 평점순위별 후기 조회 
+	
+	// 원하는평점조건검색  
 	@Override
-	public List<String> rankList() {
+	public List<String> hopeList(String reviewno) {
+
+		List<String> hopeList = new ArrayList<>();
+
+		try {
+			String sql =  " select  dense_rank() over(order by review_score desc) as rank "
+						+ " , review_no, com_name, viewcount " 
+						+ " , case when length(review_contents) > 13 then substr(review_contents, 1,10) || '...' else review_contents end as review_contents "
+						+ " , review_score "
+						+ " , to_char(review_regidate, 'yyyy-mm-dd') as review_regidate "
+						+ " from "
+						+ " ( "
+						+ " select review_no, viewcount, com_name, review_contents, review_score, review_regidate, fk_user_no "
+						+ " from tbl_reviews A join tbl_companies B "
+						+ " on A.fk_com_no = B.com_no "
+						+ " ) A join tbl_users B "
+						+ " on A.fk_user_no = B.user_no "
+						+ " where review_score >= ? "
+						+ " order by rank, com_name, viewcount desc " ; 
+						
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, reviewno);
+			
+			rs = pstmt.executeQuery();
+			
+			
+			while(rs.next()) {
+				
+
+				String result = rs.getInt("rank") + "\t" +  rs.getInt("review_no") + "\t" 
+						      + rs.getString("com_name") + "\t" + rs.getInt("viewcount") + "회"+ "\t" + rs.getInt("review_score") + "점"
+						      + "\t" + rs.getString("review_regidate") + "\t" + rs.getString("review_contents") +"\n";
+				hopeList.add(result);
+			}
+		
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+				close();
+		}
+		
+		return hopeList;
+	}
+
+
+
+	// 평점순위별 후기 조회 (내림차순)
+	@Override
+	public List<String> descRankList() {
 		
 		List<String> rankList = new ArrayList<>();
  
@@ -484,7 +530,8 @@ public class MbrReviewDAO_imple implements MbrReviewDAO {
 						+ " from tbl_reviews A join tbl_companies B "
 						+ " on A.fk_com_no = B.com_no " 
 						+ " ) A join tbl_users B "
-						+ " on A.fk_user_no = B.user_no " ; 
+						+ " on A.fk_user_no = B.user_no "
+						+ " order by rank, com_name, viewcount desc " ; 
 	 
 			pstmt = conn.prepareStatement(sql);
 
@@ -492,9 +539,9 @@ public class MbrReviewDAO_imple implements MbrReviewDAO {
 			
 			while(rs.next()) {
 
-				String result = String.format("%-10s", rs.getInt("rank")) + String.format("%-10s", rs.getInt("review_no")) +  String.format("%-10s", rs.getString("com_name")) +
-						String.format("%-30s", rs.getString("review_contents")) + String.format("%-10s", rs.getInt("viewcount")) + String.format("%-10s", rs.getInt("review_score")) + String.format("%-10s", rs.getString("review_regidate")) + "\n" ;
-				 
+				String result = rs.getInt("rank") + "\t" +  rs.getInt("review_no") + "\t" 
+						      + rs.getString("com_name") + "\t" + rs.getInt("viewcount") + "회"+ "\t" + rs.getInt("review_score") + "점"
+						      + "\t" + rs.getString("review_regidate") + "\t" + rs.getString("review_contents") +"\n";
 				rankList.add(result);
 			}
 			
@@ -507,6 +554,49 @@ public class MbrReviewDAO_imple implements MbrReviewDAO {
 		return rankList;
 	}
 
+	// 평점순위별 후기 조회 (오름차순)
+	@Override
+	public List<String> ascRankList() {
+		List<String> rankList = new ArrayList<>();
+		 
+		try {
+			String sql =  " select  dense_rank() over(order by review_score asc) as rank "
+						+ "       , review_no, com_name, viewcount "
+						+ "		  , case when length(review_contents) > 13 then substr(review_contents, 1,10) || '...' else review_contents end as review_contents  "
+						+ "       , review_score "
+						+ "		  , to_char(review_regidate, 'yyyy-mm-dd') as review_regidate  "
+						+ " from "
+						+ " ( "
+						+ " select review_no, viewcount, com_name, review_contents, review_score, review_regidate, fk_user_no "
+						+ " from tbl_reviews A join tbl_companies B "
+						+ " on A.fk_com_no = B.com_no " 
+						+ " ) A join tbl_users B "
+						+ " on A.fk_user_no = B.user_no "
+						+ " order by rank, com_name, viewcount desc" ; 
+	 
+			pstmt = conn.prepareStatement(sql);
+
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+
+				String result = rs.getInt("rank") + "\t" +  rs.getInt("review_no") + "\t" 
+						      + rs.getString("com_name") + "\t" + rs.getInt("viewcount") + "회"+ "\t" + rs.getInt("review_score") + "점"
+						      + "\t" + rs.getString("review_regidate") + "\t" + rs.getString("review_contents") +"\n";
+				rankList.add(result);
+			}
+			
+		} catch (SQLException e) {
+				e.printStackTrace();
+		} finally {
+				close();
+		}
+
+		return rankList;
+	}
+
+	
+	
 
 	
 	// 글삭제하기 (status 0으로 변경) 
@@ -574,12 +664,7 @@ public class MbrReviewDAO_imple implements MbrReviewDAO {
 			}
 			
 		} catch (SQLException e) {
-			if(e.getErrorCode() == 1722) {
-				System.out.println(">> [경고] 회사 번호는 정수만 입력하세요 ! ");
-			} else {
-				e.printStackTrace();
-			}
-		
+			e.printStackTrace();
 		} finally {
 				close();
 		}
@@ -633,17 +718,20 @@ public class MbrReviewDAO_imple implements MbrReviewDAO {
 		String result = "";
 		try {
 			
-			String sql =  " select com_name, trunc(avg(review_score),1) as review_score "
-						+ " from tbl_reviews A join tbl_companies B "
+			String sql =  " select  rank() over(order by avg(review_score) desc) rank "
+						+ "      , com_name\r\n"
+						+ "      , trunc(avg(review_score),1) as review_score "
+						+ " from tbl_reviews A join tbl_companies B\r\n"
 						+ " on A.fk_com_no = B.com_no "
-						+ " group by com_name " ; 
+						+ " group by com_name "
+						+ " order by review_score desc " ; 
 			
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
 				
-				result = rs.getString("com_name")+" : " + rs.getDouble("review_score") + "\t" ; 
+				result = rs.getString("rank") + "위\t" + rs.getString("com_name")+" : " + rs.getDouble("review_score") + "\n" ; 
 				
 				avgList.add(result);
 			}
@@ -656,12 +744,6 @@ public class MbrReviewDAO_imple implements MbrReviewDAO {
 
 		return avgList;
 	}
-
-
-
-	
-
-
 
 
 

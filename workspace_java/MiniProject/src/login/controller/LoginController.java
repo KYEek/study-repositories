@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+import game.controller.GameController;
+import jobpost.controller.ComJobPostController;
+import jobpost.controller.JobPostController;
 import user.domain.CompanyDTO;
 import user.domain.MemberDTO;
 import company.model.*;
@@ -16,6 +19,7 @@ import review.domain.ReviewDTO;
 import search.controller.SearchController;
 import admin.controller.AdminController;
 import admin.model.*;
+import comment.domain.CommentDTO;
 
 
 public class LoginController {
@@ -33,6 +37,9 @@ public class LoginController {
 	ResumeController resumeCtl = new ResumeController();
 	CompanyReviewController ComReviewCtrl = new CompanyReviewController();
 	ReviewDTO review = new ReviewDTO();
+	CommentDTO comment = new CommentDTO();
+	JobPostController jpctrl = new JobPostController();
+	ComJobPostController comjpctrl = new ComJobPostController();
 	
 	//임시로 내 정부 관리 메뉴를 위해서 만듬
 	Myinfo_Controller info_control = new Myinfo_Controller();
@@ -109,12 +116,12 @@ public class LoginController {
 					if (user_condition == 1) {	//유저 상태 변수로 일반(1), 기업(2), 관리자(3) 별로 보여줌
 						// 일반 회원 메뉴 화면
 						System.out.println("\n\n"+"—".repeat(17) + "메뉴 [일반회원 "+ member.getUser_name()+" 님이 로그인중]" +"—".repeat(17));
-						System.out.println("1.이력서 관리 2.채용 공고  3.기업정보 조회  4.내정보 관리  5.로그아웃");
+						System.out.println("1.이력서 관리 2.채용 공고  3.기업정보 조회  4.내정보 관리  5.미니게임  6.로그아웃");
 					}
 					else if(user_condition ==2) {
 						// 기업 회원 메뉴 화면
 						System.out.println("\n\n"+"—".repeat(17) + "메뉴 [기업회원 "+ company.getCom_name()+" 님이 로그인중]" +"—".repeat(17));
-						System.out.println("1.공고 관리 2.구직자 조회  3.후기 조회  4.내정보 관리  5.로그아웃");
+						System.out.println("1.공고 관리 2.구직자 조회  3.후기 조회  4.내정보 관리  5.미니게임  6.로그아웃");
 					}
 					else {
 						adctl.admin_menu(sc);
@@ -134,7 +141,7 @@ public class LoginController {
 							resumeCtl.resume_menu(sc, member);
 						}
 						else if(user_condition == 2) {		//기업 회원일 시
-							
+							comjpctrl.jobpostcdmenu(sc, company);
 						}
 						
 						
@@ -142,7 +149,7 @@ public class LoginController {
 						
 					case "2": // 2번 메뉴 선택시
 						if (user_condition == 1) { // 일반 회원일 시
-
+							jpctrl.JobPostMenu(member, sc);
 						} else if (user_condition == 2) { // 기업 회원일 시
 							searchCtl.search_gujikja(sc);
 						}
@@ -153,7 +160,7 @@ public class LoginController {
 						if (user_condition == 1) { // 일반 회원일 시
 							searchCtl.search_company(sc, company, member);
 						} else if (user_condition == 2) { // 기업 회원일 시
-							ComReviewCtrl.Company_review_search_memu(sc, company, review);
+							ComReviewCtrl.Company_review_search_memu(sc, company, review, comment);
 						} 
 						break;
 						
@@ -166,7 +173,12 @@ public class LoginController {
 						} 
 						break;
 
-					case "5": 		//로그아웃
+					case "5": // 5번 메뉴 선택시
+						GameController gamectrl = new GameController();
+						gamectrl.game_menu(member, company, sc);
+						break;
+
+					case "6": 		//로그아웃
 						
 						
 						menu_select = 0;	//반복문 탈출 후 첫번째 메뉴를 표시해주기 위해서 설정

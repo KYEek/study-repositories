@@ -43,14 +43,14 @@ public class CompanyReviewDAO_imple implements CompanyReviewDAO {
 						+ " ,      substr(user_name, 1,1) || '**' as user_name "
 						+ " from "
 						+ " ( "
-						+ " select fk_com_no, review_no, viewcount "
+						+ " select fk_com_no, review_no, viewcount, review_status "
 						+ " , case when length(review_contents) > 13 then substr(review_contents, 1,10) || '...' else review_contents end as review_contents  "
 						+ " , review_regidate, fk_user_no "
 						+ " from tbl_companies A join tbl_reviews B "
 						+ " on A.com_no = B.fk_com_no "
 						+ " ) A join tbl_users B "
 						+ " on A.fk_user_no = B.user_no "
-						+ " where fk_com_no = ? "
+						+ " where fk_com_no = ? and review_status = 1 "
 						+ " order by review_no ";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -61,8 +61,8 @@ public class CompanyReviewDAO_imple implements CompanyReviewDAO {
 			while(rs.next()) {
 				
 				
-				String result = rs.getInt("review_no") + "\t" + rs.getString("review_contents") + "\t" + rs.getInt("viewcount") + "회"
-				+ "\t" + rs.getString("review_regidate") + "\t" + rs.getString("user_name") ;
+				String result = rs.getInt("review_no") + "\t" + rs.getInt("viewcount") + "회"
+				+ "\t" + rs.getString("review_regidate") + "\t" + rs.getString("user_name") + "\t" + rs.getString("review_contents") ;
 					
 				companyreviewList.add(result);
 			}
@@ -76,7 +76,6 @@ public class CompanyReviewDAO_imple implements CompanyReviewDAO {
 		return companyreviewList;
 		
 	}
-
 
 
 	// 후기상세조회 
@@ -130,19 +129,14 @@ public class CompanyReviewDAO_imple implements CompanyReviewDAO {
 	@Override
 	public boolean compareNo(String review_no, CompanyDTO company) {
 		
-		String sql = " select review_no "
-				+ " from " 
-				+ " ( "
-				+ " select fk_com_no, review_no, fk_user_no "
-				+ " from tbl_companies A join tbl_reviews B "
-				+ " on A.com_no = B.fk_com_no "
-				+ " ) A join tbl_users B "
-				+ " on A.fk_user_no = B.user_no "
-				+ " where fk_com_no = ? and review_no = ? ";
-
-	      boolean result = false; // 아이디가 있는지 없는지 비교
-
-	      try {
+		boolean result = false;
+		try {
+			String sql =  " select * "
+						+ " from tbl_reviews A join tbl_companies B "
+						+ " on A.fk_com_no = B.com_no "
+						+ " where com_no = ? and review_no = ? ";
+	
+		     result = false; // 아이디가 있는지 없는지 비교
 
 	         pstmt = conn.prepareStatement(sql);
 	         pstmt.setInt(1, company.getCom_no());
