@@ -80,8 +80,20 @@ public class RegisteController {
 		System.out.println("—".repeat(40));
 		boolean check_current = false; // 입력값이 맞는지 체크
 		do {
+			
+			
 			System.out.print("아이디 입력 : ");
 			String inputID = sc.nextLine();
+			try {
+				if(Integer.parseInt(inputID) < 0) {
+					System.out.println("아이디는 5글자 이상 20글자 이하여야 합니다.");
+					continue;
+				}
+			} catch(NumberFormatException e) {
+				System.out.println("아이디는 5글자 이상 20글자 이하여야 합니다.");
+				continue;
+			}
+
 			if (cdao.compareID(company)) {				//중복된 아이디 검사
 				System.out.println("존재하는 아이디 입니다.");
 				continue;
@@ -194,8 +206,20 @@ public class RegisteController {
 		// 입력 받는 부분
 		boolean check_currect = false;		//입력값이 맞는지 체크
 		while(!check_currect) {
+			
+			
 			System.out.print("아이디 입력 : ");
-			check_currect = member.setUser_id(sc.nextLine());
+			String inputID = sc.nextLine();
+			try {
+				if(Integer.parseInt(inputID) < 0) {
+					System.out.println("아이디는 5글자 이상 20글자 이하여야 합니다.");
+					continue;
+				}
+			} catch(NumberFormatException e) {
+				System.out.println("아이디는 5글자 이상 20글자 이하여야 합니다.");
+				continue;
+			}
+			check_currect = member.setUser_id(inputID);
 		}
 		check_currect = false;		//성공여부 초기화
 		while(!check_currect) {

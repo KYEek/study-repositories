@@ -1,6 +1,8 @@
 package jobpost.controller;
 import jobpost.service.JobPostDAO; 
-import jobpost.service.JobPostDAO_imple; 
+import jobpost.service.JobPostDAO_imple;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import jobpost.member.domain.JobPostDTO;
@@ -9,6 +11,7 @@ import user.domain.*;
 public class JobPostController {
 	
        private JobPostDAO jobPostService = new JobPostDAO_imple();
+	   private JobPostDAO jobPostDAO = new JobPostDAO_imple();
   
     // 사용자 메뉴 선택을 처리하는 메소드
 //    public void menuJobPost(MemberDTO member, Scanner scanner) {
@@ -95,8 +98,8 @@ public class JobPostController {
         do {
             System.out.println("\n>> ----  공고 조회 ---- <<");
             System.out.println("-----------------------------------------------------------------");
-            System.out.println("  1. 공고리스트(상세)조회  2. 내가 지원한 공고 조회");
-            System.out.println("  3. 돌아가기");
+            System.out.println("  1. 공고리스트(상세)조회  2. 조건 검색 조회");
+            System.out.println("  3. 내가 지원한 공고 조회 4.돌아가기");
             System.out.println("-----------------------------------------------------------------");
 
             System.out.print("▶ 메뉴 번호를 입력하세요: ");
@@ -120,16 +123,16 @@ public class JobPostController {
                 }
                 break;
 
-//                case "2": // 조건검색조회
-//                   showConditionSearchMenu(scanner);
-//                   break;
+                case "2": // 조건검색조회
+                	showConditionSearchMenu(scanner);
+                   break;
 
-				case "2":
+				case "3":
 					// 내가 지원한 공고 조회
 					displayAppliedJobPosts(scanner, member);
 					break;
 
-				case "3":
+				case "4":
 					// 돌아가기
 
 					return;
@@ -163,7 +166,7 @@ private void displayAllJobPosts() {
         for (JobPostDTO jobPost : jobPosts) {
             // 각 항목을 정렬하여 추가
             sb.append(String.format("%-10d %-20s %-10d %-25s ~ %-25s %-15d%n",
-                      jobPost.getJop_postno(), 
+                      jobPost.getJob_postno(), 
                       jobPost.getCom_name(), 
                       jobPost.getWage(), 
                       jobPost.getWrite_date(), 
@@ -222,85 +225,124 @@ public void showJobPostDetailMenu(Scanner scanner) {
     
 
 
-  }
-    
+  }// end of public void showJobPostDetailMenu(Scanner scanner)-----------
 
 
 
-// 조건 검색 메뉴를 보여주는 메소드
-
-private void showConditionSearchMenu(Scanner scanner) {
 
 
-	
-    System.out.println(">>  조건 검색 입력란  <<");
-    System.out.println("-------------------------------------------------");   
-    
-    System.out.print("▶ 공고번호: "); 
-    String jop_postno = scanner.nextLine();
 
-    System.out.print("▶ 기업명: "); 
-    String com_name = scanner.nextLine();
 
-    System.out.print("▶ 연봉: "); 
-    String wage = scanner.nextLine();
 
-    System.out.print("▶ 직종명: "); 
-    String job_type = scanner.nextLine();
 
-    System.out.println("-------------------------------------------------");
+
+
+
+
+// 공고 조건 검색 메소드
+public void showConditionSearchMenu(Scanner scanner) {
    
-    // 조건 검색을 실행하는 로직 추가
-   // List<JobPostDTO> filteredPosts = jobPostService.searchJobPosts(jop_postno, com_name, wage, job_type);
-   // displayFilteredJobPosts(filteredPosts);
+    String jobPostNo;
+    String companyName;
+    String wage;
+    String jobType;
 
-    System.out.println("▶  (뒤로가려면 엔터를 누르십시오) ");
-    scanner.nextLine();  // 뒤로 가기를 위해 엔터 입력 대기
-}
+    System.out.println(">> 조건 검색 입력란 <<");
+    System.out.println("(입력하지 않으려면 Enter를 누르십시오.)\n");
+   
+    System.out.print("▶ 공고번호: ");
+    jobPostNo = scanner.nextLine();
+    System.out.print("▶ 기업명: ");
+    companyName = scanner.nextLine();
+    System.out.print("▶ 연봉: ");
+    wage = scanner.nextLine();
+    System.out.print("▶ 직종명: ");
+    jobType = scanner.nextLine();
 
+    // 입력값 검증
+    List<String> String = new ArrayList<>();
 
-
-
-
-
-
-
-
-
-// 필터링된 공고 리스트를 출력하는 메소드
-private void displayFilteredJobPosts(List<JobPostDTO> jobPosts) {
-    if (jobPosts.isEmpty()) {
-        System.out.println("조건에 맞는 공고가 없습니다.");
-    } else {
-        // 공고 리스트 출력 
-        StringBuilder sb = new StringBuilder();
-        sb.append("\n" + "-".repeat(50) + " [검색 결과] " + "-".repeat(50) + "\n");
-        sb.append("공고번호\t\t기업명\t\t\t연봉\t\t\t공고기간\t\t조회수\n");
-        sb.append("-".repeat(113) +"\n");
-
-        for (JobPostDTO jobPost : jobPosts) {
-            sb.append(String.format("%-10d %-20s %-10d %-25s ~ %-25s %-15d%n",
-                      jobPost.getJop_postno(), 
-                      jobPost.getCom_name(),  
-                      jobPost.getWage(), 
-                      jobPost.getWrite_date(), 
-                      jobPost.getEnd_date(),
-                      jobPost.getView_count()));
-        }
-        System.out.println(sb.toString());
+    // 공고번호와 연봉의 숫자 검증 (입력이 있을 때 숫자를 입력 안받으면 [경고]가 출력된다. 즉, 빈칸 null값은 [경고]:가 안나오게 만든다.)
+    if (jobPostNo != null && !jobPostNo.isEmpty() && !isNumeric(jobPostNo)) {
+    	String.add("[경고]: 공고번호는 숫자를 입력해야 합니다.\n");
     }
+    if (wage != null && !wage.isEmpty() && !isNumeric(wage)) {
+    	String.add("[경고]: 연봉은 숫자를 입력해야 합니다.\n");
+    }
+
+    // 경고 메시지 출력
+    if (!String.isEmpty()) {
+        for (String warning : String) {
+            System.out.println(warning);
+        }
+        // 메뉴로 돌아감
+        System.out.println("▶ 뒤로 가려면 엔터를 누르십시오.\n");
+        scanner.nextLine(); // 엔터 입력 대기
+        return; // 메서드 종료
+    }
+    
+    
+    // 적어도 하나의 필드가 입력되었는지 확인
+    if ((jobPostNo == null || jobPostNo.isEmpty()) &&
+        (companyName == null || companyName.isEmpty()) &&
+        (wage == null || wage.isEmpty()) &&
+        (jobType == null || jobType.isEmpty())) {
+        
+        System.out.println("[경고]: 최소한 하나의 입력란을 채워야 합니다.\n");
+        System.out.println("▶ 뒤로 가려면 엔터를 누르십시오.\n");
+        scanner.nextLine(); // 엔터 입력 대기
+        return; // 메서드 종료
+    }
+
+    // 공고 검색
+    List<JobPostDTO> results = jobPostDAO.searchJobPosts(jobPostNo, companyName, wage, jobType);
+
+ 
+	// 결과가 있는 경우에만 테이블 출력
+	if (!results.isEmpty()) {
+		System.out.println("--------------------------------------------------");
+		System.out.println("공고번호\t기업명\t연봉\t직종명");
+		System.out.println("--------------------------------------------------");
+
+		for (JobPostDTO post : results) {
+			System.out.printf("%d\t%s\t%d\t%s\n", post.getJob_postno(), post.getCom_name(), post.getWage(),
+					post.getJob_type());
+		}
+	} else {
+		// 결과가 없을 경우에는 테이블을 출력하지 않음
+		System.out.println("조건에 맞는 공고가 없습니다.\n");
+	}
+
+	System.out.println("▶ 뒤로 가려면 엔터를 누르십시오.\n");
+	scanner.nextLine(); // 엔터 입력 대기
 }
 
-    
-    
-    
+// 숫자인지 확인하는 메소드
+private boolean isNumeric(String str) {
+	if (str == null || str.isEmpty()) {
+		return false; // null이나 비어있는 문자열은 숫자가 아님
+	}
+	try {
+		Integer.parseInt(str);
+	} catch (NumberFormatException e) {
+		return false; // 숫자로 변환할 수 없으면 false
+	}
+	return true; // 숫자로 변환 가능
+}// end of public void showConditionSearchMenu(Scanner scanner)-----------
+
+
+
+
+
+
+
     
 //내가 지원한 공고 조회를 위한 메소드 추가
 private void displayAppliedJobPosts(Scanner scanner, MemberDTO member) {
     System.out.println(">>  내가 지원한 공고 조회 <<");
-    System.out.println("-------------------------------------------------");
+    System.out.println("---------------------------------------------------------------------------------------");
     System.out.println("공고지원번호 공고번호 기업번호   기업명   직종     연봉     공고기간");
-    System.out.println("-------------------------------------------------");
+    System.out.println("---------------------------------------------------------------------------------------");
 
     // userNo 값을 로그인 정보에서 가져오는 부분
     int userNo = member.getUser_no(); // 로그인한 사용자 정보를 가져오는 메소드
@@ -313,7 +355,7 @@ private void displayAppliedJobPosts(Scanner scanner, MemberDTO member) {
         for (JobPostDTO post : appliedPosts) {
             System.out.printf("%-10d %-10d %-10d %-20s %-10s %-10d %-20s%n",
             		post.getApply_no(),
-            		post.getJop_postno(),
+            		post.getJob_postno(),
                     post.getFk_com_no(),
                     post.getCom_name(),
                     post.getJob_type(),
@@ -322,7 +364,7 @@ private void displayAppliedJobPosts(Scanner scanner, MemberDTO member) {
         }
     }
 
-}
+}// end of private void displayAppliedJobPosts(Scanner scanner, MemberDTO member)
 
 
 
@@ -360,7 +402,7 @@ private void applyshowjobPostMenu(MemberDTO member) {
              System.out.println("\n [경고]:잘못된 선택입니다! 다시 시도하세요.\n");
      }
    } while (true); // 메뉴 번호가 3이 아닐 경우 반복
-}
+}// end of private void applyshowjobPostMenu(MemberDTO member)------------------------------------
 
 
 
@@ -394,9 +436,9 @@ private void applyshowjobPostMenu(MemberDTO member) {
             // StringBuilder의 내용을 출력
             System.out.println(sb.toString());
         }
-    }
+    }// end of private void showAllResumeList(MemberDTO member)---------------------------------------
 
-
+   // 채용 공고 지원 메소드
     private void applyJobPostMenu(Scanner scanner, MemberDTO member) {
         showAllResumeList(member); // 이력서 목록 보여주기
     	String job_postno = null;
@@ -454,9 +496,12 @@ private void applyshowjobPostMenu(MemberDTO member) {
         } else {
             System.out.println("공고 지원이 취소되었습니다.\n");
         }
-    }
+    }// end of  private void applyJobPostMenu(Scanner scanner, MemberDTO member)--------------------------------------
 
 
+    
+    
+    // 공고 지원 취소 메소드
     private void cancle_appled_joppost(Scanner scanner, MemberDTO member) {
         // scanner.nextLine(); 
         //showAllResumeList(); // 이력서 목록 보여주기
@@ -490,103 +535,19 @@ private void applyshowjobPostMenu(MemberDTO member) {
             }
         
         }
-    }
+    }//end of private void cancle_appled_joppost(Scanner scanner, MemberDTO member)----------------------------------------------------
 
     
 
 
-/*
- // 공고 지원 메뉴
-    private void applyjobpostmenu(Scanner scanner) {
-        scanner.nextLine(); 
-        showAllResumeList();
 
-        // 지원할 채용공고 번호 입력
-   
-        System.out.print("▶ 지원할 채용공고 번호 입력: ");
-        String job_postno = scanner.nextLine(); // String으로 읽어들입니다.
-
-        // 제출할 이력서 번호 입력
-        System.out.print("▶ 제출할 이력서 번호 입력: ");   
-        int resume_no = scanner.nextInt(); 
-        scanner.nextLine(); 
-        
-        // 지원한 공고에는 이력서 지원이 불가 출력
-        JobPostDAO jobPostDAO = new JobPostDAO_imple(); // DAO 인스턴스 생성
-        if (jobPostDAO.isAlreadyApplied(Integer.parseInt(job_postno), resume_no)) {
-            System.out.println("이미 지원한 공고에는 이력서 지원이 불가합니다.");
-            return; // 메소드 종료
-        }
-
-
-        String yn;
-        do {
-            // 지원 여부 확인
-            System.out.print("\n정말로 공고에 지원하시겠습니까? [Y/N]: ");
-            yn = scanner.nextLine(); 
-
-            if (!"y".equalsIgnoreCase(yn) && !"n".equalsIgnoreCase(yn)) {
-                System.out.println("[경고!!!]: Y/N만 입력하세요!!]");
-            }
-           } while (!"y".equalsIgnoreCase(yn) && !"n".equalsIgnoreCase(yn)); // 유효하지 않은 입력일 경우 반복
-
-        if ("y".equalsIgnoreCase(yn)) {
-            // 공고 지원 로직 호출
-            System.out.println("공고 지원에 성공했습니다.\n");
-        } else {
-            System.out.println("공고 지원이 취소되었습니다.\n");
-        }
-       
-    }
-
-
-  */  
-
-}
+}// end of public class JobPostController--------------------------------------
 
 
 
 
  
 
-    
-    
-    
-/*
-
-    //공고 지원 철회
-	private void cancle_appled_joppost(Scanner scanner) {
-		  scanner.nextLine(); 
-	      showAllResumeList(); // 임시로 전체리스트로 둠 나중에 각 계정에 지원할 리스트로 변경할것!!
-	      
-	      System.out.println("▶ 공고 지원을 취소할 이력서 번호: ");
-	     
-	      System.out.println(" 정말로 공고에 지원을 철회하시겠습니까? [Y/N]: ");
-	      String yn = scanner.nextLine(); 
-	      
-	      if ("y".equalsIgnoreCase(yn)) {
-	     	 System.out.println(" 공고 지원이 철회 되었습니다. \n");
-	      
-	       } else if 
-	      
-	         ("n".equalsIgnoreCase(yn)) {
-	         System.out.println(" 공고 지원 철회가 취소 되었습니다. \n");
-	      
-	       } 
-	        
-	         else {
-	         System.out.println(" 이력서 번호가 존재하지 않습니다. \n");
-	       }
-	      	 
-		
-	}
-
-}
-    
- */
-    
-    
-    
     
     
     

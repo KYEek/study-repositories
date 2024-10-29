@@ -39,6 +39,8 @@ public class MemberDTO {
 	private int user_status;	//회원상태(가입여부)
 	private int fk_job_tcode;   //업종코드
 	private String job_type;	//업종명
+	private int user_point;
+	
 	
 	
 	
@@ -47,6 +49,14 @@ public class MemberDTO {
 	//set을 해줄 때 유효성 검사를 해준다
 	
 	
+	public int getUser_point() {
+		return user_point;
+	}
+
+	public void setUser_point(int user_point) {
+		this.user_point = user_point;
+	}
+
 	public int getUser_no() {
 		return user_no;
 	}
@@ -63,6 +73,13 @@ public class MemberDTO {
 	}
 	public boolean setUser_id(String user_id) {
 		
+		try {
+			if(Integer.parseInt(user_id) < 0) {
+				return true;
+			}
+		} catch(NumberFormatException e) {
+			
+		}
 		
 		if(user_id.length() < 5 || user_id.length() > 20) {			//아이디 글자 파악
 			System.out.println("아이디는 5글자 이상 20글자 이하여야 합니다.");

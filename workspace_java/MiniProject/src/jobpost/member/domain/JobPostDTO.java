@@ -20,7 +20,7 @@ FK_JOB_TCODE  NOT NULL NUMBER
 	
 
 	private int 	wage;		    // 연봉
-	private int     jop_postno;     // 공고번호
+	private int     job_postno;     // 공고번호
 	private String 	post_title;		// 공고제목 
 	private String 	post_contents; 	// 공고내용
 	private String  write_date;     // 작성일자
@@ -81,11 +81,11 @@ FK_JOB_TCODE  NOT NULL NUMBER
 	public void setWage(int wage) {
 		this.wage = wage;
 	}
-	public int getJop_postno() {
-		return jop_postno;
+	public int getJob_postno() {
+		return job_postno;
 	}
-	public void setJop_postno(int jop_postno) {
-		this.jop_postno = jop_postno;
+	public void setJob_postno(int job_postno) {
+		this.job_postno = job_postno;
 	}
 	public String getPost_title() {
 		return post_title;

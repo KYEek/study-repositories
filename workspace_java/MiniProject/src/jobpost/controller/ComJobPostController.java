@@ -72,7 +72,7 @@ public class ComJobPostController {
 		jp.setPost_contents(sc.nextLine());
 	  while (true){
 			try {
-				System.out.println("▶ 연봉 입력:	 ");
+				System.out.println("▶ 연봉 입력 (만원 단위):	 ");
 				jp.setWage(Integer.parseInt(sc.nextLine()));   
 				break;
  
@@ -105,7 +105,7 @@ public class ComJobPostController {
 
 		String yn;
 	        do {
-	            System.out.print("\n정말로 공고에 지원하시겠습니까? [Y/N]: ");
+	            System.out.print("\n정말로 공고를 등록하시겠습니까? [Y/N]: ");
 	            yn = sc.nextLine(); 
 
 	            if (!"y".equalsIgnoreCase(yn) && !"n".equalsIgnoreCase(yn)) {
@@ -150,7 +150,7 @@ public class ComJobPostController {
 	        
 	        for (JobPostDTO jobPost : jobPostList) {
 	            System.out.printf("%-10d %-20s %-20d %-10s %-15s\n",
-	                jobPost.getJop_postno(),
+	                jobPost.getJob_postno(),
 	                jobPost.getPost_title(),
 	                jobPost.getWage(),
 	                jobPost.getFk_work_TCODE() == 1 ? "정규직" : "비정규직",

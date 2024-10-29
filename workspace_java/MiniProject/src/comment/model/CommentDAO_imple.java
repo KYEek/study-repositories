@@ -10,7 +10,6 @@ import java.util.Map;
 
 import comment.domain.CommentDTO;
 import common.ProjectDBConnection;
-import review.domain.ReviewDTO;
 import user.domain.CompanyDTO;
 
 public class CommentDAO_imple implements CommentDAO {
@@ -157,7 +156,7 @@ public class CommentDAO_imple implements CommentDAO {
 			String sql =  " select comment_no, fk_review_no, comment_contents"
 					    + " , to_char(comment_regidate, 'yyyy-mm-dd') as comment_regidate"
 						+ " from tbl_comment "
-						+  "where fk_com_no = ?";
+						+ " where fk_com_no = ? and comment_status = 1 ";
 					
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, company.getCom_no());
@@ -166,8 +165,8 @@ public class CommentDAO_imple implements CommentDAO {
 			
 			while(rs.next()) {
 				
-				String result = rs.getInt("comment_no") + "\t" + rs.getInt("fk_review_no") + "\t" 
-				 + rs.getString("comment_regidate") + "\t" + rs.getString("comment_contents"); 
+				String result =  rs.getInt("fk_review_no") + "\t" 
+				 + rs.getString("comment_regidate") + "\t" +rs.getInt("comment_no") + "\t" + rs.getString("comment_contents"); 
 				
 				commentList.add(result);
 				
@@ -210,14 +209,9 @@ public class CommentDAO_imple implements CommentDAO {
 			}
 			
 		} catch (SQLException e) {
-			if(e.getErrorCode() == 1722) {
-				System.out.println(">> [경고] 글번호는 정수만 입력하세요 ! ");
-			} else {
-				e.printStackTrace();
-			}
-		
+			e.printStackTrace();
 		} finally {
-				close();
+			close();
 		}
 		
 		return comment;

@@ -2,7 +2,18 @@ select *
 from tab;
 
 select *
+from user_sequences;
+
+select * from tbl_users;
+select * from TBL_COMPANIES;
+
+select *
 from tbl_resumes;
+
+update tbl_users set user_id = USER_DELETE_SEQ.nextval where user_no =15;
+update tbl_users set user_id = USER_DELETE_SEQ.nextval where user_no =19;
+
+commit;
 
 
 select *
@@ -61,16 +72,16 @@ update tbl_companies set com_president = '이건희', com_tel = '02-1111-4444' w
 rollback;
 
 -- 일반 회원 로그인
-select user_no, user_id, user_passwd, user_name, user_jubun, user_email, user_tel, user_address, user_regi, user_status, fk_job_tcode, job_type
+select user_no, user_id, user_passwd, user_name, user_jubun, user_email, user_tel, user_address, user_regi, user_status, fk_job_tcode, job_type, user_point
 from TBL_USERS join TBL_JOB_TYPES on FK_JOB_TCODE = JOB_CODE
-where user_id ='ronaldo' and user_passwd = 'qwer1234$' and user_status = 1;
+where user_id ='kangdw' and user_passwd = 'qwer1234$' and user_status = 1;
 
 -- 기업 회원 로그인
 select com_no, com_id, com_passwd, com_name, com_intro, com_email, com_president, com_revenue, com_tel, com_address, fk_job_tcode, com_regi, com_status, job_code, job_type 
 from TBL_companies join TBL_JOB_TYPES on FK_JOB_TCODE = JOB_CODE 
 where COM_ID = 'samsungelctronic' and COM_PASSWD = 'qwer1234$' and com_status = 1;
 
-select * from tbl_companies where com_id = 'amazon' and com_status = 1;
+select * from tbl_job_posts;
 
 
 -- 관리자 로그인
@@ -94,6 +105,9 @@ from tbl_companies
 where com_name = '아마존' and com_email = 'amazon@naver.com' and com_status = 1;
 
 select * from tbl_companies where com_id = 'iu';
+
+
+update tbl_users set user_id = 
 
 
 rollback;
@@ -195,3 +209,9 @@ select com_status from tbl_companies where com_id = 'tesla';
 
 update tbl_users set user_id = 'leejy', user_status = 1 where user_no = 17;
 update tbl_companies set com_id = 'amazon', com_status = 1 where com_name = '아마존';
+
+
+SELECT jp.*, c.com_name 
+FROM tbl_job_posts jp 
+JOIN tbl_companies c ON jp.fk_com_no = c.com_no
+where jp.post_status = 1;

@@ -82,7 +82,7 @@ public class MemberDAO_Imple implements MemberDAO {
 	public MemberDTO login(Map<String, String> login) {
 		
 		
-		String sql = " select user_no, user_id, user_passwd, user_name, user_jubun, user_email, user_tel, user_address, user_regi, user_status, fk_job_tcode, job_code, job_type "
+		String sql = " select user_no, user_id, user_passwd, user_name, user_jubun, user_email, user_tel, user_address, user_regi, user_status, fk_job_tcode, job_code, job_type, user_point "
 				+ " from TBL_USERS join TBL_JOB_TYPES on FK_JOB_TCODE = JOB_CODE "
 				+ " where user_id = ? and user_passwd = ? and user_status = 1 ";
 		
@@ -116,6 +116,7 @@ public class MemberDAO_Imple implements MemberDAO {
 				member.setUser_status(rs.getInt(10));
 				member.setFk_job_tcode(rs.getInt(11));
 				member.setJob_type(rs.getString(12));
+				member.setUser_point(rs.getInt("user_point"));
 				
 			}
 			

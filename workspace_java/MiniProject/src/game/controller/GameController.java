@@ -174,6 +174,7 @@ public class GameController {
                 // end of if()----------------------
 
             }catch (NumberFormatException e) {
+            	i--;
                 System.out.print("[경고] 숫자로만 입력하세요!!\n");
             }// end of try~catch()---------------------
 
@@ -330,6 +331,7 @@ public class GameController {
             }
             else {
                 System.out.println("\n>> ### 오답입니다~ㅠ ### <<");
+                System.out.println("정답: "+ quiz.get("word_answer"));
                 System.out.println("맞춘문제수: " + answer_count);
             }
 

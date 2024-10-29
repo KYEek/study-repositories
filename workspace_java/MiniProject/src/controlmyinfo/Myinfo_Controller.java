@@ -152,6 +152,7 @@ public class Myinfo_Controller {
 			System.out.println("연락처 : " + member.getUser_tel());
 			System.out.println("주소 : " + member.getUser_address());
 			System.out.println("희망업종 : " + jobcode);
+			System.out.println("포인트 : " + member.getUser_point());
 			//TODO 희망업종 이름으로 표시되게 하기
 			
 			

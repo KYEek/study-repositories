@@ -8,8 +8,7 @@ import jobpost.member.domain.*;
 
 
 public interface JobPostDAO {
-    // 새로운 공고를 추가하는 메소드
-    void addJobPost(JobPostDTO jobPost);
+  
     
     // 본인이 같은 곳에 공고 지원한 곳인지 확인하는 메소드
     boolean isAlreadyApplied(int jobPostNo, int resumeNo);
@@ -23,7 +22,14 @@ public interface JobPostDAO {
 
     // 조건에 따라 공고를 검색하는 메소드
     List<JobPostDTO> searchJobPosts(String companyNo, String companyName, String salary, String jobPeriod);
-
+  /*  
+    // 입력 검증 메서드 추가
+    boolean isValidJobPostNo(String jobPostNo);
+    boolean isValidCompanyName(String companyName);
+    boolean isValidWage(String wage);
+    boolean isValidJobType(String jobType);
+   */
+    
     // 모든 이력서를 조회하는 메소드
     List<JobPostDTO> showAllResumeList(MemberDTO member);
     

@@ -6,8 +6,9 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value=""/>
+		<item key="selection" value="NumberFor"/>
 		<list key="findhistory">
+			<item value="numberfor"/>
 			<item value="resume_menu"/>
 			<item value="resume"/>
 			<item value="setAutoCommit"/>
@@ -15,7 +16,6 @@
 			<item value="초기화"/>
 			<item value="last"/>
 			<item value="파일명"/>
-			<item value="count"/>
 		</list>
 		<list key="replacehistory">
 		</list>

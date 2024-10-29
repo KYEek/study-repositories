@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>CSS(Cascading Style Sheets)의 우선순위에 대해서 알아본다.</title>
+
+<link rel="stylesheet" href="./mycss.css"> <!-- 외부에 있는 css 파일을 로드한다, ./는 현재 파일의 경로를 나타낸다 -->
+<!-- ./은 생략해도 같은 의미이다 -->
+
+<style>
+
+/* 주석문 */
+/*=== CSS(Cascading Style Sheets)의 우선순위 ===*/
+
+/* 
+    !important(css 강제적용)
+    해당 태그에 직접준것(인라인방식)
+    HTML 파일에서 준 style 태그(임베디드방식)
+
+    외부에 있는 .css 파일을 로드 한것(예: <link rel="stylesheet" href="mycss.css"> )
+
+*/
+
+
+    div {
+        border : outset 8px bisque; /* 테두리를 8px로 설정하고, 테두리 색을 bisque로 설정한다. */
+        background-color: antiquewhite;  /* !important는 이거를 강제로 적용한다는 의미다*/    
+        color: #bfbfbf ; /* 글자색을 회색으로 바꾼다. */;
+        font-style: normal; /* 글자 모양을 똑바르게*/
+        /* 외부css 에서 폰트 스타일을 설정해도 이 파일에서  다시 설정했기 때문에 normal이 적용*/
+        text-align: center; /* 글자를 가운데 정렬*/ 
+        margin: 30px 0; /* 위아래로 30px씩 띄운다. */   
+
+    }
+</style>
+
+</head>
+<body>
+
+<!-- html의 주석문 -->
+<div style = "border: outset 8px ; border-color: #ffeb99; background-color: #ffd6cc; color : black; ">나는 div1</div>
+<div>나는 div2</div>
+<div>나는 div3</div>
+<div style="margin: 10px; text-align: right; border-color: black; background-color: #333333;">나는 div4</div>
+
+
+
+
+
+
+</body>
+</html>

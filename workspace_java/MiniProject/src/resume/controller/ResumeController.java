@@ -634,7 +634,7 @@ public class ResumeController {
     		int n = redao.update_resume(paramap, resume_no);
 			
     		if (n == 1) {
-    			System.out.println(">> 글 수정 성공!! << \n");
+    			System.out.println(">> 이력서 수정 성공!! << \n");
     		}
  	
 		}

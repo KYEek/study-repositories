@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import common.ProjectDBConnection;
@@ -20,10 +21,7 @@ public class JobPostDAO_imple implements JobPostDAO {
      ResultSet rs; 
      
     
-	@Override
-	public void addJobPost(JobPostDTO jobPost) {
-		
-	}
+	
 
    // 전체 공고 조회 메소드
     @Override
@@ -42,7 +40,7 @@ public class JobPostDAO_imple implements JobPostDAO {
             while (rs.next()) {
                 JobPostDTO jobPost = new JobPostDTO();
                 jobPost.setWage(rs.getInt("wage"));
-                jobPost.setJop_postno(rs.getInt("job_postno"));
+                jobPost.setJob_postno(rs.getInt("job_postno"));
                 jobPost.setPost_title(rs.getString("post_title"));
                 jobPost.setCom_name(rs.getString("com_name"));
                 jobPost.setPost_contents(rs.getString("post_contents"));
@@ -95,7 +93,7 @@ public class JobPostDAO_imple implements JobPostDAO {
 	        if (rs.next()) {
 	            jobPost = new JobPostDTO();
 	            // 결과에서 데이터 추출
-	            jobPost.setJop_postno(rs.getInt("job_postno"));
+	            jobPost.setJob_postno(rs.getInt("job_postno"));
 	            jobPost.setCom_name(rs.getString("com_name"));
 	            jobPost.setJob_type(rs.getString("job_type"));
 	            jobPost.setWage(rs.getInt("wage"));
@@ -122,77 +120,110 @@ public class JobPostDAO_imple implements JobPostDAO {
 	}
 
 
-
+    // 공고 조건 검색 메소드
 	@Override
-	// 조건 검색 조회 메소드
-	  public List<JobPostDTO> searchJobPosts(String jop_postno, String com_name, String wage, String job_type) {
+	public List<JobPostDTO> searchJobPosts(String jobPostNo, String companyName, String wage, String jobType) {
+	    // 조건에 맞는 공고 목록을 담을 리스트 초기화
+	    List<JobPostDTO> filteredPosts = new ArrayList<>();
+	    // 모든 입력란이 비어있으면 경고 메시지 출력
+	    if ((jobPostNo == null || jobPostNo.isEmpty()) &&
+	        (companyName == null || companyName.isEmpty()) &&
+	        (wage == null || wage.isEmpty()) &&
+	        (jobType == null || jobType.isEmpty())) {
+	        System.out.println("[경고]: 검색할 조건을 적어도 한개는 입력해야 합니다.");
+	        return Collections.emptyList(); // 빈 리스트 반환
+	    }
+	    
 
-		List<JobPostDTO> jobPosts = new ArrayList<>();
-        String sql = " SELECT jp.*, c.com_name, j.job_type "
-                   + " FROM TBL_JOB_POSTS jp "
-                   + " JOIN TBL_COMPANIES c ON jp.fk_com_no = c.com_no "
-                   + " JOIN TBL_JOB_TYPES j ON jp.fk_job_tcode = j.job_tcode "
-                   + " WHERE (1=1) ";
-       
-        // 조건에 따라 SQL 문을 동적으로 구성
-        if (!jop_postno.isEmpty()) {
-            sql += " AND c.com_no = ?";
-        }
-        if (!com_name.isEmpty()) {
-            sql += " AND c.com_name LIKE ?";
-        }
-        if (!wage.isEmpty()) {
-            sql += " AND jp.wage = ?";
-        }
-        if (!job_type.isEmpty()) {
-            sql += " AND jp.write_date >= ?"; // 시작일 기준으로 공고 기간 조건 추가
-        }
 
-        try {
-        	
-        	pstmt = conn.prepareStatement(sql);  
+	    // 공고 조건 검색을 위한 SQL 쿼리 문자열 생성
+	    String sql = "SELECT jp.job_postno, c.com_name, jp.wage, jt.job_type, jp.write_date AS start_date, jp.end_date, jp.view_count " +
+	                 "FROM tbl_job_posts jp " +   // 공고 정보를 담은 테이블과
+	                 "JOIN tbl_companies c ON jp.fk_com_no = c.com_no " +   // 회사 테이블을 회사 ID(fk_com_no)를 통해 조인
+	                 "JOIN tbl_job_types jt ON jp.fk_job_tcode = jt.job_code " + // 직종명 테이블을 직종 코드(fk_job_tcode)로 조인
+	                 "WHERE post_status =1 ";   // 기본 조건 설정 (후속 조건을 추가하기 위함)
 
-            int index = 1;
+	    // SQL 조건을 사용자가 입력한 값에 따라 추가
+	    if (jobPostNo != null && !jobPostNo.isEmpty()) sql += " AND job_postno = ? ";   // 공고 번호 조건
+	    if (companyName != null && !companyName.isEmpty()) sql += " AND com_name LIKE ? ";   // 회사 이름 조건
+	    if (wage != null && !wage.isEmpty()) sql += " AND wage >= ? ";   // 연봉 조건
+	    if (jobType != null && !jobType.isEmpty()) sql += " AND job_type LIKE ? ";   // 직종명 조건
 
-            if (!jop_postno.isEmpty()) {
-                pstmt.setInt(index++, Integer.parseInt(jop_postno));
-            }
-            if (!com_name.isEmpty()) {
-                pstmt.setString(index++, "%" + com_name + "%");
-            }
-            if (!wage.isEmpty()) {
-                pstmt.setInt(index++, Integer.parseInt(wage));
-            }
-            if (!job_type.isEmpty()) {
-                pstmt.setString(index++, job_type); // 날짜 형식에 맞춰 입력
-            }
-
-            ResultSet rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                JobPostDTO jobPost = new JobPostDTO();
-                
-                // 여기에 jobPost의 필드 설정
-                jobPosts.add(jobPost);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
+	    try {
+	        // 데이터베이스 연결 생성
+	        Connection conn = ProjectDBConnection.getConn();
 	        
-	        try {
-	            if (rs != null) rs.close();
-	            if (pstmt != null) pstmt.close();
-	        } catch (SQLException e) {
-	            e.printStackTrace();
+	        // 조건에 따라 SQL을 준비하여 PreparedStatement 생성
+	        PreparedStatement pstmt = conn.prepareStatement(sql);
+
+	        // SQL에 설정할 파라미터 인덱스 초기화
+	        int paramIndex = 1;
+	        // SQL에 설정할 파라미터 인덱스에 따라 값 설정
+	        if (jobPostNo != null && !jobPostNo.isEmpty()) {
+	            pstmt.setInt(paramIndex++, Integer.parseInt(jobPostNo)); // 공고번호 파라미터 설정
 	        }
+	        if (companyName != null && !companyName.isEmpty()) {
+	            pstmt.setString(paramIndex++, "%" + companyName + "%"); // 회사 이름 파라미터 설정
+	        }
+	        if (wage != null && !wage.isEmpty()) {
+	            pstmt.setInt(paramIndex++, Integer.parseInt(wage)); // 연봉 파라미터 설정
+	        }
+	        if (jobType != null && !jobType.isEmpty()) {
+	            pstmt.setString(paramIndex++, "%" + jobType + "%"); // 직종명 파라미터 설정
+	        }
+
+
+	        // SQL 실행 및 결과 가져오기
+	        ResultSet rs = pstmt.executeQuery();
+	        
+	        // 결과 집합을 반복하면서 각 공고 정보를 JobPostDTO 객체로 변환
+	        while (rs.next()) {
+	            JobPostDTO post = new JobPostDTO();
+	            post.setJob_postno(rs.getInt("job_postno"));  // 공고번호 설정
+	            post.setCom_name(rs.getString("com_name"));   // 회사 이름 설정
+	            post.setWage(rs.getInt("wage"));              // 연봉 설정
+	            post.setJob_type(rs.getString("job_type"));   // 직종명 설정
+	            post.setWrite_date(rs.getString("start_date")); // 공고 시작일 설정
+	            post.setEnd_date(rs.getString("end_date"));   // 공고 종료일 설정
+	            post.setView_count(rs.getInt("view_count"));  // 조회수 설정
+
+	            filteredPosts.add(post);  // 리스트에 공고 객체 추가
+	        }
+
+	        
+	    } catch (SQLException e) {
+	        // SQL 예외 발생 시 스택 트레이스 출력
+	        e.printStackTrace();
 	    }
 
-        return jobPosts;
+	    // 조건에 맞는 공고 목록 반환
+	    return filteredPosts;
+	}
+
+	/*
+	
+	// 입력 검증 메서드 구현
+    @Override
+    public boolean isValidJobPostNo(String jobPostNo) {
+        return jobPostNo != null && !jobPostNo.isEmpty() && jobPostNo.matches("\\d+");
     }
 
+    @Override
+    public boolean isValidCompanyName(String companyName) {
+        return companyName != null && !companyName.isEmpty();
+    }
 
-	  
+    @Override
+    public boolean isValidWage(String wage) {
+        return wage != null && !wage.isEmpty() && wage.matches("\\d+");
+    }
+
+    @Override
+    public boolean isValidJobType(String jobType) {
+        return jobType != null && !jobType.isEmpty();
+    }
+
+   */
 
 	    // 나의 이력서를 조회하는 메소드
 		@Override
@@ -276,7 +307,7 @@ public class JobPostDAO_imple implements JobPostDAO {
 		        
 		        while (rs.next()) {
 		            JobPostDTO post = new JobPostDTO();
-		            post.setJop_postno(rs.getInt("JOB_POSTNO"));
+		            post.setJob_postno(rs.getInt("JOB_POSTNO"));
 		            post.setApply_no(rs.getInt("APPLY_NO"));
 		            post.setFk_com_no(rs.getInt("com_no"));
 		            post.setCom_name(rs.getString("com_name"));
@@ -532,7 +563,7 @@ public class JobPostDAO_imple implements JobPostDAO {
 		        
 		        while (rs.next()) {
 		            JobPostDTO jobPost = new JobPostDTO();
-		            jobPost.setJop_postno(rs.getInt("job_postno"));
+		            jobPost.setJob_postno(rs.getInt("job_postno"));
 		            jobPost.setPost_title(rs.getString("post_title"));
 		            jobPost.setPost_contents(rs.getString("post_contents"));
 		            jobPost.setWage(rs.getInt("wage"));
@@ -648,6 +679,12 @@ public class JobPostDAO_imple implements JobPostDAO {
 
 			}
 		}
+
+
+
+		
+
+	
 
 		
 }		

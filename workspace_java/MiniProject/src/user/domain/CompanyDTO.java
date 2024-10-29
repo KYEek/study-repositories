@@ -65,6 +65,17 @@ public class CompanyDTO {
 		return com_id;
 	}
 	public boolean setCom_id(String com_id) {
+		
+		
+		try {
+			if(Integer.parseInt(com_id) < 0) {
+				return true;
+			}
+		} catch(NumberFormatException e) {
+			
+		}
+		
+		
 		if(com_id.length() < 2 || com_id.length() > 20) {			//아이디 글자 파악
 			System.out.println("아이디는 5글자 이상 20글자 이하여야 합니다.");
 			return false;

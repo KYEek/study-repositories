@@ -321,7 +321,7 @@ public class MbrReviewDAO_imple implements MbrReviewDAO {
 						+ " , review_regidate "
 						+ " from tbl_reviews A join tbl_users B "
 						+ " on A.fk_user_no = B.user_no "
-						+ " where review_no = ? "; 
+						+ " where review_no = ? and review_status = 1 "; 
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, paraMap.get("review_no"));

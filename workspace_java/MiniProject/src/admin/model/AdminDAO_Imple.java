@@ -108,7 +108,7 @@ public class AdminDAO_Imple implements AdminDAO {
 						+ "		 , CASE WHEN LENGTH(post_contents) > 10 THEN SUBSTR(post_contents, 1,7) || '...' ELSE post_contents END AS post_contents "
 						+ "		 , TO_CHAR(end_date, 'yyyy-mm-dd') AS end_date, view_count, rank() over(order by view_count desc) AS rank "
 						+ "   FROM tbl_job_posts "
-						+ "  WHERE TO_CHAR(end_date, 'yyyymmdd') - TO_CHAR(sysdate, 'yyyymmdd') > 0 ";
+						+ "  WHERE TO_CHAR(end_date, 'yyyymmdd') - TO_CHAR(sysdate, 'yyyymmdd') > 0 AND post_status = 1 ";
 		
 			pstmt = conn.prepareStatement(sql);		// 쿼리문 세팅
 			rs = pstmt.executeQuery();				// 쿼리문 실행
@@ -148,6 +148,7 @@ public class AdminDAO_Imple implements AdminDAO {
 						+ "		 SELECT A.fK_job_postno, B.post_title, B.post_contents, B.end_date "
 						+ "		   FROM tbl_applys A JOIN tbl_job_posts B "
 						+ "			 ON A.fk_job_postno = B.job_postno "
+						+ " 	  WHERE B.post_status = 1 "
 						+ "	) C JOIN ( "
 						+ "		 SELECT fk_job_postno, COUNT(*) AS apply_count "
 						+ "		   FROM tbl_applys "
@@ -159,6 +160,7 @@ public class AdminDAO_Imple implements AdminDAO {
 						+ "		 SELECT A.fK_job_postno, B.post_title, B.post_contents, B.end_date "
 						+ "		   FROM tbl_applys A JOIN tbl_job_posts B "
 						+ "			 ON A.fk_job_postno = B.job_postno "
+						+ " 	  WHERE B.post_status = 1 "
 						+ "	) C JOIN ( "
 						+ "		 SELECT fk_job_postno, COUNT(*) AS apply_count "
 						+ "		   FROM tbl_applys "

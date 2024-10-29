@@ -41,7 +41,6 @@
     <fullyQualifiedTypeName name="member.model.MemberDAO_Imple"/>
     <fullyQualifiedTypeName name="company.model.CompanyDAO_Imple"/>
     <fullyQualifiedTypeName name="java.util.HashMap"/>
-    <fullyQualifiedTypeName name="java.lang.NumberFormatException"/>
     <fullyQualifiedTypeName name="java.lang.Integer"/>
     <fullyQualifiedTypeName name="job_posts.domain.JobpostDTO"/>
     <fullyQualifiedTypeName name="java.util.regex.Pattern"/>
@@ -50,4 +49,5 @@
     <fullyQualifiedTypeName name="resume.controller.ResumeController"/>
     <fullyQualifiedTypeName name="admin.util.Util"/>
     <fullyQualifiedTypeName name="user.domain.CompanyDTO"/>
+    <fullyQualifiedTypeName name="java.lang.NumberFormatException"/>
 </qualifiedTypeNameHistroy>

@@ -89,7 +89,7 @@ public class CompanyReviewDAO_imple implements CompanyReviewDAO {
 			String sql =  " select review_no, user_name, user_no, review_contents, review_score, review_regidate, viewcount "
 						+ " from tbl_reviews A join tbl_users B "
 						+ " on A.fk_user_no = B.user_no "
-						+ " where review_no = ? "; 
+						+ " where review_no = ?"; 
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, review_no);
