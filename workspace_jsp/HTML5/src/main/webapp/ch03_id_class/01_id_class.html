@@ -50,6 +50,18 @@
         font-size: 30pt;
         font-weight: bold;
       }
+      /* 스팬태그 이면서 아이디가 span1인것 */
+      span#span1 {
+        background-color: #002699;
+      }
+      /* 스팬태그 이면서 아이디가 span2인것 */
+      span#span2 {
+        background-color: #00804d;
+      }
+      div.myclass > span {
+        background-color: yellow;
+        color: black;
+      }
     </style>
   </head>
   <body>
@@ -68,11 +80,11 @@
     <div class="mycenter">div 태그에 class 속성이 있습니다.</div>
 
     <p class="myclass">
-      <span>여기는 첫번째 p태그의 내용 입니다.</span>
+      <span id="span1">여기는 첫번째 p태그의 내용 입니다.</span>
     </p>
 
     <p class="myclass">
-      <span>여기는 두번째 p태그의 내용 입니다.</span>
+      <span id="span2">여기는 두번째 p태그의 내용 입니다.</span>
     </p>
   </body>
 </html>

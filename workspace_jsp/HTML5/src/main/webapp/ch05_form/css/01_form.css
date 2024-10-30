@@ -1,0 +1,32 @@
+@charset "UTF-8";
+
+div#container {
+  border: solid 0px red;
+  width: 80%;
+  margin: 5% auto 0 auto;
+}
+
+div#container > form {
+  border: solid 0px blue;
+  width: 50%;
+}
+
+div#container > form > fieldset > legend {
+  font-size: 20pt;
+  background-color: black;
+  color: white;
+  padding: 0.5% 1%;
+  margin: 0 10%;
+}
+
+div#container > form > fieldset > ul {
+  border: solid 1px black;
+  list-style-type: none;
+  padding-left: 10%;
+}
+
+div#container > form > fieldset > ul > li > label {
+  border: solid 1px black;
+  display: inline-block;
+  width: 25%;
+}
