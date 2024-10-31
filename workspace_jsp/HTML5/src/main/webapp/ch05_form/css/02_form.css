@@ -1,1 +1,89 @@
 @charset "UTF-8";
+
+* {
+  font-family: Arial, "MS Trebuchet", sans-serif;
+}
+
+div#container {
+  border: solid 0px gray;
+}
+
+div#container > form > fieldset > legend {
+  background-color: navy;
+  font-size: 20pt;
+  font-weight: bold;
+  color: antiquewhite;
+}
+
+div#container > form > fieldset > ul {
+  border: solid 0px gray;
+  list-style: none;
+}
+
+div#container > form > fieldset > ul > li > label:first-child {
+  display: inline-block;
+  width: 18%;
+  font-size: 14pt;
+  font-weight: bolder;
+  color: navy;
+}
+
+div#container > form > fieldset > ul > li {
+  margin: 2% 0;
+}
+
+div#container > form > fieldset > ul > li > label[for="male"] {
+  margin-right: 3%;
+}
+div#container > form > fieldset > ul > li > input[type="radio"] {
+  margin-right: 2%;
+}
+
+div#container > form > fieldset > ul > li > input[type="checkbox"] {
+  margin-right: 5%;
+  margin-left: 1%;
+}
+
+div#container > form > fieldset > ul > li > select {
+  width: 15%;
+  height: 30px;
+}
+div#container > form > fieldset > ul > li > select[name="food"] option,
+div#container > form > fieldset > ul > li > select[name="class"] option {
+  color: red;
+}
+
+div#container > form > fieldset > ul > li > select[name="food"] option,
+div#container > form > fieldset > ul > li > select[name="program"] option {
+  height: 20px;
+  font-size: 16pt;
+}
+
+div#container > form > fieldset > ul > li > select[name="food"] {
+  height: 80px;
+}
+
+input[type="submit"] {
+  background-color: navy;
+  margin-right: 4%;
+  width: 10%;
+  color: azure;
+  height: 40px;
+}
+
+input[type="reset"] {
+  background-color: rgb(226, 59, 59);
+  color: azure;
+  width: 10%;
+  height: 40px;
+}
+
+label[for="registeCommand"] {
+  position: relative;
+  top: -60px;
+}
+
+label[for="favorite_food"] {
+  position: relative;
+  top: -60px;
+}
