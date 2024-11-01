@@ -1,0 +1,56 @@
+@charset "UTF-8";
+
+div#container {
+  border: solid 1px #000;
+  width: 80%;
+  margin: 4% auto;
+}
+
+div#container > table {
+  border: solid 0px orange;
+  width: 40%;
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+div#container > table th {
+  border: solid 1px #000;
+  height: 40px;
+  font-size: 14pt;
+}
+
+div#container > table th:hover {
+  background-color: navy;
+  color: white;
+  cursor: pointer;
+  transition: 3s;
+  /* transition은 속성을 서서히 변화시키는 속성이다. 
+        3s(==3초)는 transition 실행시간으로써 반드시 지정해주어야 한다.
+        지정해주지 않으면 기본값인 0s 가 적용되어 아무런 효과가 나타나지 않는다.
+        보통 transition은 태그(요소)에 마우스오버 했을때 변화가 나타난다. 
+      */
+}
+
+div#container > table td {
+  text-align: center;
+  height: 200px;
+}
+
+div#container > table td > img {
+  border: solid 0px red;
+
+  /* border-radius: 50%; 절반씩 깎음 */
+
+  /* border-radius는 태그(요소)의 모서리를 둥글게 만드는 속성이다. */
+  /* border-radius: top-left-x top-right-x bottom-right-x bottom-left-x / top-left-y top-right-y bottom-right-y bottom-left-y */
+  /* border-radius: 20px 20px 20px 20px/ 20px 20px 20px 20px; */
+  /* 또는 아래처럼 하면 같은것이다. */
+  border-radius: 50%;
+  opacity: 0.5;
+  /* 광도  0.0 ~ 1.0  숫자가 적을수록 희미해진다.  0.0 은 투명, 1.0 은 원래 광도이다. */
+}
+
+div#container > table td > img:hover {
+  opacity: 1;
+  transition: 2s;
+}

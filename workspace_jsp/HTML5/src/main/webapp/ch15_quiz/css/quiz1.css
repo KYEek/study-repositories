@@ -1,0 +1,75 @@
+@charset "UTF-8";
+
+div#container {
+  border: solid 0px black;
+  width: 80%;
+  margin: 0 auto;
+}
+
+nav {
+  border: solid 0px black;
+}
+
+nav > span {
+  color: blue;
+  font-size: 14pt;
+  margin-right: 3%;
+}
+nav > hr {
+  border: solid 2px blue;
+}
+
+nav > form > input[type="text"] {
+  size: 5;
+}
+
+nav > form {
+  float: right;
+}
+
+div#main_div {
+  border: solid 0px black;
+  display: flex;
+  height: 600px;
+}
+div#main_div > div:first-child {
+  border: solid 1px gray;
+  border-radius: 20px 20px 20px 20px/ 20px 20px 20px 20px;
+  width: 65%;
+  margin: 0 auto 0 0;
+  overflow: auto;
+}
+div#main_div > div:last-child {
+  border: solid 1px gray;
+  border-radius: 20px 20px 20px 20px/ 20px 20px 20px 20px;
+  width: 28%;
+  margin: 0 0 0 auto;
+}
+
+aside {
+  font-size: 17pt;
+  color: darkmagenta;
+  float: right;
+  width: 40%;
+  height: 90px;
+  font-weight: bolder;
+  position: relative;
+  top: -20px;
+  margin: 0 0 4% 4%;
+}
+
+div#date_list > div:nth-child(2) {
+  color: blue;
+}
+
+ul#date_ul {
+  list-style-type: none;
+  font-size: 14pt;
+}
+ul#date_ul > li {
+  margin: 15px 0;
+}
+
+div#date_list {
+  padding: 2% 0 0 3%;
+}

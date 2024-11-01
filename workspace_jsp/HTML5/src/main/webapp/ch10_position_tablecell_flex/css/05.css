@@ -1,0 +1,95 @@
+@charset "UTF-8";
+
+body {
+  border: solid 1px gray;
+  width: 80%;
+  margin: 0 auto;
+}
+
+div#container {
+  border: solid 1px red;
+  width: 80%;
+  margin: 0 auto;
+}
+
+div#container > div#parent,
+div#container > div#other {
+  border: solid 2px green;
+  margin: 10px;
+}
+
+div#container > div#parent {
+  width: 50%;
+  background-color: #ffcccc;
+}
+
+div#container div.me {
+  background-color: yellow;
+  width: 80%;
+  /* position: fixed; 이므로 width 를 주면 부모의 크기를 따라가는 것이 아니라 웹브라우저 크기의 80% 만큼 잡힌다. */
+}
+
+/*
+   엘리먼트에 CSS 속성으로 position을 지정하면 여러가지 방법으로 위치를 지정할 수 있다.
+
+  - 고정위치(fixed positioning)
+    position: fixed
+
+        문서를 기준(웹브라우저 주소창 아래의 top 0px, left 0px 을 기준)으로 위치가 정해지기 때문에 부모 엘리먼트의 위치와는 무관하다.
+        parent와의 관계는 완전히 사라지기 때문에 엘리먼트의 크기는 부모 엘리먼트의 크기에 영향을 받지 않는다.
+		width 를 정해주지 않으면 width는 내용물의 크기만큼 잡힌다.
+        중요한 것은 스크롤의 영향을 받지 않는다는 것이다.
+    me는 절대위치와 동일한 성격을 갖지만, 화면을 스크롤해도 고정된 위치에 위치함 
+*/
+
+div#container > div.myfixed {
+  border: solid 0px blue;
+  position: fixed;
+  top: 78%;
+  left: 84%;
+}
+
+div#container > div.div_table > div#div_table_cell {
+  border: solid 0px black;
+  width: 80px;
+  height: 80px;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  border-radius: 50%;
+  background-color: navy;
+}
+
+div#container > div.div_table > div#div_table_cell > a:link,
+div#container > div.div_table > div#div_table_cell > a:visited,
+div#container > div.div_table > div#div_table_cell > a:active {
+  /* a:link    : 방문 전 링크 상태이다.
+       a:visited : 방문 후 링크 상태이다.
+      a:hover   : 마우스 오버 했을 때 링크 상태이다.
+      a:active  : 클릭 했을 때 링크 상태이다.
+    */
+  color: white;
+}
+
+/*
+       vertical-align 속성 적용 가능 한 곳 :  (아래의 경우만 된다고 한다.)
+       1. table내
+       2. inline 엘리먼트 : text, img, input (여러 inline엘리먼트 안에서 세로로 가운데 정렬이 되는 것/ div안에서의 가운데 정렬을 의미하지 않음)
+   */
+/*
+      >>>> !!! div 에 세로 정렬을 시키려면 !!! <<<<
+      외곽 div 의 display 를 table 로 하고, 내부 div 의 display 를 table-cell 로 지정해주면 된다.
+   */
+
+div#container > div.div_table {
+  display: table;
+}
+
+div#container > div.div_table > div#div_table_cell > a {
+  text-decoration: none;
+}
+
+div#container > div.div_table > div#div_table_cell:hover {
+  background-color: red;
+  transition: 1.5s;
+}
