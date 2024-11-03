@@ -71,5 +71,22 @@ ul#date_ul > li {
 }
 
 div#date_list {
-  padding: 2% 0 0 3%;
+  padding: 2% 0 0 1%;
+}
+div#date_list > div > h3 {
+  margin-left: 10%;
+}
+
+footer > div:first-child {
+  margin: 3%;
+  text-align: center;
+}
+
+footer > div#footer_menu {
+  text-align: center;
+}
+
+footer > div#footer_menu a {
+  text-align: center;
+  margin: 2% 4%;
 }
