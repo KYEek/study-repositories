@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>스크립트 태그는 head 태그내에 위치해도 됩니다.</title>
+
+    <script type="text/javascript">
+      // 한줄주석
+      /*
+      여러줄 주석
+     */
+
+      //자바스크립트에서 문자열을 사용할 때는 큰따옴표나 작은따옴표를 사용합니다.
+      document.getElementById("h1").innerHTML =
+        "<span style='color: red; font-weight: bold;'>h1태그입니다</span>";
+
+      function myFunction() {
+        document.getElementById("h1").innerHTML =
+          "<span style='color: green; font-weight: bold;'>h1태그입니다</span>";
+        document.getElementById("demo").innerHTML =
+          "p태그의 <span style='color: red; font-weight: bold;'>내용이 변경</span> 되었습니다.";
+      }
+    </script>
+  </head>
+  <body>
+    <h1 id="h1"></h1>
+    <h2>스크립트 태크 head 내에 위치해도 됩니다.</h2>
+
+    <p id="demo">변경전 p태그</p>
+    <!-- button type을 생략하면 기본값이 button이 되는데 자바와 결합할 때 생략하면 문제가 발생할 수 있습니다. -->
+    <!-- onclick은 버튼을 클릭했을 때 실행할 자바스크립트 코드를 지정합니다. -->
+    <!-- ()가 있는 경우는 함수를 호출하는 것이고 ()가 없는 경우는 함수를 참조하는 것입니다. -->
+    <button type="button" onclick="myFunction()">클릭하세요</button>
+  </body>
+</html>

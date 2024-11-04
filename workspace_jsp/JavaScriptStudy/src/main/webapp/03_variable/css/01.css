@@ -1,0 +1,9 @@
+@charset "UTF-8";
+
+div.div1 {
+  margin: 40px 0 20px 0;
+}
+
+div.div2 > button {
+  margin-right: 40px;
+}
