@@ -153,5 +153,74 @@ window.onload = function () {
     };
     img.width = "150"; //px을 안붙여도 된다.
     img.height = "110"; //기본적으로 px이다.
-  }
+  } // end of fot
+
+  // 체크박스확인1 버튼을 클릭하면 name 값이 hobby 인 체크박스에 체크가 되어진것만 value 을 나열해서 span태그의 id값이 result1 인 곳에 출력하세요...
+  document.querySelectorAll("button")[6].onclick = function () {
+    //document.querySelectorAll("button")[6]를 "이벤트 소스"라고 한다.
+    //onclick = function(){} 이벤트 소스에 클릭 이벤트를 걸어준다.
+    //function(){} 이벤트 핸들러라고 한다.
+    // alert("체크박스확인1 버튼을 클릭하셨군요");
+
+    //input[type=checkbox] 보다는 input[name=hobby]를 사용하는 것이 좋다.
+    //const checkbox_list = document.querySelectorAll("input[type=checkbox]");
+    const checkbox_list = document.querySelectorAll("input[name=hobby]");
+    let result = "";
+    let cnt = 0;
+    for (let i = 0; i < checkbox_list.length; i++) {
+      //필수암기
+      // console.log("확인용 value : ", checkbox_list[i].value);
+      //cheked 속성 필수 암기
+      // console.log("확인용 체크유무 : ", checkbox_list[i].checked);
+
+      if (checkbox_list[i].checked) {
+        cnt++;
+        let s_comma = cnt == 0 ? "" : ",";
+        result += s_comma + checkbox_list[i].value;
+      }
+    } //end of for-----------------------------
+
+    // console.log(result);
+    document.querySelector("span#result1").innerHTML = result;
+  };
+
+  // 체크박스확인2 버튼을 클릭하면 name 값이 hobby 인 체크박스에 체크가 되어진것만 value 을 나열해서 span태그의 id값이 result1 인 곳에 출력하세요...
+  document
+    .querySelector("button#btn_ok_2")
+    .addEventListener("click", function () {
+      const checkbox_list = document.querySelectorAll("input[type=checkbox]");
+      let result = "";
+      let cnt = 0;
+      for (let i = 0; i < checkbox_list.length; i++) {
+        //필수암기
+        // console.log("확인용 value : ", checkbox_list[i].value);
+        //cheked 속성 필수 암기
+        // console.log("확인용 체크유무 : ", checkbox_list[i].checked);
+
+        if (checkbox_list[i].checked) {
+          cnt++;
+          let s_comma = cnt == 0 ? "" : ",";
+          result += s_comma + checkbox_list[i].value;
+        }
+      } //end of for-----------------------------
+    });
+  //document.querySelectorAll("button")[6]를 "이벤트 소스"라고 한다.
+  //onclick = function(){} 이벤트 소스에 클릭 이벤트를 걸어준다.
+  //function(){} 이벤트 핸들러라고 한다.
+  // alert("체크박스확인1 버튼을 클릭하셨군요");
+
+  // console.log(result);
+  document.querySelector("span#result1").innerHTML = result;
 };
+
+function func_clear() {
+  const checkbox_list = document.querySelectorAll("input[type=checkbox]");
+
+  for (let i = 0; i < checkbox_list.length; i++) {
+    //체크박스의 체크를 해제
+    checkbox_list[i].checked = false;
+  }
+
+  document.querySelector("span#result1").innerHTML = "";
+  document.querySelector("span#result2").innerHTML = "";
+}
