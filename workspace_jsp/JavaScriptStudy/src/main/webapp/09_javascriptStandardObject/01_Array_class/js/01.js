@@ -571,4 +571,24 @@ window.onload = function () {
   }
 
   document.querySelector("div#person_arr").innerHTML = person_html;
+
+  //=====================퀴즈-2 시작=====================//
+  const words = document.querySelector("div#words").innerText;
+  const word_arr = words.split(",");
+  const word_result = [];
+  for (let word of word_arr) {
+    word.trim();
+    if (word.indexOf("o", 1) == 1) {
+      word_result.push(word);
+    }
+  } //end of for-------------------
+
+  if (word_arr.length > 0) {
+    let word_html = "<ul>";
+    for (let word of word_result) {
+      word_html += `<li>${word}</li>`;
+    }
+    word_html += "</ul>";
+    document.querySelector("div#word_list").innerHTML = word_html;
+  }
 };
