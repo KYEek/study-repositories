@@ -63,7 +63,7 @@ window.onload = function () {
 
   const timerDiv = document.querySelector("div#timer"); // 타이머를 보여줄 장소
 
-  let time = 600; // 타이머 시간을 10분으로 지정함.
+  let time = 10; // 타이머 시간을 10분으로 지정함.
 
   // ===== 타이머 함수 만들기 시작 ===== //
   const timer = function () {
@@ -312,6 +312,47 @@ window.onload = function () {
     // document.querySelector(
     //   "div#score"
     // ).innerHTML = `<span style='font-weight:bold;'>정답개수 : ${answer_cnt}</span>`;
+
+    html = `<table>
+        <tr>
+            <th>문제번호</th>
+            <th>1번문제</th>
+            <th>2번문제</th>
+            <th>3번문제</th>
+            <th>4번문제</th>
+            <th>5번문제</th>
+            <th>점수</th>
+        </tr>
+        <tr>
+
+            <th>정답</th>
+            <td>3</td>
+            <td>2</td>
+            <td>4</td>
+            <td>2</td>
+            <td>4</td>
+            <td rowspan="4">60</td>
+        </tr>
+        <tr>
+
+            <th>제출한답</th>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+            <td>1</td>
+        </tr>
+        <tr></tr>
+            <th>제첨결과</th>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+        </tr>
+    </table>`;
+
+    document.querySelector("footer").innerHTML = html;
 
     return true; // true 를 리턴시켜 주면서 함수의 종료한다.
     // =========== 진짜로 채점하러 가기 끝 ============ //

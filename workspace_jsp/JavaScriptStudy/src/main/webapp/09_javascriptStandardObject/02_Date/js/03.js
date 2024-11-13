@@ -7,7 +7,7 @@ window.onload = function () {
 
   const timerDiv = document.querySelector("div#timer"); // 타이머를 보여줄 장소
 
-  let time = 600; // 타이머 시간을 10분으로 지정함.
+  let time = 10; // 타이머 시간을 10분으로 지정함.
 
   // ===== 타이머 함수 만들기 시작 ===== //
   const timer = function () {
