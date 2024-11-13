@@ -46,15 +46,14 @@ const arr_quizData = [
     correct: 2,
   },
   {
-    question:
-      "문제5. 사진속의 인물의 이름은?<div><img src='images/parkby.jpg'/></div>",
+    question: "문제5. 사진속의 인물중 가장 나이가 많은 사람은?",
     answers: {
-      1: "엄정화",
-      2: "아이유",
-      3: "김태희",
-      4: "박보영",
+      1: "<img src='images/imsoojung.jpg'/>",
+      2: "<img src='images/jangnl.jpg'/>",
+      3: "<img src='images/jessi.jpg'/>",
+      4: "<img src='images/sandara.jpg'/>",
     },
-    correct: 4,
+    correct: 1,
   },
 ];
 
@@ -62,8 +61,9 @@ window.onload = function () {
   const btnSubmit = document.querySelector("button#btnSubmit"); // "제출하기" 버튼
 
   const timerDiv = document.querySelector("div#timer"); // 타이머를 보여줄 장소
-
-  let time = 10; // 타이머 시간을 10분으로 지정함.
+  const my_answer = [];
+  const ox_list = [];
+  let time = 2; // 타이머 시간을 10분으로 지정함.
 
   // ===== 타이머 함수 만들기 시작 ===== //
   const timer = function () {
@@ -78,7 +78,7 @@ window.onload = function () {
       btnSubmit.setAttribute("disabled", "true"); // "제출하기" 버튼 비활성화
 
       //  [참고]  btnSubmit.disabled = false;   // "제출하기" 버튼 활성화
-
+      console.log("시험시간 종료!!");
       check(); // 채점하는 함수 호출
     } else {
       let minute = "";
@@ -113,7 +113,7 @@ window.onload = function () {
 
   let current_index = 0; // 현재 인덱스 번호
   let max_length = quiz_arr.length - 1;
-
+  let score = 0;
   quiz_arr.forEach((elmt) => {
     elmt.style.display = "none";
   });
@@ -129,20 +129,12 @@ window.onload = function () {
     html += `<ol>`;
 
     for (let property_name in item.answers) {
-      // 어떤 객체의 속성(키)들을 모두 불러올때는 for문에서 of 가 아니라 in 을 사용한다.
       html += `<li><label for="${index}${property_name}">${item.answers[property_name]}</label>&nbsp;<input id="${index}${property_name}" type="radio" name="question${index}" value="${property_name}" /></li>`;
-      // 객체명.속성명 은 속성명에는 변수가 사용될 수 없다.
-      // 객체명[속성명] 은 속성명에 변수가 사용될 수 있다.
-      // ${item.answers[property_name]} 는 "부산" 과 같은 것을 말하는 것이다.
-
-      // 라디오는 반드시 name 값이 동일해야 한다.
-      // value 값은 item.answers 의 속성명인 1 2 3 4 로 되어진다.
     } // end of for----------------------------
 
     html += `</ol>`;
     html += `<div class='ox' id="ox${index}"></div>`; // 퀴즈문항에 대해 정답인지 틀린것인지 보여줄 장소
-    console.log(item);
-    console.log(html);
+
     quizDiv.innerHTML = html;
   }); // end of arr_quizData.forEach()--------------------------
   // ===== 퀴즈문항을 html 로 만들기 끝 ===== //
@@ -218,6 +210,7 @@ window.onload = function () {
 
   // ===== 채점하는 함수 만들기 시작 ====== //
   const check = function () {
+    console.log("체크 시작");
     if (time >= 0) {
       // 시험시간이 남아있을때만 사용자가 "제출하기" 버튼을 클릭할 수 있다.
       let choice_cnt = 0; // 답안선택 누적용
@@ -246,7 +239,7 @@ window.onload = function () {
           }
         } // end of for---------------------
       }); // end of arr_quizData.forEach()--------------------------
-
+      console.log("문제 검사 끝");
       if (choice_cnt != arr_quizData.length) {
         alert("답안을 선택하지 않은 문제가 있습니다.");
         return false; // false 를 리턴시켜 주면서 함수의 종료한다.
@@ -275,7 +268,6 @@ window.onload = function () {
               문제3. 미국의 수도는?
               문제4. 사진속의 인물의 이름은?
            */
-      console.log("실행됨");
       document.querySelector(`p#q${index}`).innerHTML =
         question +
         `&nbsp;<span style='color:red; font-weight:bold;'>${item.correct}</span>`;
@@ -294,6 +286,7 @@ window.onload = function () {
         user_anser = "-1";
       } else {
         user_answer = checked_radio_elmt.value;
+        my_answer.push(user_answer);
       }
 
       if (user_answer == item.correct) {
@@ -301,11 +294,13 @@ window.onload = function () {
         document.querySelector(
           `div#ox${index}`
         ).innerHTML = `<span style='color:blue;'>정답</span>`;
+        ox_list.push("O");
+        score += 20;
       } else {
-        console.log(document.querySelector(`div#ox${index}`));
         document.querySelector(
           `div#ox${index}`
         ).innerHTML = `<span style='color:red;'>틀림</span>`;
+        ox_list.push("X");
       }
     }); // end of arr_quizData.forEach()--------------------------
 
@@ -326,29 +321,29 @@ window.onload = function () {
         <tr>
 
             <th>정답</th>
-            <td>3</td>
-            <td>2</td>
-            <td>4</td>
-            <td>2</td>
-            <td>4</td>
-            <td rowspan="4">60</td>
+            <td>${arr_quizData[0].correct}</td>
+            <td>${arr_quizData[1].correct}</td>
+            <td>${arr_quizData[2].correct}</td>
+            <td>${arr_quizData[3].correct}</td>
+            <td>${arr_quizData[4].correct}</td>
+            <td rowspan="4">${score}</td>
         </tr>
         <tr>
 
             <th>제출한답</th>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
+            <td>${my_answer[0]}</td>
+            <td>${my_answer[1]}</td>
+            <td>${my_answer[2]}</td>
+            <td>${my_answer[3]}</td>
+            <td>${my_answer[4]}</td>
         </tr>
         <tr></tr>
             <th>제첨결과</th>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
+            <td>${ox_list[0]}</td>
+            <td>${ox_list[1]}</td>
+            <td>${ox_list[2]}</td>
+            <td>${ox_list[3]}</td>
+            <td>${ox_list[4]}</td>
         </tr>
     </table>`;
 

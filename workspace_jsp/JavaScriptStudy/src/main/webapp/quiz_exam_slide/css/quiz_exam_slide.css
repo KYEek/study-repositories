@@ -9,14 +9,10 @@ div#container {
   align-items: center;
   justify-content: center;
 }
-
-div#container > div:first-child,
-div#container > div:last-child {
-  width: 5%;
-  border: 0px solid black;
-  height: 10%;
+img {
+  width: 119px;
+  height: 149px;
 }
-
 div#timer {
   font-size: 15pt;
   font-weight: bold;
@@ -27,17 +23,57 @@ div#main {
   width: 90%;
   height: 100%;
 }
+div#quiz_4 > ol {
+  height: 200px;
+}
+div#quiz_4 > ol > li {
+  float: left;
+  margin-right: 4%;
+}
+div#quiz_4 > div.ox > span {
+  clear: left;
+}
 
 header {
   border: 0px solid black;
   display: flex;
   height: 13%;
 }
+header > h2 {
+  margin: 20px 0 0 80px;
+}
+header > div:nth-child(2) {
+  margin: 20px 0 0 auto;
+  position: relative;
+  left: 12%;
+  font-size: 15pt;
+  font-weight: bold;
+}
 
-header > div:last-child,
-header > div:first-child {
-  margin: 30px 0 0 auto;
-  border: 0px solid black;
+header > div#timer {
+  margin: 20px 0 0 auto;
+}
+button#previous,
+button#next {
+  margin: 0 30px;
+  width: 50px;
+  height: 50px;
+  background-color: #646464;
+  color: white;
+  font-size: 20pt;
+  border-radius: 50%;
+}
+
+button#previous:active,
+button#next :active {
+  /* 버튼을 누르고 있는 경우 */
+  background-color: #333;
+}
+
+button#previous:disabled,
+button#next:disabled {
+  /* 버튼 속성이 disabled 되어진 경우 */
+  background-color: #ccc;
 }
 
 main {
@@ -73,9 +109,8 @@ footer > span {
 }
 
 table {
-  margin-left: 400px;
+  margin: 0 auto;
   border: 1px solid black;
-  margin: 0;
   border-collapse: collapse;
   text-align: center;
 }
