@@ -2,6 +2,62 @@
  *
  */
 
+const arr_quizData = [
+  {
+    question: "문제1. 대한민국의 수도는?",
+    answers: {
+      1: "부산",
+      2: "수원",
+      3: "서울",
+      4: "인천",
+    },
+    correct: 3,
+  },
+  {
+    question: "문제2. 1+1은?",
+    answers: {
+      1: "1",
+      2: "2",
+      3: "3",
+      4: "4",
+    },
+    correct: 2,
+  },
+  {
+    question: "문제3. 미국의 수도는?",
+    answers: {
+      1: "뉴욕",
+      2: "파리",
+      3: "로스엔젤러스",
+      4: "워싱턴",
+      5: "런던",
+    },
+    correct: 4,
+  },
+  {
+    question:
+      "문제4. 사진속의 인물의 이름은?<div><img src='images/iyou.jpg'/></div>",
+    answers: {
+      1: "엄정화",
+      2: "아이유",
+      3: "김태희",
+      4: "박보영",
+    },
+    correct: 2,
+  },
+  {
+    question:
+      "문제5. 사진속의 인물의 이름은?<div><img src='images/parkby.jpg'/></div>",
+    answers: {
+      1: "엄정화",
+      2: "아이유",
+      3: "김태희",
+      4: "박보영",
+    },
+    correct: 4,
+  },
+];
+
 window.onload = function () {
   const btnSubmit = document.querySelector("button#btnSubmit"); // "제출하기" 버튼
 
@@ -43,67 +99,31 @@ window.onload = function () {
       time--;
     }
   };
+  timer();
   // ===== 타이머 함수 만들기 끝 ===== //
 
-  timer();
-
-  // const interval_timer = setInterval(function(){ timer(); }, 1000); // 1초 마다 주기적으로 타이머 함수가 호출되도록 지정함.
-  // 또는
   const interval_timer = setInterval(timer, 1000); // 1초 마다 주기적으로 타이머 함수가 호출되도록 지정함.
 
-  //////////////////////////////////////////////////////////////////////
-
-  const arr_quizData = [
-    {
-      question: "문제1. 대한민국의 수도는?",
-      answers: {
-        1: "부산",
-        2: "수원",
-        3: "서울",
-        4: "인천",
-      },
-      correct: 3,
-    },
-    {
-      question: "문제2. 1+1은?",
-      answers: {
-        1: "1",
-        2: "2",
-        3: "3",
-        4: "4",
-      },
-      correct: 2,
-    },
-    {
-      question: "문제3. 미국의 수도는?",
-      answers: {
-        1: "뉴욕",
-        2: "파리",
-        3: "로스엔젤러스",
-        4: "워싱턴",
-        5: "런던",
-      },
-      correct: 4,
-    },
-    {
-      question:
-        "문제4. 사진속의 인물의 이름은?<div><img src='images/iyou.jpg'/></div>",
-      answers: {
-        1: "엄정화",
-        2: "아이유",
-        3: "김태희",
-        4: "박보영",
-      },
-      correct: 2,
-    },
-  ];
-
-  const quizDiv = document.querySelector("div#quiz_display"); // 퀴즈문항을 보여줄 장소
-
   // ===== 퀴즈문항을 html 로 만들기 시작 ===== //
-  let html = ``;
+
+  const btn_previous = document.querySelector("button#previous");
+  const btn_next = document.querySelector("button#next");
+
+  const quiz_arr = document.querySelectorAll("main > div");
+
+  let current_index = 0; // 현재 인덱스 번호
+  let max_length = quiz_arr.length - 1;
+
+  quiz_arr.forEach((elmt) => {
+    elmt.style.display = "none";
+  });
+
+  quiz_arr[0].style.display = "";
 
   arr_quizData.forEach((item, index) => {
+    const quizDiv = document.querySelector(`div#quiz_${index}`); // 퀴즈문항을 보여줄 장소
+
+    let html = ``;
     html += `<p id="q${index}">${item.question}</p>`;
 
     html += `<ol>`;
@@ -121,12 +141,54 @@ window.onload = function () {
 
     html += `</ol>`;
     html += `<div class='ox' id="ox${index}"></div>`; // 퀴즈문항에 대해 정답인지 틀린것인지 보여줄 장소
+    console.log(item);
+    console.log(html);
+    quizDiv.innerHTML = html;
   }); // end of arr_quizData.forEach()--------------------------
-
-  quizDiv.innerHTML = html;
   // ===== 퀴즈문항을 html 로 만들기 끝 ===== //
 
-  //////////////////////////////////////////////////////////////
+  const func_next = function () {
+    if (current_index < max_length) {
+      //현재 인덱스 번호가 마지막(지금은 3)이 아닌경우
+      //이전 버튼을 활성화 한다
+      //   btn_previous.disabled = false;
+      //또는
+      btn_previous.removeAttribute("disabled");
+      quiz_arr.forEach((elmt) => {
+        elmt.style.display = "none";
+      });
+
+      const quiz = quiz_arr[++current_index];
+      quiz.style.display = ""; //다음번 이미지만 보이게 만든다.
+
+      document.querySelector("h2#msg").innerHTML = "";
+    } else {
+      btn_next.setAttribute("disabled", "true"); // 마지막 사진일 때 다음버튼을 비활성화 상태로 만든다.
+      document.querySelector("h2#msg").innerHTML = "마지막 사진입니다.";
+    }
+  };
+
+  // == 이전으로 이동하는 함수
+  const func_prev = function () {
+    if (current_index > 0) {
+      //현재 인덱스 번호가 마지막(지금은 3)이 아닌경우
+      quiz_arr.forEach((elmt) => {
+        elmt.style.display = "none";
+      });
+      btn_next.removeAttribute("disabled");
+
+      const quiz = quiz_arr[--current_index];
+      quiz.style.display = ""; //다음번 이미지만 보이게 만든다.
+      document.querySelector("h2#msg").innerHTML = "";
+    } else {
+      btn_previous.setAttribute("disabled", "true"); // 처음 사진일 때 이전버튼을 비활성화 상태로 만든다.
+      document.querySelector("h2#msg").innerHTML = "처음 사진입니다.";
+    }
+  };
+
+  btn_previous.setAttribute("disabled", "true"); // 처음 사진일 때 이전버튼을 비활성화 상태로 만든다.
+  btn_next.addEventListener("click", func_next);
+  btn_previous.addEventListener("click", func_prev);
 
   // ==== "제출하기" 버튼 클릭시 이벤트 처리하기 시작 ==== //
   const handleSubmit = function () {
@@ -150,7 +212,7 @@ window.onload = function () {
 
   // btnSubmit 은 "제출하기" 버튼이다. 이것은 맨 위에서 만들었다.
   btnSubmit.addEventListener("click", handleSubmit);
-  // ==== "제출하기" 버튼 클릭시 이벤트 처리하기 끝 ==== //
+  // ==== "제출하기" 버튼  클릭시 이벤트 처리하기 끝 ==== //
 
   ////////////////////////////////////////////////////////////
 
@@ -213,7 +275,7 @@ window.onload = function () {
               문제3. 미국의 수도는?
               문제4. 사진속의 인물의 이름은?
            */
-
+      console.log("실행됨");
       document.querySelector(`p#q${index}`).innerHTML =
         question +
         `&nbsp;<span style='color:red; font-weight:bold;'>${item.correct}</span>`;
@@ -247,12 +309,12 @@ window.onload = function () {
       }
     }); // end of arr_quizData.forEach()--------------------------
 
-    document.querySelector(
-      "div#score"
-    ).innerHTML = `<span style='font-weight:bold;'>정답개수 : ${answer_cnt}</span>`;
+    // document.querySelector(
+    //   "div#score"
+    // ).innerHTML = `<span style='font-weight:bold;'>정답개수 : ${answer_cnt}</span>`;
 
     return true; // true 를 리턴시켜 주면서 함수의 종료한다.
     // =========== 진짜로 채점하러 가기 끝 ============ //
   };
   // ===== 채점하는 함수 만들기 끝 ====== //
-}; // end of window.onload = function(){}-------------------------
+};

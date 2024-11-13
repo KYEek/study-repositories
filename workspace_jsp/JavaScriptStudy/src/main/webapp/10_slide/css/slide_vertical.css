@@ -1,14 +1,15 @@
 @charset "UTF-8";
-
 div#container {
   border: solid 0px green;
   width: 70%;
   margin: 5% auto; /**중앙 정렬한다.**/
 }
 div#images {
+  display: flex;
   border: solid 0px red;
   width: 900px; /* 화면상에 보여지는 장소이므로 width 는 img 태그의 width 와 동일하게 설정한다. */
   height: 300px; /* 화면상에 보여지는 장소이므로 height 는 img 태그의 height 와 동일하게 설정한다. */
+  overflow: hidden;
 }
 
 div#images > img {
