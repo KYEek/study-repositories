@@ -150,6 +150,11 @@ window.onload = function () {
       }
       //0일때 체크박스 해제하기 끝
     });
+
+    input_number.addEventListener("keyup", () => {
+      alert("키보드 입력은 안됩니다.");
+      input_number.value = 0;
+    });
   }
   //주문수량 이벤트 처리하기 끝//
 
