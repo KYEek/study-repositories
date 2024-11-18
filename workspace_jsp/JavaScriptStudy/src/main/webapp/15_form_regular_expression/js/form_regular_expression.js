@@ -91,6 +91,8 @@ window.onload = function () {
 
     //    정규표현식 객체 만들기
     // 정규표현식 객체는 항상 / 로 시작해서 / 로 끝나고 ; 을 붙여주면 된다.
+
+    console.log(frm);
     const regExp_userid = /^[A-Za-z][A-Za-z0-9]{4,19}$/;
 
     //위에서 생성한 정규표현식 객체를 이용하여 사용자 ID가 올바른지 검사
@@ -109,28 +111,172 @@ window.onload = function () {
       document.querySelector("span#err_userid").innerText = "";
     }
 
-    if (2 == 4 - 1) {
-      alert("전송버튼 클릭");
-      frm.submit(); // 유효성 검사를 통과하면 submit을 한다.
-    } else {
-      alert("유효성 검사 문제 발생");
-      return false; //submit을 하지 않는다
-    }
-  };
+    const regExp_pssswd =
+      /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*+=-]).*$/g;
 
+    // 2. 암호는 8글자 이상 15글자 이하이어야 하고, 영문자, 숫자, 특수문자가 혼합되어야만 한다.
+    //    올바른예 : qwer1234$ , Abcd007!
+    //    틀린예  : qw12$ , qwer12345, adfsdf24243@%@#$sdfsdf
+    const bool_passwd = regExp_pssswd.test(frm.passwd.value);
+
+    // frm.userid.value 값이 regExp_userid 패턴에 맞으면 true,
+    // frm.userid.value 값이 regExp_userid 패턴에 틀리면 false
+
+    if (!bool_passwd) {
+      document.querySelector("span#err_passwd").innerText =
+        "암호는 8글자 이상 15글자 이하이어야 하고, 영문자, 숫자, 특수문자가 혼합되어야만 합니다.";
+      frm.passwd = "";
+      frm.passwd.focus();
+      return; // 종료
+    } else {
+      document.querySelector("span#err_passwd").innerText = "";
+    }
+
+    if (frm.passwd.value != frm.passwd2.value) {
+      document.querySelector("span#err_passwd2").innerText =
+        "암호와 암호확인 값이 서로 다릅니다!!!.";
+      frm.passwd2 = "";
+      frm.passwd2.focus();
+      return;
+    } else {
+      document.querySelector("span#err_passwd2").innerText = "";
+    }
+
+    // 4. 성명은 필수 입력사항이므로 반드시 입력되어야 한다.
+    // 단, 공백없이 한글만 2글자 이상 6글자 이하이어야 한다.
+
+    const regExp_name = /^[가-힣]{2,6}$/;
+
+    // 2. 암호는 8글자 이상 15글자 이하이어야 하고, 영문자, 숫자, 특수문자가 혼합되어야만 한다.
+    //    올바른예 : qwer1234$ , Abcd007!
+    //    틀린예  : qw12$ , qwer12345, adfsdf24243@%@#$sdfsdf
+    const bool_name = regExp_name.test(frm.name.value);
+
+    // frm.name.value 값이 regExp_name 패턴에 맞으면 true,
+    // frm.name.value 값이 regExp_name 패턴에 틀리면 false
+    if (!bool_name) {
+      document.querySelector("span#err_name").innerHTML =
+        "성명은 공백없이 한글로만 2글자 이상 6글자 이하 까지만 됩니다.";
+      document.getElementById("input#name").value = "";
+      frm.name.focus();
+      console.log(frm);
+      return; // 종료
+    } else {
+      document.querySelector("span#err_name").innerText = "";
+      console.log(frm);
+    }
+
+    const regExp_email = /[a-z0-9]{2,}@[a-z0-9]{2,}.[a-z0-9]{2,}/i;
+
+    // 5. 이메일 형식에 맞아야 한다.
+    //    올바른예 : leess@naver.com
+    //    틀린예  : leessnaver.com , leess@naver.@com
+    const bool_email = regExp_email.test(frm.email.value);
+
+    // frm.userid.value 값이 regExp_userid 패턴에 맞으면 true,
+    // frm.userid.value 값이 regExp_userid 패턴에 틀리면 false
+
+    if (!bool_email) {
+      document.querySelector("span#err_email").innerText =
+        "email 형식에 맞지 않습니다. 올바른 email 을 입력하세요!!";
+      frm.email = "";
+      frm.email.focus();
+      return; // 종료
+    } else {
+      document.querySelector("span#err_email").innerText = "";
+    }
+
+    // 6.성별을 선택했는지 확인
+    let gender = document.getElementsByName("gender");
+    let gender_checked = false;
+    for (let gen of gender) {
+      if (gen.checked) {
+        gender_checked = true;
+        break;
+      }
+    }
+    if (!gender_checked) {
+      document.querySelector("span#err_gender").innerText =
+        "성별을 선택하세요!!";
+      return;
+    } else {
+      document.querySelector("span#err_gender").innerText = "";
+    }
+
+    const hobby_list = frm.hobby;
+
+    let checked_hobby_count = 0;
+    hobby_list.forEach((hobby) => {
+      if (hobby.checked) {
+        checked_hobby_count++;
+      }
+    });
+
+    if (checked_hobby_count < 2) {
+      document.querySelector("span#err_hobby").innerText =
+        "취미는 2개 이상 선택하세요!!";
+      return;
+    } else {
+      document.querySelector("span#err_hobby").innerText = "";
+    }
+
+    if (
+      isNaN(frm.birthYear.value) ||
+      isNaN(frm.birthMonth.value) ||
+      isNaN(frm.birthDate.value) ||
+      checkValidDate(
+        frm.birthYear.vaule +
+          "-" +
+          frm.birthMonth.value +
+          "-" +
+          frm.birthDate.value
+      )
+    ) {
+      document.querySelector("span#err_birthday").innerText =
+        "생년월일을 선택하세요!!";
+      return;
+    } else {
+      document.querySelector("span#err_birthday").innerText = "";
+    }
+
+    if (frm.school.value == "선택하세요") {
+      document.querySelector("span#err_school").innerText =
+        "학력을 선택하세요!!";
+      return;
+    } else {
+      document.querySelector("span#err_school").innerText = "";
+    }
+
+    if (frm.registerComment.value.trim() == "") {
+      document.querySelector("span#err_registerComment").innerText =
+        "가입인사말을 입력하세요!!";
+      frm.registerComment.value = "";
+      frm.registerComment.focus();
+      return;
+    } else {
+      document.querySelector("span#err_registerComment").innerText = "";
+    }
+    frm.submit();
+  };
   //전송(button) 클릭시 끝
 
   //전송(submit) 클릭시 시작
-  const frm = document.register_form; //form 태그 객체를 참조
-  // onsubmit 은 버튼 인풋 상관없이 type="submit" 이면 작동한다.
-  frm.onsubmit = function () {
-    alert("summit 클릭");
-  };
+  // const frm = document.register_form; //form 태그 객체를 참조
+  // // onsubmit 은 버튼 인풋 상관없이 type="submit" 이면 작동한다.
+  // frm.onsubmit = function () {
+  //   alert("전송버튼 클릭");
+  // };
   //전송(submit ) 클릭시 끝
-};
 
-function go_birthDate() {}
+  frm.onreset = function () {
+    document.querySelector("span#age").innerHTML = "";
+    document.querySelectorAll(".errmsg").forEach((span) => {
+      span.value = "";
+    });
+  };
 
+  function go_birthDate() {}
+}; // end of window.onload
 //생년월일을 입력 받으면 '만나이'를 구해주는 함수
 function go_age(birthday) {
   const d = new Date(birthday); //문자열(yyyy-mm-dd)을 Date객체로 변환
