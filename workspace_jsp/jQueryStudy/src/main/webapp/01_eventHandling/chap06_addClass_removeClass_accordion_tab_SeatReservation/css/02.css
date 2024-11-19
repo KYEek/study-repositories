@@ -1,0 +1,41 @@
+@charset "UTF-8";
+
+main {
+  margin: 3%;
+}
+
+#menu,
+#contents {
+  display: flex;
+  margin-top: 10px;
+}
+
+#menu > div {
+  margin-left: 2%;
+  width: 80%;
+}
+
+#menu_span {
+  color: white;
+  background-color: navy;
+  font-size: 13pt;
+}
+
+button {
+  margin: 0 5px;
+  font-size: 12pt;
+  height: 30px;
+  width: 70px;
+}
+
+#square {
+  width: 130px;
+  height: 130px;
+
+  background-color: red;
+}
+#color-text {
+  margin: auto 0 0 0;
+  font-size: 30pt;
+  color: red;
+}
