@@ -8,21 +8,27 @@ public class Main {
 		
 		Scanner sc = new Scanner(System.in);
 		StringBuilder sb = new StringBuilder();
-		int count = Integer.parseInt(sc.nextLine()) ;
-		int[] num_arr = new int[count];
-		
-		for(int i = 0; i < num_arr.length; i++) {
-			String str = sc.nextLine();
-			String[] str_arr = str.split(" ");
-			if(str_arr.length == 2) {
-				num_arr[i] = Integer.parseInt(str_arr[0]) + Integer.parseInt(str_arr[1]);
+		try {
+		int count = Integer.parseInt(sc.nextLine());
+		if(count >0 && count <= 100) {
+
+			for (int i = 0; i < count; i++) {
+				for(int a = count-1; a > i; a--) {
+					sb.append(" ");
+				}
+				for(int b = 0; b <= i; b++)
+				{
+					sb.append("*");
+				}
+				sb.append("\n");
 			}
+
+			System.out.println(sb.toString());
 		}
-		
-		for(int i = 0; i < num_arr.length; i++) {
-			sb.append("Case #"+ (i+1) + ": " + num_arr[i] + "\n");
 		}
-		System.out.println(sb.toString());
+		catch (NumberFormatException e) {
+			System.out.println("1에서 100 사이의 숫자를 입력하세요");
+		}
 	}
 
 }
