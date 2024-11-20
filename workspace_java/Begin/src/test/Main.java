@@ -1,34 +1,42 @@
 package test;
 
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
 
 	public static void main(String[] args) {
-		
-		Scanner sc = new Scanner(System.in);
+
+		// Scanner sc = new Scanner(System.in);
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
-		try {
-		int count = Integer.parseInt(sc.nextLine());
-		if(count >0 && count <= 100) {
 
-			for (int i = 0; i < count; i++) {
-				for(int a = count-1; a > i; a--) {
-					sb.append(" ");
+		while (true) {
+
+			String number;
+			try {
+				number = reader.readLine();
+
+				if (number != null) {
+
+					String[] num_arr = number.split(" ");
+					if (num_arr.length == 2) {
+						int result = Integer.parseInt(num_arr[0]) + Integer.parseInt(num_arr[1]);
+						sb.append(result + "\n");
+					}
+
 				}
-				for(int b = 0; b <= i; b++)
-				{
-					sb.append("*");
+				else {
+					break;
 				}
-				sb.append("\n");
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
+		}
 
-			System.out.println(sb.toString());
-		}
-		}
-		catch (NumberFormatException e) {
-			System.out.println("1에서 100 사이의 숫자를 입력하세요");
-		}
+		System.out.println(sb.toString());
+
 	}
 
 }
