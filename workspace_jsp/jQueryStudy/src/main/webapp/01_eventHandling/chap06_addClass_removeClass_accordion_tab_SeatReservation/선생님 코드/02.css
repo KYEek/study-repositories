@@ -1,0 +1,55 @@
+@charset "UTF-8";
+
+div#container {
+	/* border: solid 1px gray; */
+	
+	width: 90%;
+	margin: 0 auto;
+	padding: 2%;
+}
+
+div#container > div#btnsDiv > span#msg {
+    font-size: 20pt;
+	background-color: navy;
+	color: white;
+	margin-right: 3%;
+}
+
+div#container > div#btnsDiv > span.myaudio {
+	font-size: 9pt;
+	background-color: yellow;
+	color: red;
+	margin: 0.2%;
+	border : solid 1px black;
+	padding: 0.3%;
+	cursor: pointer;
+	display: inline-block;
+	width: 8%;
+	text-align: center;
+}
+
+div#container > div#btnsDiv > button {
+    font-size: 20pt;
+	width: 100px;
+	height: 50px;
+	margin-right: 20px;
+}
+
+div#container > div:nth-child(2) {
+	display: flex;
+}
+
+div#container > div:nth-child(2) > div {
+	border: solid 0px gray;
+	margin: 20px 20px 0 0;
+}
+
+div#container > div:nth-child(2) > div#hangulDiv {
+	font-size: 60pt;
+	margin-top: auto;
+}
+
+div#container > div:nth-child(2) > div#music_title_view {
+	font-size: 16pt;
+	margin: auto 0;
+}
