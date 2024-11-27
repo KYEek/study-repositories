@@ -39,7 +39,7 @@ doGet() 메소드와 doPost() 메소드의
 
 */
 
-public class GetMethod_01 extends HttpServlet {
+public class PostMethod_02 extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
@@ -47,6 +47,24 @@ public class GetMethod_01 extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		System.out.println("~~~ get 방식으로 요청을 보내어서 doGet 메소드가 응대를 하겠습니다.");
+
+
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		System.out.println("### post 방식으로 요청을 보내어서 doPost 메소드가 응대를 하겠습니다.");
+		
+		/*
+        Tomcat 9 까지는
+        post 방식으로 넘어온 데이터중 영어는 글자가 안깨지지만,
+        한글은 글자모양이 깨져나온다. (Tomcat 10은 해당 사항 없음)
+        그래서 post 방식에서 넘어온 한글 데이터가 글자가 안깨지게 하려면 
+        아래처럼 request.setCharacterEncoding("UTF-8"); 을 해야 한다.
+        주의할 것은 request.getParameter("변수명"); 보다 먼저 기술을 해주어야 한다는 것이다.      
+     */
+  // request.setCharacterEncoding("UTF-8"); 을 주석처리한다.!!!
 //		HttpServletRequest 객체는 전성되어온 데이터를 처리해주는 용도로 쓰인다
 		String name = request.getParameter("name");
 		String school = request.getParameter("school");
@@ -85,37 +103,36 @@ public class GetMethod_01 extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		// out 은 웹브라우저에 기술하는 대상체라고 생각하자.
 
+		String like_color = "좋아하는 색이 없습니다";
+		if(!"없음".equals(color)) {
+			like_color = "<span style ='color:"+color+";'>";
+		}
+		
 		switch (color) {
 		case "red":
-			color = "빨강";
+			color = "빨간색";
 			break;
 		case "blue":
-			color = "파랑";
+			color = "파랑색";
 			break;
 		case "green":
-			color = "초록";
+			color = "초록색";
 			break;
 		case "yellow":
-			color = "노랑";
+			color = "노란색";
 			break;
 		}
-
-		String like_color = "";
-		like_color = !"없음".equals(color) ? color + "색을 좋아합니다" : "좋아하는 색이 없습니다.";
+		if(!"없음".equals(color)) {
+			like_color += color + "</span>을 좋아합니다.";
+		}
+//		like_color = !"없음".equals(color) ? color + "을 좋아합니다" : "좋아하는 색이 없습니다.";
 		like_foodes = arr_food != null ? String.join(",", arr_food) + "입니다" : "없습니다";
 
-		out.println("<html>" + "<head><title>개인성향 테스트 결과화면</title></head>" + "<body>" + "<h2>개인성향 테스트 결과 01(GET)</h2>"
-				+ "<span style='color:blue; font-weight:bold;'>" + name + "</span>님의 개인성향은 <br><br>" + "학력은 " + school
+		out.println("<html>" + "<head><title>개인성향 테스트 결과화면</title></head>" + "<body>" + "<h2>개인성향 테스트 결과 01(POST)</h2>"
+				+ "<span style='color:red; font-weight:bold;'>" + name + "</span>님의 개인성향은 <br><br>" + "학력은 " + school
 				+ "이며 " + like_color + "<br><br>" + "좋아하는 음식은 " + like_foodes + "<br><br>" + "</body>" + "</html>");
 
 		// **** 웹브라우저에 출려갛기 끝 ****//
-
-	}
-
-	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
-
-		System.out.println("### post 방식으로 요청을 보내어서 doPost 메소드가 응대를 하겠습니다.");
 	}
 
 }

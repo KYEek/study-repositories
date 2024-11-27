@@ -14,13 +14,13 @@ System.out.println("ctxPath => " + ctxPath);
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Get방식으로 데이터 전송하기</title>
+<title>POST방식으로 데이터 전송하기</title>
 <link rel="stylesheet" type="text/css" href="css/04.css" />
 </head>
 <body>
 	<div id="container">
 		<!-- 		<form action="/JSPServletBegin/01_getMethod.do"> -->
-		<form action="<%= ctxPath%>/01_getMethod.do" method="get">
+		<form action="<%= ctxPath%>/02_postMethod.do" method="post">
 			<%-- !! 중요 !!
         확장자가 .jsp 또는 .html 인 파일에서 URL경로를 나타낼때 맨 앞에 / 가 오면
         그 앞에는  http://ip주소:포트번호 가 자동으로 붙게 된다.
@@ -50,7 +50,7 @@ System.out.println("ctxPath => " + ctxPath);
        그러므로 web.xml 파일에 내용을 추가하거나 삭제하는 등 변경되어지면 변경된 내용대로 작동하기 위해서는 반드시 WAS를 껐다가 켜야만 변경되어진 내용이 적용된다. !!!     
      --%>
 			<fieldset>
-				<legend>개인성향 테스트 01(GET method)</legend>
+				<legend>개인성향 테스트 02(POST method)</legend>
 				<ul>
 					<li><label for="name">성명</label> <input type="text"
 						name="name" id="name" placeholder="성명입력" required /></li>

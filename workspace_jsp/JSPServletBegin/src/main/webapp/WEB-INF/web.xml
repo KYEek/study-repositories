@@ -1,30 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="https://jakarta.ee/xml/ns/jakartaee"
-	xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee  https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
-	id="WebApp_ID" version="5.0">
-	<display-name>JSPServletBegin</display-name>
-	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-		<welcome-file>index.jsp</welcome-file>
-		<welcome-file>index.htm</welcome-file>
-		<welcome-file>default.html</welcome-file>
-		<welcome-file>default.jsp</welcome-file>
-		<welcome-file>default.htm</welcome-file>
-	</welcome-file-list>
-	<servlet>
-  	<servlet-name>01_getMethod</servlet-name>
-  	<servlet-class>chap02.GetMethod_01</servlet-class>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://jakarta.ee/xml/ns/jakartaee" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd" id="WebApp_ID" version="5.0">
+  <display-name>JSPServletBegin</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+  </welcome-file-list>
+  <servlet>
+    <servlet-name>01_getMethod</servlet-name>
+    <servlet-class>chap02.GetMethod_01</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>01_getMethod</servlet-name>
     <url-pattern>/01_getMethod.do</url-pattern>
-    <!-- !! 중요 !!
-	     확장자가 .xml 또는 .java 인 파일에서 URL경로를 나타낼때 맨 앞에 / 가 오면
-	     그 앞에는  http://ip주소:포트번호/컨텍스트패스명 이 자동으로 붙게 된다.
-	     그러므로 <url-pattern>/01_getMethod.do</url-pattern> 은
-	     http://ip주소:포트번호/컨텍스트패스명/01_getMethod.do 을 말하는 것이다.
-	     즉, http://localhost:9090/JSPServletBegin/01_getMethod.do 이라는 말이다. -->
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>02_postMethod</servlet-name>
+    <servlet-class>chap02.PostMethod_02</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>02_postMethod</servlet-name>
+    <url-pattern>/02_postMethod.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>03_get_post_Method</servlet-name>
+    <servlet-class>chap02.Get_Post_Method_03</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>03_get_post_Method</servlet-name>
+    <url-pattern>/03_get_post_Method.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>04_get_post_Method</servlet-name>
+    <servlet-class>chap02.Get_Post_Method_04</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>04_get_post_Method</servlet-name>
+    <url-pattern>/04_get_post_Method.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description>연습6번</description>
+    <display-name>Get_Post_Method_06</display-name>
+    <servlet-name>Get_Post_Method_06</servlet-name>
+    <servlet-class>chap02.Get_Post_Method_06</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Get_Post_Method_06</servlet-name>
+    <url-pattern>/06_get_post_Method.do</url-pattern>
   </servlet-mapping>
 </web-app>
-
