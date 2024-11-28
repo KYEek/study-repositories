@@ -9,8 +9,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/registerPerson.do")
-public class RegisterPerson extends HttpServlet {
+@WebServlet("/quiz_registerPerson.do")
+public class QuizRegisterPerson extends HttpServlet {
 
 	
 	private static final long serialVersionUID = 1L;
@@ -51,14 +51,14 @@ public class RegisterPerson extends HttpServlet {
 			
 //			System.out.println(String.join(",", arr_food));
 			
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/chap03_StandardAction/03_view_03.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/chap04_JSTL/quiz/03_view_03.jsp");
 			dispatcher.forward(request, response);
 			
 		}
 		else {
 			//GET 방식으로 들어온 경우
 			System.out.println("접근금지!!");	
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/chap03_StandardAction/03_forbidden_02.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/chap04_JSTL/quiz/03_forbidden_02.jsp");
 			dispatcher.forward(request, response);
 		}
 		

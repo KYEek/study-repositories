@@ -41,6 +41,7 @@
     <servlet-name>04_get_post_Method</servlet-name>
     <url-pattern>/04_get_post_Method.do</url-pattern>
   </servlet-mapping>
+  
   <servlet>
     <description>연습6번</description>
     <display-name>Get_Post_Method_06</display-name>
@@ -51,4 +52,5 @@
     <servlet-name>Get_Post_Method_06</servlet-name>
     <url-pattern>/06_get_post_Method.do</url-pattern>
   </servlet-mapping>
+  
 </web-app>

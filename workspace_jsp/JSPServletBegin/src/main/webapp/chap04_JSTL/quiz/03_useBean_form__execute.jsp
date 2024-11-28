@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-pageEncoding="UTF-8"%> <% String ctxPath = request.getContextPath(); %>
+pageEncoding="UTF-8"%> 
+
+<%RequestDispatcher dispatcher = request.getRequestDispatcher("02_forEach_Array_List_result_02.jsp"); %>
 <!DOCTYPE html>
 <html>
   <head>
@@ -8,22 +10,22 @@ pageEncoding="UTF-8"%> <% String ctxPath = request.getContextPath(); %>
     <link
       rel="stylesheet"
       type="text/css"
-      href="<%= ctxPath%>/chap03_StandardAction/css/03.css"
+      href="<%=request.getContextPath()%>/chap04_JSTL/quiz/css/03.css"
     />
     <script
       type="text/javascript"
-      src="<%= ctxPath%>/js/jquery-3.7.1.min.js"
+      src="<%=request.getContextPath()%>/js/jquery-3.7.1.min.js"
     ></script>
     <script
       type="text/javascript"
-      src="<%= ctxPath%>/chap03_StandardAction/js/03.js"
+      src="<%=request.getContextPath()%>/chap03_StandardAction/js/03.js"
     ></script>
   </head>
   <body>
     <div id="container">
       <form
         name="registerFrm"
-        action="<%= ctxPath%>/registerPerson.do"
+        action="<%=request.getContextPath()%>/quiz_registerPerson.do"
         method="post"
       >
         <fieldset>
