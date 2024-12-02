@@ -103,4 +103,69 @@ public class PersonDAO_imple_04 implements PersonDAO_03 {
 		return personList;
 	}
 
+	//tbl_person_interest 테이블에 저장되어진 특정 1개행(데이터)만 읽어다가(select) 웹페이지에 보여줘야 한다.
+	@Override
+	public PersonDTO_02 selectOne(String seq) throws SQLException {
+		
+		PersonDTO_02 psdto =null;
+		
+		try {
+			String sql = " select seq, name, school, color, food "
+						+ "     , to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday "
+						+  "      , NVL( to_char(updateday, 'yyyy-mm-dd hh24:mi:ss'), ' ') AS updateday "
+						+ " from tbl_person_interest "
+						+ " where seq = ? ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, seq);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				psdto = new PersonDTO_02();
+				psdto.setSeq(rs.getInt("seq"));
+				psdto.setName(rs.getString("name"));
+				psdto.setSchool(rs.getString("school"));
+				psdto.setColor(rs.getString("color"));
+				
+				String foodes = rs.getString("food");
+				if(foodes != null) {
+					psdto.setFood(foodes.split("\\,"));
+				}
+				else {
+					psdto.setFood(null);
+				}
+				psdto.setRegisterday(rs.getString("registerday"));
+				psdto.setUpdateday(rs.getString("updateday"));
+				
+				
+			}// end of while-----------------------
+		} finally {
+			close();
+		}
+		
+		return psdto;
+	}// end of public PersonDTO_02 selectOne(String seq) --------------------
+
+	@Override
+	public int personDelete(int seqNum) throws SQLException {
+		
+		int result =0;
+		
+		
+		try {
+			String sql = " delete from tbl_person_interest where seq = ?  ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, seqNum);
+			result = pstmt.executeUpdate();
+			
+			
+			
+			
+		}
+		finally {
+			close();
+		}
+		
+		return result;
+	}
+
 }

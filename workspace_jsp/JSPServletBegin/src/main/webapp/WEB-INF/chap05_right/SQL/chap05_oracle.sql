@@ -47,3 +47,20 @@ select seq, name, school, color, food
      , to_char(updateday, 'yyyy-mm-dd hh24:mi:ss') AS updateday
 from tbl_person_interest
 order by seq;
+
+select seq, name, school, color, food
+     , to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday
+     , to_char(updateday, 'yyyy-mm-dd hh24:mi:ss') AS updateday
+from tbl_person_interest
+where seq = 81;
+
+
+select seq, name, school, color, food
+     , to_char(registerday, 'yyyy-mm-dd hh24:mi:ss') AS registerday
+     , to_char(updateday, 'yyyy-mm-dd hh24:mi:ss') AS updateday
+from tbl_person_interest
+where seq = to_number('abcd');
+
+delete from tbl_person_interest where seq = 81;
+commit;
+
