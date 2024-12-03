@@ -40,6 +40,7 @@ public class PersonUpdate_09 extends HttpServlet {
 			try {
 				int seqNum = Integer.parseInt(seq);
 				PersonDTO_02 psdto = dao.selectOne(seq);
+				System.out.println(psdto.getFood());
 				request.setAttribute("psdto", psdto);
 				pathname = "/WEB-INF/chap05_right/personUpdate.jsp";
 			} catch (SQLException e) {

@@ -30,19 +30,39 @@ $(document).ready(function(){
 	$("input:text[name='name']").val("${requestScope.psdto.name}");
 	// 학력 입력해주기
 	$("select[name='school']").val("${requestScope.psdto.school}");
+	$("input:radio[id='${requestScope.psdto.color}']").prop('checked', true);
+	console.log("${requestScope.psdto.strFood}");
+	
+	
+	if("없음" != "${requestScope.psdto.strFood}") {
+		
+
+		const arr_food = "${requestScope.psdto.strFood}".split(",");
+		
+		
+		arr_food.forEach((food)=>
+		$("input:checkbox[value="+food+"]").prop('checked', true));
+		
+		
+	}
+	
+	
+	
 	});
 </script>
-	
+
 <title>개인성향 데이터 수정하기</title>
 </head>
 <body>
 	<div class="container border border-info mt-5 p-4">
-		<p class="h3 mb-5">${requestScope.psdto.name}님 성향 정보 수정하기</p>
+		<p class="h3 mb-5">${requestScope.psdto.name}님성향정보 수정하기</p>
 		<%-- 먼저 div 엘리먼트에 .form-group 으로 <input>, <textarea> 및 <select> 태그를 감싼다.
             .form-control 클래스가 있는 모든 <input>, <textarea> 및 <select> 요소의 너비는 100% 입니다. 
       --%>
-		<form name="registerFrm" action="<%=ctxPath%>/PersonRegister.do"
+		<form name="registerFrm" action="<%=ctxPath%>/PersonUpdate_2.do"
 			method="post">
+
+			<input type="hidden" name="seq" value="${requestScope.psdto.seq}" />
 			<div class="row">
 				<label class="col-md-4" for="name">성명</label>
 				<div class="col-md-8 form-group">
@@ -122,10 +142,11 @@ $(document).ready(function(){
 			<div class="row mt-4">
 				<div class="col-md-3 offset-md-1 form-group">
 					<input type="submit" class="btn btn-success form-control"
-						value="전송" />
+						value="수정완료" />
 				</div>
 				<div class="col-md-3 offset-md-1 form-group">
-					<input type="reset" class="btn btn-danger form-control" value="취소" />
+					<input type="reset" class="btn btn-danger form-control"
+						value="수정취소" />
 				</div>
 				<div class="col-md-3 offset-md-1 form-group">
 					<a href="PersonSelect.do" class="btn btn-info">개인성향 모든정보 보기</a>
@@ -133,7 +154,6 @@ $(document).ready(function(){
 			</div>
 		</form>
 	</div>
-
 
 </body>
 </html>
