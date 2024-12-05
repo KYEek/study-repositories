@@ -1,6 +1,5 @@
 package common.controller;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -10,9 +9,8 @@ import myshop.domain.ImageVO;
 import myshop.model.ProductDAO;
 import myshop.model.ProductDAO_imple;
 
-public class IndexController extends AbstractController{
+public class IndexController extends AbstractController {
 
-	
 	private ProductDAO pdao;
 	
 	public IndexController() {
@@ -20,18 +18,20 @@ public class IndexController extends AbstractController{
 	}
 	
 	@Override
-	public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception  {
+	public void execute(HttpServletRequest request, HttpServletResponse respone) throws Exception {
+		
 		try {
-		List<ImageVO> imgList = pdao.imageSelectAll();
-		request.setAttribute("imgList", imgList);
-		super.setRedirect(false);
-		super.setViewPage("/WEB-INF/Index.jsp");
+			List<ImageVO> imgList = pdao.imageSelectAll();
+			request.setAttribute("imgList", imgList); 
+			super.setRedirect(false);
+			super.setViewPage("/WEB-INF/Index.jsp");
 		} catch(SQLException e) {
 			e.printStackTrace();
+			
 			super.setRedirect(true);
-			super.setViewPage(request.getContextPath() + "/error.up");
+			super.setViewPage(request.getContextPath()+"/error.up");
 		}
-		
+
 	}
 
 }

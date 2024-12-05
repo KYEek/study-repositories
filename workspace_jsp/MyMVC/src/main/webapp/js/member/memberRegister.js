@@ -1,3 +1,7 @@
+let b_idcheck_click = false;
+let b_emailcheck_click = false;
+//"아이디 중복확인"을 클릭했는지 안했는지 검사하기 위한 용도
+
 $(document).ready(function () {
   $("span.error").hide();
   $("input#name").focus();
@@ -441,4 +445,193 @@ $(document).ready(function () {
       $(e.target).next().hide();
     }
   }); // 생년월일에 마우스로 값을 변경하는 경우
+  /////////////////////////////////////////////////////////
+
+  //"아이디 중복한인"을 클릭했을 때 이벤트 처리하기 시작
+  $("img#idcheck").click(function () {
+    b_idcheck_click = true;
+    //"아이디 중복확인"을 클릭했는지 안했는지 검사하기 시작
+
+    /*
+           Ajax (Asynchronous JavaScript and XML)란?                         
+          ==> 이름만 보면 알 수 있듯이 '비동기 방식의 자바스크립트와 XML' 로서     
+              Asynchronous JavaScript + XML 인 것이다.
+              한마디로 말하면, Ajax 란? Client 와 Server 간에 XML 데이터를 JavaScript 를 사용하여 비동기 통신으로 주고 받는 기술이다.
+              하지만 요즘에는 데이터 전송을 위한 데이터 포맷방법으로 XML 을 사용하기 보다는 JSON(Javascript Standard Object Notation) 을 더 많이 사용한다. 
+              참고로 HTML은 데이터 표현을 위한 포맷방법이다.
+              그리고, 비동기식이란 어떤 하나의 웹페이지에서 여러가지 서로 다른 다양한 일처리가 개별적으로 발생한다는 뜻으로서, 
+              어떤 하나의 웹페이지에서 서버와 통신하는 그 일처리가 발생하는 동안 일처리가 마무리 되기전에 또 다른 작업을 할 수 있다는 의미이다.
+        */
+
+    // === 첫번째 방법 === //
+    $.ajax({
+      url: "idDuplicateCheck.up",
+      data: { userid: $("input#userid").val() }, //// data 속성은 http://localhost:9090/MyMVC/member/idDuplicateCheck.up 로 전송해야할 데이터를 말한다.
+      type: "POST",
+      async: true, // async:true 가 비동기 방식을 말한다. async 을 생략하면 기본값이 비동기 방식인 async:true 이다.
+      // async:false 가 동기 방식이다. 지도를 할때는 반드시 동기방식인 async:false 을 사용해야만 지도가 올바르게 나온다.
+      success: function (text) {
+        console.log(text);
+        console.log("~~~ text의 데이터타입: " + typeof text);
+        // text 는 idDuplicateCheck.up 을 통해 가져온 결과물인 "{"isExists":true}" 또는 "{"isExists":false}" 로 되어지는 string 타입의 결과물이다.
+
+        const json = JSON.parse(text);
+        // JSON.parse(text); 은 JSON.parse("{"isExists":true}"); 또는 JSON.parse("{"isExists":false}"); 와 같은 것인데
+        // 그 결과물은 {"isExists":true} 또는 {"isExists":false} 와 같은 문자열을 자바스크립트 객체로 변환해주는 것이다.
+        // 조심할 것은 text 는 반드시 JSON 형식으로 되어진 문자열이어야 한다.
+        console.log(json);
+        console.log("~~~ json의 데이터타입: " + typeof json);
+
+        if (json.isExists) {
+          //입력한 userid가 이미 사용중이라면
+          $("span#idcheckResult")
+            .html(
+              $("input#userid").val() +
+                "은 이미 사용중이므로 다른 아이디를 입력하세요"
+            )
+            .css("color", "red");
+          $("input#userid").val("");
+        } else {
+          //입력한 userid 가 존재하지 않는 경우라면
+          $("span#idcheckResult")
+            .html($("input#userid").val() + "은 사용 가능합니다")
+            .css("color", "navy");
+        }
+      },
+      error: function (request, status, error) {
+        alert(
+          "code: " +
+            request.status +
+            "\n" +
+            "message: " +
+            request.responseText +
+            "\n" +
+            "error: " +
+            error
+        );
+      },
+    });
+    // === 두번째 방법 === //
+  });
+  $("input#userid").on("change", function () {
+    b_idcheck_click = false;
+  });
+
+  $("span#emailcheck").click(function () {
+    b_emailcheck_click = true;
+    //"이메일 중복확인"을 클릭했는지 안했는지 검사하기 시작
+  });
+  $("span#b_emailcheck").on("change", function () {
+    b_emailcheck_click = false;
+  });
+  //"이메일 중복확인"을 클릭했을 때 이벤트 처리하기 끝
 }); // end $(document).ready(function(){})----------------------
+
+//"가입하기" 버튼을 클릭했을 때 이벤트 처리하기
+
+function goRegister() {
+  //필수입력사항에 모두 입력이 되었는지 검사하기 시작
+  let b_requiredInfo = true;
+  // $("input.requiredInfo").each(function (index, elmt) {
+  //   const data = $(elmt).val().trim();
+  //   if (data == "") {
+  //     alert("표시된 필수입력사항은 모두 입력하셔야 합니다.");
+  //     b_requiredInfo = false;
+  //     return false;
+  //   }
+  // });
+  //필수입력사항에 모두 입력이 되었는지 검사하기 끝
+  const requiredInfo_list = document.querySelectorAll("input.requiredInfo");
+  for (let i = 0; i < requiredInfo_list.length; i++) {
+    const val = requiredInfo_list[i].value.trim();
+    if (val == "") {
+      alert("표시된 필수입력사항은 모두 입력하셔야 합니다.");
+      b_requiredInfo = false;
+      return;
+    }
+  }
+
+  // 아이디 중복확인을 클릭했는지 안했는지 검사하기 시작
+  if (!b_idcheck_click) {
+    alert("아이디 중복확인을 클릭하셔야 합니다.");
+    return;
+  }
+  // 아이디 중복확인을 클릭했는지 안했는지 검사하기 끝
+
+  // 이메일 중복확인을 클릭했는지 안했는지 검사하기 시작
+  if (!b_emailcheck_click) {
+    alert("이메일 중복확인을 클릭하셔야 합니다.");
+    return;
+  }
+  // 이메일 중복확인을 클릭했는지 안했는지 검사하기 끝
+
+  // 우편번호 및 주소에 값을 입력했는지 검사하기 시작
+
+  let b_addressInfo = true;
+  const arr_addressInfo = [];
+  arr_addressInfo.push($("input#postcode").val().trim());
+  arr_addressInfo.push($("input#address").val().trim());
+  arr_addressInfo.push($("input#detailAddress").val().trim());
+  arr_addressInfo.push($("input#extraAddress").val().trim());
+
+  const postcode = $("input#postcode").val().trim();
+  const address = $("input#address").val().trim();
+  const detailAddress = $("input#detailAddress").val().trim();
+
+  for (let i = 0; i < arr_addressInfo.length; i++) {
+    if (arr_addressInfo[i].trim() == "") {
+      alert("우현번호 및 주소를 입력하셔야 합니다.");
+      b_addressInfo = false;
+      break;
+    }
+  }
+  // 우편번호 및 주소에 값을 입력했는지 검사하기 끝
+
+  if (!b_requiredInfo) {
+    return;
+  }
+  if (!b_addressInfo) {
+    return;
+  }
+
+  //성별을 선택했는지 검사하기 시작
+  const radio_checked_length = $("input:radio[name='gender']:checked").length;
+  if (radio_checked_length == 0) {
+    alert("성별을 선택하셔야 합니다.");
+    return;
+  }
+  //성별을 선택했는지 검사하기 끝
+
+  //생년월일을 선택했는지 검사하기 시작
+  const birthday = $("input#datepicker").val().trim();
+  if (birthday == "") {
+    alert("생년월일을 입력하셔야 합니다.");
+    return;
+  }
+  //생년월일을 선택했는지 검사하기 끝
+
+  //약관을 선택했는지 검사하기 시작
+  const checkbox_checked_length = $(
+    "input:checkbox[id='agree']:checked"
+  ).length;
+  if (checkbox_checked_length == 0) {
+    alert("이용약관에 동의하셔야 합니다.");
+    return;
+  }
+
+  const frm = document.registerFrm;
+  frm.action = "memberRegister.up";
+  frm.method = "post";
+  console.log(frm);
+  frm.submit();
+
+  //약관을 선택했는지 검사하기 끝
+  alert("회원가입하러갑니다");
+} // end of function goRegister()-------------------------
+
+function goReset() {
+  $("span.error").hide();
+
+  $("span#idcheckResult").empty();
+  $("span#emailCheckResult").empty();
+} // end of function goReset()---------------------
