@@ -22,11 +22,19 @@ public class MemberVO {
 						// 마지막으로 로그인 한 날짜시간이 현재시각으로 부터 1년이 지났으면 휴면으로 지정
 	
 	//////////////////////////////////////////////////////////////
-	
-	
-	
+
+	private boolean requirePwdChange = false;
+	// 마지막으로 암호를 변경한 날짜가 현재시각으로 부터 3개월이 지났으면 true
+	// 마지막으로 암호를 변경한 날짜가 현재시각으로 부터 3개월이 지나지 않았으면 false
+
 	/////////////////////////////////////////////////////////////
 
+	public boolean isRequirePwdChange() {
+		return requirePwdChange;
+	}
+	public void setRequirePwdChange(boolean requirePwdChange) {
+		this.requirePwdChange = requirePwdChange;
+	}
 	public String getUserid() {
 		return userid;
 	}

@@ -464,23 +464,68 @@ $(document).ready(function () {
         */
 
     // === 첫번째 방법 === //
+    // $.ajax({
+    //   url: "idDuplicateCheck.up",
+    //   data: { userid: $("input#userid").val() }, //// data 속성은 http://localhost:9090/MyMVC/member/idDuplicateCheck.up 로 전송해야할 데이터를 말한다.
+    //   type: "POST",
+    //   async: true, // async:true 가 비동기 방식을 말한다. async 을 생략하면 기본값이 비동기 방식인 async:true 이다.
+    //   // async:false 가 동기 방식이다. 지도를 할때는 반드시 동기방식인 async:false 을 사용해야만 지도가 올바르게 나온다.
+    //   success: function (text) {
+    //     console.log(text);
+    //     console.log("~~~ text의 데이터타입: " + typeof text);
+    //     // text 는 idDuplicateCheck.up 을 통해 가져온 결과물인 "{"isExists":true}" 또는 "{"isExists":false}" 로 되어지는 string 타입의 결과물이다.
+
+    //     const json = JSON.parse(text);
+    //     // JSON.parse(text); 은 JSON.parse("{"isExists":true}"); 또는 JSON.parse("{"isExists":false}"); 와 같은 것인데
+    //     // 그 결과물은 {"isExists":true} 또는 {"isExists":false} 와 같은 문자열을 자바스크립트 객체로 변환해주는 것이다.
+    //     // 조심할 것은 text 는 반드시 JSON 형식으로 되어진 문자열이어야 한다.
+    //     console.log(json);
+    //     console.log("~~~ json의 데이터타입: " + typeof json);
+
+    //     if (json.isExists) {
+    //       //입력한 userid가 이미 사용중이라면
+    //       $("span#idcheckResult")
+    //         .html(
+    //           $("input#userid").val() +
+    //             "은 이미 사용중이므로 다른 아이디를 입력하세요"
+    //         )
+    //         .css("color", "red");
+    //       $("input#userid").val("");
+    //     } else {
+    //       //입력한 userid 가 존재하지 않는 경우라면
+    //       $("span#idcheckResult")
+    //         .html($("input#userid").val() + "은 사용 가능합니다")
+    //         .css("color", "navy");
+    //     }
+    //   },
+    //   error: function (request, status, error) {
+    //     alert(
+    //       "code: " +
+    //         request.status +
+    //         "\n" +
+    //         "message: " +
+    //         request.responseText +
+    //         "\n" +
+    //         "error: " +
+    //         error
+    //     );
+    //   },
+    // });
+    // === 두번째 방법 === //
     $.ajax({
       url: "idDuplicateCheck.up",
       data: { userid: $("input#userid").val() }, //// data 속성은 http://localhost:9090/MyMVC/member/idDuplicateCheck.up 로 전송해야할 데이터를 말한다.
       type: "POST",
-      async: true, // async:true 가 비동기 방식을 말한다. async 을 생략하면 기본값이 비동기 방식인 async:true 이다.
+      //async: true, // async:true 가 비동기 방식을 말한다. async 을 생략하면 기본값이 비동기 방식인 async:true 이다.
       // async:false 가 동기 방식이다. 지도를 할때는 반드시 동기방식인 async:false 을 사용해야만 지도가 올바르게 나온다.
-      success: function (text) {
-        console.log(text);
-        console.log("~~~ text의 데이터타입: " + typeof text);
-        // text 는 idDuplicateCheck.up 을 통해 가져온 결과물인 "{"isExists":true}" 또는 "{"isExists":false}" 로 되어지는 string 타입의 결과물이다.
-
-        const json = JSON.parse(text);
-        // JSON.parse(text); 은 JSON.parse("{"isExists":true}"); 또는 JSON.parse("{"isExists":false}"); 와 같은 것인데
-        // 그 결과물은 {"isExists":true} 또는 {"isExists":false} 와 같은 문자열을 자바스크립트 객체로 변환해주는 것이다.
-        // 조심할 것은 text 는 반드시 JSON 형식으로 되어진 문자열이어야 한다.
+      dataType: "json", // Javascript Standard Object Notation.  dataType은 /MyMVC/member/idDuplicateCheck.up 로 부터 실행되어진 결과물을 받아오는 데이터타입을 말한다.
+      // 만약에 dataType:"xml" 으로 해주면 /MyMVC/member/idDuplicateCheck.up 로 부터 받아오는 결과물은 xml 형식이어야 한다.
+      // 만약에 dataType:"json" 으로 해주면 /MyMVC/member/idDuplicateCheck.up 로 부터 받아오는 결과물은 json 형식이어야 한다.
+      //대문자 상관 NO
+      success: function (json) {
         console.log(json);
-        console.log("~~~ json의 데이터타입: " + typeof json);
+        console.log("~~~ text의 데이터타입: " + typeof json);
+        // text 는 idDuplicateCheck.up 을 통해 가져온 결과물인 "{"isExists":true}" 또는 "{"isExists":false}" 로 되어지는 string 타입의 결과물이다.
 
         if (json.isExists) {
           //입력한 userid가 이미 사용중이라면
@@ -511,15 +556,59 @@ $(document).ready(function () {
         );
       },
     });
-    // === 두번째 방법 === //
   });
   $("input#userid").on("change", function () {
     b_idcheck_click = false;
   });
 
   $("span#emailcheck").click(function () {
+    alert("이메일 중복확인을 클릭하셨습니다.");
     b_emailcheck_click = true;
     //"이메일 중복확인"을 클릭했는지 안했는지 검사하기 시작
+    $.ajax({
+      url: "emailDuplicateCheck.up",
+
+      data: { email: $("input#email").val() }, // data 속성은 http://localhost:9090/MyMVC/member/emailDuplicateCheck.up 로 전송해야할 데이터를 말한다.
+
+      type: "POST",
+      //async: true, // async:true 가 비동기 방식을 말한다. async 을 생략하면 기본값이 비동기 방식인 async:true 이다.
+      // async:false 가 동기 방식이다. 지도를 할때는 반드시 동기방식인 async:false 을 사용해야만 지도가 올바르게 나온다.
+      dataType: "json", // Javascript Standard Object Notation.  dataType은 /MyMVC/member/idDuplicateCheck.up 로 부터 실행되어진 결과물을 받아오는 데이터타입을 말한다.
+      // 만약에 dataType:"xml" 으로 해주면 /MyMVC/member/idDuplicateCheck.up 로 부터 받아오는 결과물은 xml 형식이어야 한다.
+      // 만약에 dataType:"json" 으로 해주면 /MyMVC/member/idDuplicateCheck.up 로 부터 받아오는 결과물은 json 형식이어야 한다.
+      //대문자 상관 NO
+
+      success: function (json) {
+        if (json.isExists) {
+          // 입력한 email이 이미 사용중이라면
+          $("span#emailCheckResult")
+            .html(
+              $("input#email").val() +
+                "은 이미 사용중이므로 다른 이메일을 입력하세요"
+            )
+            .css("color", "red");
+          $("input#email").val("");
+        } else {
+          // 입력한 email이 존재하지 않는 경우라면
+          $("span#emailCheckResult")
+            .html($("input#email").val() + "은 사용 가능합니다")
+            .css("color", "navy");
+        }
+      },
+
+      error: function (request, status, error) {
+        alert(
+          "code: " +
+            request.status +
+            "\n" +
+            "message: " +
+            request.responseText +
+            "\n" +
+            "error: " +
+            error
+        );
+      },
+    });
   });
   $("span#b_emailcheck").on("change", function () {
     b_emailcheck_click = false;

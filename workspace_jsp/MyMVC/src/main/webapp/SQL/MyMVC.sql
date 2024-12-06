@@ -97,3 +97,73 @@ order by registerday desc;
 select userid
 from tbl_member
 where userid = 'leess';
+---------------------------------------------------------------------------
+create table tbl_loginhistory
+(historyno   number
+,fk_userid   varchar2(40) not null  -- 회원아이디
+,logindate   date default sysdate not null -- 로그인되어진 접속날짜및시간
+,clientip    varchar2(20) not null
+,constraint  PK_tbl_loginhistory primary key(historyno)
+,constraint  FK_tbl_loginhistory_fk_userid foreign key(fk_userid) references tbl_member(userid)
+);
+-- Table TBL_LOGINHISTORY이(가) 생성되었습니다.
+
+create sequence seq_historyno
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+-- Sequence SEQ_HISTORYNO이(가) 생성되었습니다.
+
+
+select * 
+from tbl_loginhistory
+order by historyno desc;
+
+------------ 로그인 처리를 이한 sql문 작성
+rollback;
+
+update tbl_member set registerday = add_months(registerday, -13)
+where userid = 'leess';
+select userid, name, coin, point, pwdchangegap, 
+        nvl(lastlogingap, trunc(months_between(sysdate,registerday))) as lastlogindate,
+        idle, email, mobile, postcode, address, detailaddress,extraaddress
+from 
+(
+    select userid, name, coin, point, 
+        trunc(months_between(sysdate, lastpwdchangedate)) as pwdchangegap,
+        registerday, idle, email,mobile,postcode,address, detailaddress,extraaddress
+    from  tbl_member
+    where status = 1 and userid = 'leess' and pwd = '18006e2ca1c2129392c66d87334bd2452c572058d406b4e85f43c1f72def10f5'
+) m
+cross join 
+(
+    select trunc(months_between(sysdate,max(logindate))) as lastlogingap
+    from tbl_loginhistory
+    where fk_userid = 'leess'
+) h;
+
+update tbl_loginhistory set logindate = add_months(logindate, -5)
+where historyno between 3 and 9 ;
+
+update tbl_loginhistory set logindate = add_months(logindate, -3)
+where historyno = 10 ;
+
+select * 
+from tbl_loginhistory
+order by historyno desc;
+
+commit;
+
+delete from tbl_loginhistory where historyno = 7;
+
+
+update tbl_member set lastpwdchangedate = add_months(lastpwdchangedate, -4)
+where userid = 'eomjh';
+
+update tbl_member set registerday = add_months(registerday, -5)
+where userid = 'eomjh';
+
+commit;

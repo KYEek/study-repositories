@@ -105,7 +105,7 @@ pageEncoding="UTF-8"%> <% String ctxPath = request.getContextPath(); // /MyMVC
      <div class="row">
        <div class="col-md-3" id="sideinfo">
          <div style="height: 200px; text-align: left; padding: 20px;">
-            2. 로그인/Tree/View
+         <%@ include file= "/WEB-INF/login/login.jsp"%>
          </div>
          <div id="sidecontent" style="text-align: left; padding: 20px;"></div>
        </div>
