@@ -25,8 +25,29 @@
         <mxCell id="xzkno2Z7NU_h-ZiQ9ByA-43" value="&lt;span style=&quot;text-align: left;&quot;&gt;index.up&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="-580" y="380" width="60" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="xzkno2Z7NU_h-ZiQ9ByA-45" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;주소의 구성&lt;/h1&gt;&lt;p&gt;&lt;font color=&quot;#3399ff&quot;&gt;http://localhost:9090&lt;/font&gt;&lt;font color=&quot;#ff6666&quot;&gt;/MyMVC&lt;/font&gt;&lt;font color=&quot;#33ff33&quot;&gt;/test/test4.up&lt;/font&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;color: rgb(51, 153, 255);&quot;&gt;http://localhost:9090&lt;/span&gt;&lt;font color=&quot;#33ff33&quot;&gt;&lt;/font&gt;&lt;/p&gt;&lt;p&gt;&lt;font style=&quot;font-size: 11px;&quot;&gt;내 컴퓨터의 톰캣을 의미 (톰캣에 우리의 자바 프로젝트들이 들어가 있다.&lt;/font&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;color: rgb(255, 102, 102);&quot;&gt;/MyMVC&lt;/span&gt;&lt;span style=&quot;color: rgb(51, 153, 255);&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;내 다이나믹 웹 프로젝트 중 MyMVC라는 프로젝트를 찾는다(&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;color: rgb(255, 102, 102);&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;color: rgb(51, 255, 51);&quot;&gt;/test/test4.up&lt;/span&gt;&lt;span style=&quot;color: rgb(255, 102, 102);&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;color: rgb(51, 153, 255);&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/p&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="-460" y="60" width="260" height="260" as="geometry" />
+        <mxCell id="xzkno2Z7NU_h-ZiQ9ByA-45" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;주소의 구성&lt;/h1&gt;&lt;p&gt;&lt;font color=&quot;#3399ff&quot;&gt;http://localhost:9090&lt;/font&gt;&lt;font color=&quot;#ff6666&quot;&gt;/MyMVC&lt;/font&gt;&lt;font color=&quot;#33ff33&quot;&gt;/test/test4.up&lt;/font&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;color: rgb(51, 153, 255);&quot;&gt;http://localhost:9090&lt;/span&gt;&lt;font color=&quot;#33ff33&quot;&gt;&lt;/font&gt;&lt;/p&gt;&lt;p&gt;&lt;font style=&quot;font-size: 11px;&quot;&gt;내 컴퓨터의 톰캣을 의미 &lt;br&gt;(톰캣에 우리의 자바 프로젝트들이 들어가 있다).&lt;/font&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;color: rgb(255, 102, 102);&quot;&gt;/MyMVC&lt;/span&gt;&lt;span style=&quot;color: rgb(51, 153, 255);&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;내 프로젝트 중 MyMVC라는 프로젝트를 찾는다(주소에 표시되는 이름은 변경 가능)&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;color: rgb(255, 102, 102);&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;color: rgb(51, 255, 51);&quot;&gt;/test/test4.up&lt;/span&gt;&lt;span style=&quot;color: rgb(255, 102, 102);&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;실제로 실행할 파일 주소&lt;br&gt;test 폴더의 test4.up파일을 실행한다는 의미&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;color: rgb(51, 153, 255);&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/p&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-410" y="50" width="260" height="310" as="geometry" />
+        </mxCell>
+        <mxCell id="xzkno2Z7NU_h-ZiQ9ByA-47" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;로그인 과정&lt;/h1&gt;&lt;p&gt;로그인을 실행하는 과정&lt;/p&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="90" y="30" width="180" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="xzkno2Z7NU_h-ZiQ9ByA-50" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="xzkno2Z7NU_h-ZiQ9ByA-48" target="xzkno2Z7NU_h-ZiQ9ByA-49">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="xzkno2Z7NU_h-ZiQ9ByA-48" value="비밀번호에서 엔터,&lt;div&gt;로그인 버튼을 누를경우&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="140" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="xzkno2Z7NU_h-ZiQ9ByA-49" value="로그인 버튼, 엔터를 하면" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="280" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="xzkno2Z7NU_h-ZiQ9ByA-51" value="login.js파일로 이동" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="180" y="220" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xzkno2Z7NU_h-ZiQ9ByA-52" value="Text" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="300" y="140" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xzkno2Z7NU_h-ZiQ9ByA-53" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;sql 과정&lt;/h1&gt;&lt;p&gt;로그인을 실행하는 과정&lt;/p&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="440" y="30" width="180" height="90" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
