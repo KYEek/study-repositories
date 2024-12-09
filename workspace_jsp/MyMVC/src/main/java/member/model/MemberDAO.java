@@ -16,4 +16,7 @@ public interface MemberDAO {
 	
 	
 	MemberVO login(Map<String, String> paraMap) throws SQLException;
+	
+	
+	String findUserid(Map<String, String> paraMap) throws SQLException;
 }

@@ -50,7 +50,7 @@ public class MemberRegister extends AbstractController {
 			member.setExtraaddress(extraaddress);
 			member.setGender(gender);
 			member.setBirthday(birthday);
-			
+			/*
 			//== 회원가입이 성공되어지면 "회원가입 성공"이라는 alert를 띄우고 시작페이지로 이동한다
 			String message = "";
 			String loc = "";
@@ -68,6 +68,30 @@ public class MemberRegister extends AbstractController {
 			request.setAttribute("message", message);
 			request.setAttribute("loc", loc);
 			
+			super.setRedirect(false);
+			super.setViewPage("/WEB-INF/msg.jsp");
+		}
+		
+		*/
+			
+			//회원가입이 성공되어 지면 자동으로 로그인 되도록 하겠다
+			try {
+				int n = mdao.registerMember(member);
+				if(n==1) {
+					
+					request.setAttribute("userid", userid);
+					request.setAttribute("pwd", pwd);
+					super.setRedirect(false);
+					super.setViewPage("/WEB-INF/login/memberRegister_after_autoLogin.jsp");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				String message = "회원가입 실패";
+				String loc = "javascript:history.back()";//자바 스크립트를 이용한 이전페이지로 이동하는것
+			
+			request.setAttribute("message", message);
+			request.setAttribute("loc", loc);
+			}
 			super.setRedirect(false);
 			super.setViewPage("/WEB-INF/msg.jsp");
 		}

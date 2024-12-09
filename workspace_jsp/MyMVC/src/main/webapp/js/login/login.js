@@ -29,7 +29,15 @@ function goLogin() {
     $("input#loginPwd").val("").focus();
     return;
   }
-  219;
+
+  if ($("input:checkbox[id='saveid']").prop("checked")) {
+    // alert("아이디 저장을 체크하셨습니다.");
+
+    localStorage.setItem("saveid", $("input#LoginUserid").val());
+  } else {
+    // alert("아이디 저장을 해제하셨습니다.");
+    localStorage.removeItem("saveid");
+  }
   const frm = document.loginFrm;
   frm.submit();
 } // end of goLogin-----------------------------------
