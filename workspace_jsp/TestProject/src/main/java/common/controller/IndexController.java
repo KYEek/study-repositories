@@ -10,7 +10,7 @@ public class IndexController extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse respone) throws Exception {
-		
+		//
 		super.setRedirect(false);
 		super.setViewPage("/WEB-INF/index.jsp");
 
