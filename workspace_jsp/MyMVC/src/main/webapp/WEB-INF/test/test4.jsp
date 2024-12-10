@@ -4,9 +4,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>/test/test4.up 페이지</title>
 </head>
 <body>
-
+안녕하세요? ${requestScope.name}입니다.<br>
+<img src="<%= request.getContextPath()%>/images/${requestScope.img}" />
 </body>
 </html>

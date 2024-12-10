@@ -1,15 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
-    <%
-    	String ctxPath = request.getContextPath();
-    %>
-    
-<jsp:include page="../header1.jsp"></jsp:include>
+
+<%
+	String ctxPath = request.getContextPath();
+    //     /MyMVC
+%>
+
+<jsp:include page="../header1.jsp" /> 
+
 <link rel="stylesheet" type="text/css" href="<%= ctxPath%>/css/member/memberRegister.css" />
-<script type="text/javascript" src="<%= ctxPath%>/js/member/memberRegister.js">
-</script>
-<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script> 
+<script type="text/javascript" src="<%= ctxPath%>/js/member/memberRegister.js"></script> 
+
 <div class="row" id="divRegisterFrm">
    <div class="col-md-12">
       <form name="registerFrm">
@@ -116,14 +119,15 @@
                     </td>
                 </tr>
                 
-         
-<!--               <tr> -->
-<!--                <td>투숙기간</td> -->
-<!--                <td> -->
-<!--                   시작일자: <input type="text" id="fromDate">&nbsp;&nbsp;  -->
-<!--                   종료일자: <input type="text" id="toDate"> -->
-<!--                </td> -->
-<!--             </tr> -->
+           <%--      
+		        <tr>
+					<td>투숙기간</td>
+					<td>
+						시작일자: <input type="text" id="fromDate">&nbsp;&nbsp; 
+						종료일자: <input type="text" id="toDate">
+					</td>
+				</tr>
+           --%>
                 
                 <tr>
                     <td colspan="2">
@@ -149,12 +153,14 @@
        
        <%--    
           <div>
-              <button onclick="goGaib()">type이 없으면 submit 임</button>&nbsp; 
-              <button type="button" onclick="goGaib()">type이 button 인것</button>&nbsp;
-              <button type="submit">type이 submit 인 것</button>
+          	 <button onclick="goGaib()">type이 없으면 submit 임</button>&nbsp; 
+          	 <button type="button" onclick="goGaib()">type이 button 인것</button>&nbsp;
+          	 <button type="submit">type이 submit 인 것</button>
           </div>
        --%>   
       </form>
    </div>
 </div>
-<jsp:include page="../footer1.jsp"></jsp:include>
+
+<jsp:include page="../footer1.jsp" />
+   

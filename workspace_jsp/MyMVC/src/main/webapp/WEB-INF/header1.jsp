@@ -1,64 +1,41 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-pageEncoding="UTF-8"%> <% String ctxPath = request.getContextPath(); // /MyMVC
+    pageEncoding="UTF-8"%>
+<%
+    String ctxPath = request.getContextPath();
+    //    /MyMVC
 %>
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>:::HOMEPAGE:::</title>
+<head>
 
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+<title>:::HOMEPAGE:::</title> 
 
-    <!-- Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="<%=ctxPath%>/bootstrap-4.6.2-dist/css/bootstrap.min.css"
-    />
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Font Awesome 6 Icons -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
-    />
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" type="text/css" href="<%= ctxPath%>/bootstrap-4.6.2-dist/css/bootstrap.min.css" > 
 
-    <!-- 직접 만든 CSS -->
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="<%=ctxPath%>/css/template/template.css"
-    />
+<!-- Font Awesome 6 Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
 
-    <!-- Optional JavaScript -->
-    <script
-      type="text/javascript"
-      src="<%=ctxPath%>/js/jquery-3.7.1.min.js"
-    ></script>
-    <script
-      type="text/javascript"
-      src="<%=ctxPath%>/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js"
-    ></script>
-    <%-- jQueryUI CSS 및 JS --%>
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="<%=ctxPath%>/jquery-ui-1.13.1.custom/jquery-ui.min.css"
-    />
-    <script
-      type="text/javascript"
-      src="<%=ctxPath%>/jquery-ui-1.13.1.custom/jquery-ui.min.js"
-    ></script>
-    <%--내가 만든 js --%>
-    <script
-      type="text/javascript"
-      src="<%=ctxPath%>/js/template/template.js"
-    ></script>
-  </head>
-  <body>
+<!-- 직접 만든 CSS -->
+<link rel="stylesheet" type="text/css" href="<%= ctxPath%>/css/template/template.css" />
+
+<!-- Optional JavaScript -->
+<script type="text/javascript" src="<%= ctxPath%>/js/jquery-3.7.1.min.js"></script>
+<script type="text/javascript" src="<%= ctxPath%>/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js" ></script> 
+
+<%-- jQueryUI CSS 및 JS --%>
+<link rel="stylesheet" type="text/css" href="<%= ctxPath%>/jquery-ui-1.13.1.custom/jquery-ui.min.css" />
+<script type="text/javascript" src="<%= ctxPath%>/jquery-ui-1.13.1.custom/jquery-ui.min.js"></script> 
+
+<%-- 직접 만든 JS --%>
+<script type="text/javascript" src="<%= ctxPath%>/js/template/template.js"></script>
+
+</head>
+<body>
 
    <!-- 상단 네비게이션 시작 -->
    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top mx-4 py-3">
@@ -104,17 +81,19 @@ pageEncoding="UTF-8"%> <% String ctxPath = request.getContextPath(); // /MyMVC
      
      <div class="row">
        <div class="col-md-3" id="sideinfo">
-       
-       <%-- 유트브 넣기 header1.jsp 에만 있음 --%>
-       <div class="row">
-         <div class="col-md-8 offset-md-2 mt-3 embed-responsive embed-responsive-16by9">
-               <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/E0W5sJZ2d64" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> 
-         </div>
-       </div>
-       
+         
+         <%-- 유트브 넣기 header1.jsp 에만 있음 --%>
+		 <div class="row">
+			<div class="col-md-8 offset-md-2 mt-3 embed-responsive embed-responsive-16by9">
+		   		<iframe class="embed-responsive-item" src="https://www.youtube.com/embed/E0W5sJZ2d64" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> 
+			</div>
+		 </div>
+         
          <div style="height: 200px; text-align: left; padding: 20px;">
-         <%-- 로그인 처리하기 --%>
-         <%@ include file= "/WEB-INF/login/login.jsp"%>
+            
+            <%-- === 로그인 처리하기 === --%>
+            <%@ include file="/WEB-INF/login/login.jsp" %>
+            
          </div>
          <div id="sidecontent" style="text-align: left; padding: 20px;"></div>
        </div>

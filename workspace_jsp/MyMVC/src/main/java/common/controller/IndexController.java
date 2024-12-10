@@ -23,8 +23,9 @@ public class IndexController extends AbstractController {
 		try {
 			List<ImageVO> imgList = pdao.imageSelectAll();
 			request.setAttribute("imgList", imgList); 
+			
 			super.setRedirect(false);
-			super.setViewPage("/WEB-INF/Index.jsp");
+			super.setViewPage("/WEB-INF/index.jsp");
 		} catch(SQLException e) {
 			e.printStackTrace();
 			

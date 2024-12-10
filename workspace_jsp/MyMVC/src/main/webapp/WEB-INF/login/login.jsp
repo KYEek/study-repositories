@@ -1,25 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+    pageEncoding="UTF-8"%>
+
+<%@ taglib prefix="c"   uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+
 <%
-String ctx_Path = request.getContextPath();
-//    /MyMVC
+    String ctx_Path = request.getContextPath();
+    //    /MyMVC
 %>
 
-<link rel="stylesheet" type="text/css"
-	href="<%=ctx_Path%>/css/login/login.css" />
-<script type="text/javascript" src="<%=ctx_Path%>/js/login/login.js"></script>
-<%-- === 로그인을 하기 위한 폼을 생성 === --%>
-<%-- 
-<c:if test=" ${empty sessionScope.loginuser} "> 와 같이 test="" 에 test=" " 와 같이 공백을 넣어주면 꽝이다.!!! 
---%>
-<%-- 
-<c:if test="${sessionScope.loginuser == null}"></c:if>
---%>
-<script type="text/javascript">
-$(document).ready(function (){
+<link rel="stylesheet" type="text/css" href="<%= ctx_Path%>/css/login/login.css" />
 
+<script type="text/javascript" src="<%= ctx_Path%>/js/login/login.js"></script>
+
+<script type="text/javascript">
+	
+	$(document).ready(function(){
+		
 	/*   !!!!!! 필수로 기억해야 합니다. !!!!!!
 	>>>> 로컬 스토리지(localStorage)와 세션 스토리지(sessionStorage) <<<< 
 	      로컬 스토리지와 세션 스토리지는 HTML5에서 추가된 저장소이다.
@@ -90,127 +88,189 @@ $(document).ready(function (){
 	   >> 로컬 스토리지(localStorage)와 세션 스토리지(sessionStorage) 에 저장된 데이터를 보는 방법 << 
 	       크롬인 경우 F12(개발자도구) Application 탭에 가면 Storage - LocalStorage 와 SessionStorage 가 보여진다.
 	       거기에 들어가서 보면 Key 와 Value 값이 보여진다.
-	*/
+	*/		
+		
+	   /////////////////////////////////////////////////////
+	   
+	  // === 로그인을 하지 않은 상태일 때 
+      //     로컬스토리지(localStorage)에 저장된 key가 'saveid' 인 userid 값을 불러와서 
+      //     input 태그 userid 에 넣어주기 ===
+	  
+      if( ${empty sessionScope.loginuser} )	{
+    	
+    	  const loginUserid = localStorage.getItem('saveid');
+    	  
+    	  if(loginUserid != null) {
+    		  $("input#loginUserid").val(loginUserid);
+    		  $("input:checkbox[id='saveid']").prop("checked", true);
+    	  }
+      }
+	  /////////////////////////////////////////////////////// 
+	  
+	  
+	  // == 아이디 찾기에서 close 버튼을 클릭하면 iframe 의 form 태그에 입력된 값을 지우기 == //
+	  $("button.idFindClose").click(function(){
+		  
+		  const iframe_idFind = document.getElementById("iframe_idFind"); 
+	      // 대상 아이프레임을 선택한다.
+	      <%-- 선택자를 잡을때 jQuery를 사용한 ${} 으로 잡으면 안되고, 순수한 자바스크립트를 사용하여 선택자를 잡아야 한다. --%>  
+	      <%-- .jsp 파일속에 주석문을 만들때 ${} 을 넣고자 한다라면 반드시 JSP 주석문으로 해야 하지, 스크립트 주석문으로 해주면 ${} 때문에 오류가 발생한다. --%> 
+	       
+	      const iframe_window = iframe_idFind.contentWindow;
+	        // iframe 요소에 접근하는 contentWindow 와 contentDocument 의 차이점은 아래와 같다.
+	    	// contentWindow 와 contentDocument 둘 모두 iframe 하위 요소에 접근 할 수 있는 방법이다.
+	    	// contentWindow 는 iframe의 window(전체)을 의미하는 것이다.
+	    	// 참고로, contentWindow.document 은 contentDocument 와 같은 것이다.
+	    	// contentWindow 가 contentDocument 의 상위 요소이다.
+	      
+	      iframe_window.func_form_reset_empty();
+	      // func_form_reset_empty() 함수는 idFind.jsp 파일에 정의해 둠.  
+		  
+	  });// end of $("button.idFindClose").click(function(){})------------
+	  
+	  
+	});// end of $(document).ready(function(){})----------------
 	
-	// === 로그인을 하지 않은 상태일 때 
-    //     로컬스토리지(localStorage)에 저장된 key가 'saveid' 인 userid 값을 불러와서 
-    //     input 태그 userid 에 넣어주기 ===
-    if(${empty sessionScope.loginuser}) {
-	   const loginUserid = localStorage.getItem('saveid');
-	   if(loginUserid != null) {
-	   $("input#loginUserid").val(loginUserid);
-	   $("input:checkbox[id='saveid']").prop("checked", true);
-	   	}
-	   }
-    });
 </script>
-<c:if test="${empty sessionScope.loginuser }">
-	<form name="loginFrm" action="<%=ctx_Path%>/login/login.up"
-		method="post">
-		<table id="loginTbl">
-			<thead>
-				<tr>
-					<th colspan="2">LOGIN</th>
-				</tr>
-			</thead>
 
-			<tbody>
-				<tr>
-					<td>ID</td>
-					<td><input type="text" name="userid" id="loginUserid"
-						size="20" autocomplete="off" /></td>
-				</tr>
-				<tr>
-					<td>암호</td>
-					<td><input type="password" name="pwd" id="loginPwd" size="20" /></td>
-				</tr>
+<%-- === 로그인을 하기 위한 폼을 생성 === --%>
+<%-- 
+<c:if test=" ${empty sessionScope.loginuser} "> 와 같이 test="" 에 test=" " 와 같이 공백을 넣어주면 꽝이다.!!! 
+--%>
+<%-- 
+<c:if test="${sessionScope.loginuser == null}"></c:if>
+--%>
+<c:if test="${empty sessionScope.loginuser}">
 
-				<%-- ==== 아이디 찾기, 비밀번호 찾기 ==== --%>
-				<tr>
-					<td colspan="2"><a style="cursor: pointer;"
-						data-toggle="modal" data-target="#userIdfind" data-dismiss="modal">아이디찾기</a>
-						/ <a style="cursor: pointer;" data-toggle="modal"
-						data-target="#passwdFind" data-dismiss="modal"
-						data-backdrop="static">비밀번호찾기</a></td>
-				</tr>
-
-				<tr>
-					<td colspan="2"><input type="checkbox" id="saveid" />&nbsp;<label
-						for="saveid">아이디저장</label>
-						<button type="button" id="btnSubmit"
-							class="btn btn-primary btn-sm ml-3">로그인</button></td>
-				</tr>
-			</tbody>
-		</table>
+	<form name="loginFrm" action="<%= ctx_Path%>/login/login.up" method="post">
+	   <table id="loginTbl">
+	       <thead>
+	           <tr>
+	              <th colspan="2">LOGIN</th>
+	           </tr>
+	       </thead>
+	       
+	       <tbody>
+	           <tr>
+	               <td>ID</td>
+	               <td><input type="text" name="userid" id="loginUserid" size="20" autocomplete="off" /></td>
+	           </tr>
+	           <tr>
+	               <td>암호</td>
+	               <td><input type="password" name="pwd" id="loginPwd" size="20" /></td>
+	           </tr>
+	           
+	           <%-- ==== 아이디 찾기, 비밀번호 찾기 ==== --%>
+	           <tr>
+	               <td colspan="2">
+	                  <a style="cursor: pointer;" data-toggle="modal" data-target="#userIdfind" data-dismiss="modal">아이디찾기</a> / 
+	                  <a style="cursor: pointer;" data-toggle="modal" data-target="#passwdFind" data-dismiss="modal" data-backdrop="static">비밀번호찾기</a>
+	               </td>
+	           </tr>
+	           
+	           <tr>
+	               <td colspan="2">
+	                  <input type="checkbox" id="saveid" />&nbsp;<label for="saveid">아이디저장</label> 
+	                  <button type="button" id="btnSubmit" class="btn btn-primary btn-sm ml-3">로그인</button> 
+	               </td>
+	           </tr>
+	       </tbody>
+	   </table>
 	</form>
 
 
-	<%-- ****** 아이디 찾기 Modal 시작 ****** --%>
-	<%-- <div class="modal fade" id="userIdfind"> --%>
-	<%-- 만약에 모달이 안보이거나 뒤로 가버릴 경우에는 모달의 class 에서 fade 를 뺀 class="modal" 로 하고서 해당 모달의 css 에서 zindex 값을 1050; 으로 주면 된다. --%>
-	<div class="modal fade" id="userIdfind" data-backdrop="static">
-		--%>
-		<%-- 만약에 모달이 안보이거나 뒤로 가버릴 경우에는 모달의 class 에서 fade 를 뺀 class="modal" 로 하고서 해당 모달의 css 에서 zindex 값을 1050; 으로 주면 된다. --%>
-		<div class="modal-dialog">
-			<div class="modal-content">
+<%-- ****** 아이디 찾기 Modal 시작 ****** --%>
+<%-- <div class="modal fade" id="userIdfind"> --%> <%-- 만약에 모달이 안보이거나 뒤로 가버릴 경우에는 모달의 class 에서 fade 를 뺀 class="modal" 로 하고서 해당 모달의 css 에서 zindex 값을 1050; 으로 주면 된다. --%> 
+  <div class="modal fade" id="userIdfind" data-backdrop="static"> <%-- 만약에 모달이 안보이거나 뒤로 가버릴 경우에는 모달의 class 에서 fade 를 뺀 class="modal" 로 하고서 해당 모달의 css 에서 zindex 값을 1050; 으로 주면 된다. --%>  
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal header -->
+        <div class="modal-header">
+          <h4 class="modal-title">아이디 찾기</h4>
+          <button type="button" class="close idFindClose" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div id="idFind">
+             <iframe id="iframe_idFind" style="border: none; width: 100%; height: 350px;" src="<%= ctx_Path%>/login/idFind.up"> 
+             </iframe>
+          </div>
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger idFindClose" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
 
-				<!-- Modal header -->
-				<div class="modal-header">
-					<h4 class="modal-title">아이디 찾기</h4>
-					<button type="button" class="close idFindClose"
-						data-dismiss="modal">&times;</button>
-				</div>
-
-				<!-- Modal body -->
-				<div class="modal-body">
-					<div id="idFind">
-						<iframe id="iframe_idFind"
-							style="border: none; width: 100%; height: 350px;"
-							src="<%=ctx_Path%>/login/idFind.up"> </iframe>
-					</div>
-				</div>
-
-				<!-- Modal footer -->
-				<div class="modal-footer">
-					<button type="button" class="btn btn-danger idFindClose"
-						data-dismiss="modal">Close</button>
-				</div>
-			</div>
-
-		</div>
-	</div>
-	<%-- ****** 아이디 찾기 Modal 끝 ****** --%>
+<%-- ****** 아이디 찾기 Modal 끝 ****** --%>
 
 
-	<%-- ****** 비밀번호 찾기 Modal 시작 ****** --%>
-
-	<%-- ****** 비밀번호 찾기 Modal 끝 ****** --%>
-
-
-	<%-- === 로그인 되어진 후의 사용자 정보를 보여주겠다 === --%>
+<%-- ****** 비밀번호 찾기 Modal 시작 ****** --%>
+<div class="modal fade" id="passwdFind"> <%-- 만약에 모달이 안보이거나 뒤로 가버릴 경우에는 모달의 class 에서 fade 를 뺀 class="modal" 로 하고서 해당 모달의 css 에서 zindex 값을 1050; 으로 주면 된다. --%>
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal header -->
+        <div class="modal-header">
+          <h4 class="modal-title">비밀번호 찾기</h4>
+          <button type="button" class="close passwdFindClose" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div id="pwFind">
+          	<iframe style="border: none; width: 100%; height: 350px;" src="<%= ctx_Path%>/login/pwdFind.up">  
+          	</iframe>
+          </div>
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger passwdFindClose" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+<%-- ****** 비밀번호 찾기 Modal 끝 ****** --%>    
 
 </c:if>
 
-<c:if test="${not empty sessionScope.loginuser }">
+
+<%-- === 로그인 되어진 후의 사용자 정보를 보여주기 === --%>
+<c:if test="${not empty sessionScope.loginuser}">
+
 	<table style="width: 95%; height: 130px; margin: 0 auto;">
-		<tr style="background-color: #f2f2f2;">
-			<td style="text-align: center; padding: 20px;"><span
-				style="color: blue; font-weight: bold;">${(sessionScope.loginuser).name}</span>
-				[<span style="color: red; font-weight: bold;">${(sessionScope.loginuser).userid}</span>]님
-				<br> <br>
-				<div
-					style="text-align: left; line-height: 150%; padding-left: 20px;">
-					<span style="font-weight: bold;">코인액&nbsp;:</span>&nbsp;&nbsp;
-					<fmt:formatNumber value="${(sessionScope.loginuser).coin}"
-						pattern="###,###" />
-					원 <br> <span style="font-weight: bold;">포인트&nbsp;:</span>&nbsp;&nbsp;
-					<fmt:formatNumber value="${(sessionScope.loginuser).point}"
-						pattern="###,###" />
-					POINT
-				</div> <br>로그인 중...<br> <br> [<a href="">나의정보</a>]&nbsp;&nbsp;
-				[<a href="">코인충전</a>] <br> <br>
-				<button type="button" class="btn btn-danger btn-sm"
-					onclick="javascript:goLogOut('<%=ctx_Path%>')">로그아웃</button></td>
-		</tr>
-	</table>
+       <tr style="background-color: #f2f2f2;">
+           <td style="text-align: center; padding: 20px;">
+               <span style="color: blue; font-weight: bold;">${(sessionScope.loginuser).name}</span> 
+               [<span style="color: red; font-weight: bold;">${(sessionScope.loginuser).userid}</span>]님 
+               <br><br>
+               <div style="text-align: left; line-height: 150%; padding-left: 20px;">
+                  <span style="font-weight: bold;">코인액&nbsp;:</span>&nbsp;&nbsp; <fmt:formatNumber value="${(sessionScope.loginuser).coin}" pattern="###,###" /> 원
+                  <br>
+                  <span style="font-weight: bold;">포인트&nbsp;:</span>&nbsp;&nbsp; <fmt:formatNumber value="${(sessionScope.loginuser).point}" pattern="###,###" /> POINT  
+               </div>
+               <br>로그인 중...<br><br>
+               [<a href="">나의정보</a>]&nbsp;&nbsp;
+               [<a href="">코인충전</a>] 
+               <br><br>
+               <button type="button" class="btn btn-danger btn-sm" onclick="javascript:goLogOut('<%= ctx_Path%>')">로그아웃</button>  
+           </td>
+       </tr>
+   </table>
+
 </c:if>
+
+
+
+
+
+
+
