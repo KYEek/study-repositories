@@ -22,7 +22,7 @@ import jakarta.servlet.http.HttpServletResponse;
 	  description = "사용자가 웹에서 *.up 을 했을 경우 이 서블릿이 응답을 해주도록 한다.",
 	  urlPatterns = {"*.up"},
 	  initParams = { 
-		  @WebInitParam(name = "propertyConfig", value = "C:/NCS/workspace_jsp/MyMVC/src/main/webapp/WEB-INF/Command.properties", description = "*.up 에 대한 클래스의 매핑파일") 
+		  @WebInitParam(name = "propertyConfig", value = "C:\\Users\\dltns\\git\\study-repositories\\workspace_jsp\\TestProject\\src\\main\\webapp\\WEB-INF\\Command.properties", description = "*.up 에 대한 클래스의 매핑파일") 
 	  })
 public class FrontController extends HttpServlet {
 	
@@ -31,25 +31,26 @@ public class FrontController extends HttpServlet {
 	private Map<String, Object> cmdMap = new HashMap<>();
 
 	public void init(ServletConfig config) throws ServletException {
-	  /*
-	      웹브라우저 주소창에서  *.up 을 하면 FrontController 서블릿이 응대를 해오는데 
-	      맨 처음에 자동적으로 실행되어지는 메소드가 init(ServletConfig config) 이다.
-	      여기서 중요한 것은 init(ServletConfig config) 메소드는 WAS(톰캣)가 구동되어진 후
-	      딱 1번만 init(ServletConfig config) 메소드가 실행되어지고, 그 이후에는 실행이 되지 않는다. 
-	      그러므로 init(ServletConfig config) 메소드에는 FrontController 서블릿이 동작해야할 환경설정을 잡아주는데 사용된다.
-	  */		
+	  	/*
+		 * 웹브라우저 주소창에서 *.up 을 하면 FrontController 서블릿이 응대를 해오는데 맨 처음에 자동적으로 실행되어지는 메소드가
+		 * init(ServletConfig config) 이다. 여기서 중요한 것은 init(ServletConfig config) 메소드는
+		 * WAS(톰캣)가 구동되어진 후 딱 1번만 init(ServletConfig config) 메소드가 실행되어지고, 그 이후에는 실행이 되지
+		 * 않는다. 그러므로 init(ServletConfig config) 메소드에는 FrontController 서블릿이 동작해야할 환경설정을
+		 * 잡아주는데 사용된다.
+		 */
 		// *** 확인용 *** //
-	  // System.out.println("~~~ 확인용 => 서블릿 FrontController 의 init(ServletConfig config) 메소드가 실행됨.");
-	  // ~~~ 확인용 => 서블릿 FrontController 의 init(ServletConfig config) 메소드가 실행됨.
-		
-		 FileInputStream fis = null;
-		 // 특정 파일에 있는 내용을 읽어오기 위한 용도로 쓰이는 객체
-		 
-		 String props = config.getInitParameter("propertyConfig");
-	  // System.out.println("~~~ 확인용 props => " + props);
-		 // ~~~ 확인용 props => C:/NCS/workspace_jsp/MyMVC/src/main/webapp/WEB-INF/Command.properties
-		 
-		 try {
+		System.out.println("~~~ 확인용 => 서블릿 FrontController 의 init(ServletConfig config) 메소드가 실행됨.");
+		// ~~~ 확인용 => 서블릿 FrontController 의 init(ServletConfig config) 메소드가 실행됨.
+
+		FileInputStream fis = null;
+		// 특정 파일에 있는 내용을 읽어오기 위한 용도로 쓰이는 객체
+
+		String props = config.getInitParameter("propertyConfig");
+		System.out.println("~~~ 확인용 props => " + props);
+		// ~~~ 확인용 props =>
+		// C:/NCS/workspace_jsp/MyMVC/src/main/webapp/WEB-INF/Command.properties
+
+		try {
 			fis = new FileInputStream(props);
 			// fis 는 C:/NCS/workspace_jsp/MyMVC/src/main/webapp/WEB-INF/Command.properties 파일의 내용을 읽어오기 위한 용도로 쓰이는 객체이다. 
 			
@@ -149,7 +150,7 @@ public class FrontController extends HttpServlet {
    //  웹브라우저의 주소 입력창에서 
    //  http://localhost:9090/MyMVC/member/idDuplicateCheck.up?userid=leess 와 같이 입력되었더라면
 	   String uri =	request.getRequestURI();
-   //  System.out.println("~~~~ 확인용 uri => " + uri);
+     System.out.println("~~~~ 확인용 uri => " + uri);
 	   // ~~~~ 확인용 uri => /MyMVC/member/idDuplicateCheck.up
        // ~~~~ 확인용 uri => /MyMVC/test1.up
        // ~~~~ 확인용 uri => /MyMVC/test/test2.up
