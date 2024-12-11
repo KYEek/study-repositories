@@ -1,1 +1,5 @@
 @charset "UTF-8";
+
+div.main_container {
+  boder: 1px solid black;
+}
