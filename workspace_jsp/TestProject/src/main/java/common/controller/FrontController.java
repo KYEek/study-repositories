@@ -1,5 +1,6 @@
 package common.controller;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -20,10 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet(
 	  description = "사용자가 웹에서 *.up 을 했을 경우 이 서블릿이 응답을 해주도록 한다.",
-	  urlPatterns = {"*.up"},
-	  initParams = { 
-		  @WebInitParam(name = "propertyConfig", value = "C:\\Users\\dltns\\git\\study-repositories\\workspace_jsp\\TestProject\\src\\main\\webapp\\WEB-INF\\Command.properties", description = "*.up 에 대한 클래스의 매핑파일") 
-	  })
+	  urlPatterns = {"*.up"})
 public class FrontController extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
@@ -31,6 +29,8 @@ public class FrontController extends HttpServlet {
 	private Map<String, Object> cmdMap = new HashMap<>();
 
 	public void init(ServletConfig config) throws ServletException {
+		
+		
 	  	/*
 		 * 웹브라우저 주소창에서 *.up 을 하면 FrontController 서블릿이 응대를 해오는데 맨 처음에 자동적으로 실행되어지는 메소드가
 		 * init(ServletConfig config) 이다. 여기서 중요한 것은 init(ServletConfig config) 메소드는
@@ -41,11 +41,11 @@ public class FrontController extends HttpServlet {
 		// *** 확인용 *** //
 		System.out.println("~~~ 확인용 => 서블릿 FrontController 의 init(ServletConfig config) 메소드가 실행됨.");
 		// ~~~ 확인용 => 서블릿 FrontController 의 init(ServletConfig config) 메소드가 실행됨.
-
+		
 		FileInputStream fis = null;
 		// 특정 파일에 있는 내용을 읽어오기 위한 용도로 쓰이는 객체
-
-		String props = config.getInitParameter("propertyConfig");
+		String path = "/WEB-INF/Command.properties";
+		String props = config.getServletContext().getRealPath(path);
 		System.out.println("~~~ 확인용 props => " + props);
 		// ~~~ 확인용 props =>
 		// C:/NCS/workspace_jsp/MyMVC/src/main/webapp/WEB-INF/Command.properties
