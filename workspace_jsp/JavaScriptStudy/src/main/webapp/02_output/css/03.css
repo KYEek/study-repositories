@@ -1,8 +1,0 @@
-@charset "UTF-8";
-
-span#name {
-  font-size: 20pt;
-  color: green;
-  font-weight: bold;
-  font-style: italic;
-}
