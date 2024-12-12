@@ -1,0 +1,7 @@
+@charset "UTF-8";
+
+div{
+    font-size: 30px; /* 글자크기 : 30px */
+    font-style: italic; /* 글자스타일 : 기울임 */
+    text-align: center !important; /* 텍스트 정렬 : 강제 가운데 정렬*/
+}

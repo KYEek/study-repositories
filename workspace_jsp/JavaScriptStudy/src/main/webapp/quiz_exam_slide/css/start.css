@@ -1,0 +1,40 @@
+@charset "UTF-8";
+
+div#container {
+  border: 0px solid #000;
+  width: 50%;
+  height: 400px;
+  margin: 100px auto 0 auto;
+  text-align: center;
+}
+
+div#container > div:last-child {
+  display: table;
+  border: 1px solid #000;
+  height: 20%;
+  margin: 15% auto;
+  vertical-align: middle;
+  border-radius: 50%;
+  width: 15%;
+
+  background-color: rgb(172, 172, 172);
+}
+
+div#container > div:last-child:hover {
+  background-color: antiquewhite;
+}
+
+div#start {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+a {
+  font-size: large;
+}
+
+a:link,
+a:visited {
+  color: #000;
+  text-decoration: none;
+}

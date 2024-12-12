@@ -1,0 +1,23 @@
+@charset "UTF-8";
+
+div#container {
+  border: solid 0px red;
+  width: 70%;
+  margin: 5% auto;
+
+  text-align: center;
+}
+
+div#container > div {
+  border: solid 0px blue;
+  margin-top: 5%;
+}
+
+div#container > div:nth-child(3) {
+  background-color: #ffffe6;
+}
+
+div#container > div:nth-child(3) > img {
+  width: 225px;
+  height: 175px;
+}

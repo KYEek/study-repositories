@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>position 사용하기(relative position)</title>
+
+    <link rel="stylesheet" href="css/03.css" />
+  </head>
+  <body>
+    <div id="container">
+      <div id="parent">
+        parent(부모)<br />
+        parent(부모)<br />
+        parent(부모)<br />
+        <div class="me">
+          첫번째 me(나)는 position: relative;으로 했으므로 원래 위치에서 부터
+          출발하여 top: 200px; left: 200px; 으로 위치값으로 변하며 크기(width)를
+          따로 지정하지 않았으므로 원래있던 자신의 크기(width)를 그대로
+          유지한다.<br />
+          첫번째 me(나)는 position: relative;으로 했으므로 원래 위치에서 부터
+          출발하여 top: 200px; left: 200px; 으로 위치값으로 변하며 크기(width)를
+          따로 지정하지 않았으므로 원래있던 자신의 크기(width)를 그대로
+          유지한다.<br />
+          첫번째 me(나)는 position: relative;으로 했으므로 원래 위치에서 부터
+          출발하여 top: 200px; left: 200px; 으로 위치값으로 변하며 크기(width)를
+          따로 지정하지 않았으므로 원래있던 자신의 크기(width)를 그대로
+          유지한다.<br />
+        </div>
+      </div>
+
+      <div class="me">
+        두번째 me(나)는 position: relative;으로 했으므로 원래 위치에서 부터
+        출발하여 top: 200px; left: 200px; 으로 위치값으로 변하며 크기(width)를
+        따로 지정하지 않았으므로 원래있던 자신의 크기(width)를 그대로
+        유지한다.<br />
+        두번째 me(나)는 position: relative;으로 했으므로 원래 위치에서 부터
+        출발하여 top: 200px; left: 200px; 으로 위치값으로 변하며 크기(width)를
+        따로 지정하지 않았으므로 원래있던 자신의 크기(width)를 그대로
+        유지한다.<br />
+      </div>
+
+      <div id="other">
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+        other(기타 다른 것들)<br />
+      </div>
+
+      <div id="parent_relative">
+        <div id="child_absolute_1">
+          여기는 부모의 position이 relative이고 <br />자식의 position이
+          absolute인 경우입니다.<br />
+          id가 child_absolute_1 입니다.
+        </div>
+        <div id="child_absolute_2">
+          여기는 부모의 position이 relative이고 <br />자식의 position이
+          absolute인 경우입니다. id가 child_absolute_2 입니다.
+        </div>
+        <!-- 부모가 relative면 absolute의 출발점은 웹브라우저가 아니라 부모이다 -->
+      </div>
+    </div>
+  </body>
+</html>

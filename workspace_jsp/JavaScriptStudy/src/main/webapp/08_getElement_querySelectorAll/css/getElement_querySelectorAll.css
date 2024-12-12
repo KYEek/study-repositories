@@ -1,0 +1,9 @@
+@charset "UTF-8";
+
+button#btn_ok_1, button#btn_ok_2 {
+    background-color: green;
+}
+
+body > section#food > ol:nth-child(2) > li {
+    width: 5%;
+}

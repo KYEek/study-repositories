@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>부트스트랩 시작페이지 예제-2</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
+    <!-- Font Awesome 6 Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark fixed-top">
+      <!-- Brand -->
+      <a class="navbar-brand" href="#"><i class="fab fa-apple fa-2x"></i></a>
+
+      <!-- Links -->
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+
+        <!-- Dropdown -->
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="navbardrop"
+            data-toggle="dropdown"
+          >
+            Dropdown
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbardrop">
+            <a class="dropdown-item" href="#">Link 1</a>
+            <a class="dropdown-item" href="#">Link 2</a>
+            <a class="dropdown-item" href="#">Link 3</a>
+          </div>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <!-- .form-inline 이것은 너비가 최소 576px인 뷰포트 내의 양식에만 적용됩니다. 576px보다 작은 화면에서는 가로로 쌓입니다. -->
+        <label class="sr-only" for="inlineFormInputName2">Name</label>
+        <input
+          type="text"
+          class="form-control mb-2 mr-sm-2"
+          id="inlineFormInputName2"
+          placeholder="Email"
+        />
+
+        <label class="sr-only" for="inlineFormInputGroupUsername2"
+          >Password</label
+        >
+        <div class="input-group mb-2 mr-sm-2">
+          <div class="input-group-prepend"></div>
+          <input
+            type="text"
+            class="form-control"
+            id="inlineFormInputGroupUsername2"
+            placeholder="Password"
+          />
+        </div>
+
+        <button type="submit" class="btn btn-success mb-2">Sign in</button>
+      </form>
+    </nav>
+
+    <div class="container-fluid" style="margin-top: 4%">
+      <div class="jumbotron">
+        <!-- 점보트론은 특별한 내용이나 정보에 대한 추가 주의를 환기시키기 위한 큰 회색 상자를 나타내는 것입니다. -->
+        <h1 class="display-4">Hello, world!</h1>
+        <p class="lead">
+          This is an example to show the po tential of an offcanvas layout
+          pattern in Bootstrap. Try some responsive-range viewport sizes to see
+          it in action.
+        </p>
+        <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+      </div>
+      <div class="card-deck mb-5">
+        <div class="card mb-3" style="width: 18rem">
+          <img
+            src="images/Koala.jpg"
+            class="card-img-top"
+            alt="코알라"
+            style="width: 100%"
+          />
+          <!-- style="width: 100%" 을 생략해도 100% 로 사용됨. -->
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">
+              Some quick example text to build on the card title and make up the
+              bulk of the card's content.
+            </p>
+            <a href="#" class="btn btn-primary">See Detail</a>
+          </div>
+        </div>
+        <div class="card mb-3" style="width: 18rem">
+          <img
+            src="images/Koala.jpg"
+            class="card-img-top"
+            alt="코알라"
+            style="width: 100%"
+          />
+          <!-- style="width: 100%" 을 생략해도 100% 로 사용됨. -->
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">
+              Some quick example text to build on the card title and make up the
+              bulk of the card's content.
+            </p>
+            <a href="#" class="btn btn-primary">See Detail</a>
+          </div>
+        </div>
+        <div class="card mb-3" style="width: 18rem">
+          <img
+            src="images/Koala.jpg"
+            class="card-img-top"
+            alt="코알라"
+            style="width: 100%"
+          />
+          <!-- style="width: 100%" 을 생략해도 100% 로 사용됨. -->
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">
+              Some quick example text to build on the card title and make up the
+              bulk of the card's content.
+            </p>
+            <a href="#" class="btn btn-primary">See Detail</a>
+          </div>
+        </div>
+        <div class="card mb-3" style="width: 18rem">
+          <img
+            src="images/Koala.jpg"
+            class="card-img-top"
+            alt="코알라"
+            style="width: 100%"
+          />
+          <!-- style="width: 100%" 을 생략해도 100% 로 사용됨. -->
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">
+              Some quick example text to build on the card title and make up the
+              bulk of the card's content.
+            </p>
+            <a href="#" class="btn btn-primary">See Detail</a>
+          </div>
+        </div>
+      </div>
+      <div class="card-deck mb-5">
+        <div class="card border-dark mb-3">
+          <div class="card-header">Header</div>
+          <div class="card-body text-dark">
+            <h5 class="card-title">Dark card title</h5>
+            <p class="card-text">
+              Some quick example text to build on the card title and make up the
+              bulk of the card's content.
+            </p>
+          </div>
+        </div>
+        <div class="card border-dark mb-3">
+          <div class="card-header">Header</div>
+          <div class="card-body text-dark">
+            <h5 class="card-title">Dark card title</h5>
+            <p class="card-text">
+              Some quick example text to build on the card title and make up the
+              bulk of the card's content.
+            </p>
+          </div>
+        </div>
+        <div class="card border-dark mb-3">
+          <div class="card-header">Header</div>
+          <div class="card-body text-dark">
+            <h5 class="card-title">Dark card title</h5>
+            <p class="card-text">
+              Some quick example text to build on the card title and make up the
+              bulk of the card's content.
+            </p>
+          </div>
+        </div>
+        <div class="card border-dark mb-3">
+          <div class="card-header">Header</div>
+          <div class="card-body text-dark">
+            <h5 class="card-title">Dark card title</h5>
+            <p class="card-text">
+              Some quick example text to build on the card title and make up the
+              bulk of the card's content.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
