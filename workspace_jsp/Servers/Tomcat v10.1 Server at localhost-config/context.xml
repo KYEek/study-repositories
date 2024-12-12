@@ -29,4 +29,5 @@
     <!-- ======= MyDBCP Setting Start ======= -->
 	<Resource auth="Container" driverClassName="oracle.jdbc.OracleDriver" maxIdle="10" maxTotal="20" maxWaitMillis="-1" name="jdbc/myoracle" password="gclass" type="javax.sql.DataSource" url="jdbc:oracle:thin:@127.0.0.1:1521:xe" username="MYMVC_USER"/>
     <!-- ======= MyDBCP Setting End ======= -->
+    <Resource auth="Container" driverClassName="oracle.jdbc.OracleDriver" maxIdle="10" maxTotal="20" maxWaitMillis="-1" name="jdbc/semioracle" password="gclass" type="javax.sql.DataSource" url="jdbc:oracle:thin:@211.238.142.186:1521:xe" username="semi_orauser3"/>
 </Context>

@@ -26,7 +26,10 @@ public interface MemberDAO {
 	boolean isUserExist(Map<String, String> paraMap) throws SQLException;
 
 	// 비밀번호 변경하기 
-	int pwdUpdate(Map<String, String> paraMap) throws SQLException; 
+	int pwdUpdate(Map<String, String> paraMap) throws SQLException;
+	
+	// 회원의 코인 및 포인트 증가하기 
+	int coinUpdateLoginUser(Map<String, String> paraMap) throws SQLException; 
 	
 	
 }

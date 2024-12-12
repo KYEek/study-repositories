@@ -352,6 +352,34 @@ public class MemberDAO_imple implements MemberDAO {
 	}// end of public int pwdUpdate(Map<String, String> paraMap) throws SQLException-------
 	
 	
+	// 회원의 코인 및 포인트 증가하기
+	   @Override
+	   public int coinUpdateLoginUser(Map<String, String> paraMap) throws SQLException {
+
+	      int result = 0;
+	      
+	      try {
+	         conn = ds.getConnection();
+	         
+	         String sql = " update tbl_member set coin = coin + ? "
+	                  + "                     , point = point + ? " 
+	                  + " where userid = ? ";
+	         
+	         pstmt = conn.prepareStatement(sql);
+	         
+	         pstmt.setInt(1, Integer.parseInt( paraMap.get("coinmoney") ) ); 
+	         pstmt.setInt(2, (int)(Integer.parseInt( paraMap.get("coinmoney") ) * 0.01) );  
+	         pstmt.setString(3, paraMap.get("userid"));
+	         
+	         result = pstmt.executeUpdate();
+	         
+	      } finally {
+	         close();
+	      }
+	      
+	      return result;
+	   }// end of public int coinUpdateLoginUser(Map<String, String> paraMap) throws SQLException-----
+	
 
 }
 

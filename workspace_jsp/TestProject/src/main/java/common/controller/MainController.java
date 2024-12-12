@@ -6,7 +6,7 @@ import java.util.List;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-public class IndexController extends AbstractController {
+public class MainController extends AbstractController {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse respone) throws Exception {
