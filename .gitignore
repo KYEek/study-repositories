@@ -1,6 +1,9 @@
 oracle_study/정규화과정.pdf
-# Eclipse Core       
-.project 
-
-# JDT-specific (Eclipse Java Development Tools)      
+# Eclipse 설정 파일
+.settings/
 .classpath
+.project
+
+# OS별 임시 파일
+*.log
+*.tmp
