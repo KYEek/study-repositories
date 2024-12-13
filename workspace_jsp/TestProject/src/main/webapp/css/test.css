@@ -1,0 +1,36 @@
+@charset "UTF-8";
+
+footer {
+  border: 1px solid black;
+
+  background-color: antiquewhite;
+  height: 100vh;
+}
+
+#first_footer {
+  position: relative;
+  background-color: violet;
+  margin: 40vh 20vw 0 20vw;
+  text-align: center;
+}
+
+#first_footer > div:first-child {
+  border: 1px solid black;
+  margin-bottom: 10vh;
+}
+
+#first_footer > div:second-child {
+  border: 1px solid black;
+  margin-bottom: ;
+}
+
+#second_footer {
+  font-size: x-small;
+  font-weight: lighter;
+  position: relative;
+  transform: translateY(0%);
+}
+
+.news_letter {
+  margin: 0;
+}
