@@ -1,5 +1,9 @@
 @charset "UTF-8";
 
+body {
+  overflow: hidden;
+}
+
 div#carouselExampleControls {
   width: 100vw;
   height: 100vh;
