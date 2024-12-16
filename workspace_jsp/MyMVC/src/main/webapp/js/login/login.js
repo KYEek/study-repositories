@@ -69,12 +69,12 @@ function goCoinPurchaseTypeChoice(userid, ctx_Path) {
 
 // === 포트원(구 아임포트) 결제를 해주는 함수 === //
 function goCoinPurchaseEnd(ctxPath, coinmoney, userid) {
-  alert(
+  /*alert(
     "확인용 부모창의 함수 호출함.\n결제금액 : " +
       coinmoney +
       "원, 사용자id : " +
       userid
-  );
+  );*/
 
   // >>> 포트원(구 아임포트) 결제 팝업창 띄우기 <<<
   // 너비 1000, 높이 600 인 팝업창을 화면 가운데 위치시키기
@@ -88,7 +88,6 @@ function goCoinPurchaseEnd(ctxPath, coinmoney, userid) {
 
   window.open(
     url,
-    "coinPurchaseEnd",
     `left=${left}, top=${top}, width=${width}, height=${height}`
   );
 } // end of function goCoinPurchaseEnd(ctxPath, coinmoney, userid)-----------------

@@ -379,6 +379,13 @@ public class MemberDAO_imple implements MemberDAO {
 	      
 	      return result;
 	   }// end of public int coinUpdateLoginUser(Map<String, String> paraMap) throws SQLException-----
+
+
+	@Override
+	public boolean duplicatePwdCheck(Map<String, String> paraMap) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 
 }

@@ -13,7 +13,7 @@ public class CoinPurchaseEnd extends AbstractController {
 		// 원포트(구 아임포트) 결제창을 하기 위한 전제조건은 먼저 로그인을 해야 하는 것이다. 
 	      if(super.checkLogin(request)) {
 	         // 로그인을 했으면
-	         
+	         System.out.println("CoinPurchaseEnd 실행됨");
 	         String userid = request.getParameter("userid");
 	         
 	         HttpSession session = request.getSession();

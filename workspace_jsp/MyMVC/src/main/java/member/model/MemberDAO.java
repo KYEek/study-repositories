@@ -29,7 +29,9 @@ public interface MemberDAO {
 	int pwdUpdate(Map<String, String> paraMap) throws SQLException;
 	
 	// 회원의 코인 및 포인트 증가하기 
-	int coinUpdateLoginUser(Map<String, String> paraMap) throws SQLException; 
+	int coinUpdateLoginUser(Map<String, String> paraMap) throws SQLException;
+
+	boolean duplicatePwdCheck(Map<String, String> paraMap); 
 	
 	
 }
