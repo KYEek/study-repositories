@@ -1,6 +1,7 @@
 package member.model;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 import member.domain.MemberVO;
@@ -31,7 +32,12 @@ public interface MemberDAO {
 	// 회원의 코인 및 포인트 증가하기 
 	int coinUpdateLoginUser(Map<String, String> paraMap) throws SQLException;
 
-	boolean duplicatePwdCheck(Map<String, String> paraMap); 
+	boolean duplicatePwdCheck(Map<String, String> paraMap);
+
+	List<MemberVO> select_Member_nopaging()throws SQLException;
+
+	//페이징 처리를 한 모든 회원목록 검색
+	List<MemberVO> select_Member_paging(Map<String, String> paraMap) throws SQLException; 
 	
 	
 }

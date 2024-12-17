@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.naming.Context;
@@ -385,6 +387,108 @@ public class MemberDAO_imple implements MemberDAO {
 	public boolean duplicatePwdCheck(Map<String, String> paraMap) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+
+	@Override
+	public List<MemberVO> select_Member_nopaging() throws SQLException {
+		
+		List<MemberVO> memberList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " select userid, name, email, gender "
+					+ " from tbl_member "
+					+ " where userid != 'admin' "
+					+ " order by registerday desc ";
+			
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				MemberVO mvo = new MemberVO();
+				//userid, name, email, gender
+				
+				mvo.setUserid(rs.getString("userid"));
+				mvo.setName(rs.getString("name"));
+
+				mvo.setEmail(aes.decrypt(rs.getString("email")));
+				mvo.setGender(rs.getString("gender"));
+				
+				memberList.add(mvo);
+			}//end of while--------------
+		}catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			close();
+		}
+		
+		return memberList;
+	}//end of select_member_nopaging
+
+
+	@Override
+	public List<MemberVO> select_Member_paging(Map<String, String> paraMap) throws SQLException {
+
+
+		List<MemberVO> memberList = new ArrayList<>();
+		
+		try {
+			conn = ds.getConnection();
+			
+			String sql = " SELECT RNO, userid, name, email, gender "
+					+ "  FROM  "
+					+ "  ( "
+					+ "      SELECT rownum AS RNO, userid, name, email, gender "
+					+ "      FROM "
+					+ "      ( "
+					+ "        select userid, name, email, gender "
+					+ "        from tbl_member "
+					+ "        where userid != 'admin' "
+					+ "        order by registerday desc "
+					+ "      ) V "
+					+ "  ) T "
+					+ "  WHERE T.RNO BETWEEN ? AND ? ";
+			
+//			where RNO between (조회하고자하는페이지번호 * 한페이지당보여줄행의개수) - (한페이지당보여줄행의개수 - 1) and (조회하고자하는페이지번호 * 한페이지당보여줄행의개수);
+			
+			
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			int currentShowPageNo = Integer.parseInt(paraMap.get("currentShowPageNo")) ;
+			int sizePerPage = Integer.parseInt(paraMap.get("sizePerPage")) ;
+			
+			//검색이 없는 경우
+			pstmt.setInt(1, (currentShowPageNo * sizePerPage) - (sizePerPage - 1));
+			pstmt.setInt(2, (currentShowPageNo * sizePerPage));
+			rs = pstmt.executeQuery();
+			
+			
+			while(rs.next()) {
+				MemberVO mvo = new MemberVO();
+				//userid, name, email, gender
+				
+				mvo.setUserid(rs.getString("userid"));
+				mvo.setName(rs.getString("name"));
+
+				mvo.setEmail(aes.decrypt(rs.getString("email")));
+				mvo.setGender(rs.getString("gender"));
+				
+				memberList.add(mvo);
+			}//end of while--------------
+		}catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			close();
+		}
+		
+		return memberList;
+		
+		
 	}
 	
 
