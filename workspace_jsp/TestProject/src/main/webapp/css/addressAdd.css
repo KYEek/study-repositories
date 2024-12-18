@@ -1,1 +1,14 @@
 @charset "UTF-8";
+
+div#menu_container {
+  border: 0px solid black;
+}
+
+div#address_header {
+  display: block;
+}
+
+input[type="text"].input_area {
+  border: 0px solid black;
+  border-bottom: 0.7px solid #d3d3d3;
+}

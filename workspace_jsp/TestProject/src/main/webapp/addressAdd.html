@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>주소 추가</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="bootstrap-4.6.2-dist/css/bootstrap.min.css"
+    />
+
+    <!-- Font Awesome 6 Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+    />
+
+    <!-- Optional JavaScript -->
+    <script type="text/javascript" src="js/jquery-3.7.1.min.js"></script>
+    <script
+      type="text/javascript"
+      src="bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js"
+    ></script>
+    <!-- 유저 CSS -->
+    <link rel="stylesheet" type="text/css" href="css/mypage.css" />
+    <link rel="stylesheet" type="text/css" href="css/address.css" />
+    <link rel="stylesheet" type="text/css" href="css/addressAdd.css" />
+    <!--jQueryUI CSS 및 JS   -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="jquery-ui-1.13.1.custom/jquery-ui.min.css"
+    />
+    <script
+      type="text/javascript"
+      src="jquery-ui-1.13.1.custom/jquery-ui.min.js"
+    ></script>
+    <!-- 유저 js -->
+    <script type="text/javascript" src="js/addressAdd.js"></script>
+  </head>
+  <body>
+    <main>
+      <div id="menu_container">
+        <div id="address_header">
+          <div>제목</div>
+          <div>설명 부분</div>
+        </div>
+        <div id="address_input">
+          <form>
+            <input class="input_area" type="text" placeholder="이름" />
+            <input
+              class="input_area"
+              type="text"
+              placeholder="우편번호"
+            /><button id="find_Zip" type="button">우편번호 찾기</button>
+            <input class="input_area" type="text" placeholder="주소" />
+            <input class="input_area" type="text" placeholder="선택사항" />
+            <input class="input_area" type="text" placeholder="지역" />
+            <input class="input_area" type="text" placeholder="지역번호" />
+            <button type="button" onclick="submit">저장</button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
