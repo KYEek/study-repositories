@@ -28,10 +28,12 @@ document.addEventListener("DOMContentLoaded", function () {
         // li태그 생성
         if (info == "addr_isdefault") {
           if (item[info] == 1) {
-            html += "<li style ></li>";
+            html +=
+              "<li style ><div id='is_default_address'>기본 주소</div></li>";
           }
+        } else {
+          html = html + "<li>" + item[info] + "</li>";
         }
-        html = html + "<li>" + item[info] + "</li>";
       }
       html +=
         "</ul><div class='i_tag'><i class='fa-solid fa-ellipsis'></i></div></div></li>";
