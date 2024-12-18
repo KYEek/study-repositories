@@ -47,23 +47,44 @@
   </head>
   <body>
     <main>
+      <div id="address_header">
+        <div>주소</div>
+        <p>
+          우편번호를 입력하여 주소를 검색하세요. 주소 필드는 검색을 기반으로
+          자동 완성됩니다. 주소 <b>2</b> 필드에 필요한 정보를 입력하여 주소를
+          완성할 수 있습니다.
+        </p>
+      </div>
       <div id="menu_container">
-        <div id="address_header">
-          <div>제목</div>
-          <div>설명 부분</div>
-        </div>
         <div id="address_input">
           <form>
-            <input class="input_area" type="text" placeholder="이름" />
-            <input
-              class="input_area"
-              type="text"
-              placeholder="우편번호"
-            /><button id="find_Zip" type="button">우편번호 찾기</button>
-            <input class="input_area" type="text" placeholder="주소" />
-            <input class="input_area" type="text" placeholder="선택사항" />
-            <input class="input_area" type="text" placeholder="지역" />
-            <input class="input_area" type="text" placeholder="지역번호" />
+            <div class="input_area">
+              <input class="input_area" type="text" id="input1" /><label
+                for="input1"
+                >이름</label
+              >
+            </div>
+            <div id="zip_area">
+              <input
+                class="input_area"
+                type="text"
+                placeholder="우편번호"
+              /><button id="find_Zip" type="button">
+                <span>우편번호 찾기</span>
+              </button>
+            </div>
+            <div>
+              <input class="input_area" type="text" placeholder="주소" />
+            </div>
+            <div>
+              <input class="input_area" type="text" placeholder="선택사항" />
+            </div>
+            <div>
+              <input class="input_area" type="text" placeholder="지역" />
+            </div>
+            <div>
+              <input class="input_area" type="text" placeholder="지역번호" />
+            </div>
             <button type="button" onclick="submit">저장</button>
           </form>
         </div>
