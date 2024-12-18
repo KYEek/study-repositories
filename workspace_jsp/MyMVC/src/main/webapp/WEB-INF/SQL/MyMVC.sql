@@ -198,3 +198,108 @@ from tbl_member
 order by registerday desc;
 
 
+
+
+
+
+-- 오라클에서 프로시저를 사용하여 회원을 대량으로 입력(insert)하겠습니다. --
+select * 
+from user_constraints
+where table_name = 'TBL_MEMBER';
+
+-- 이메일을 대량으로 넣기 위해서 어쩔수 없이 email 에 대한 unique 제약을 없애도록 한다.
+alter table tbl_member
+drop constraint UQ_TBL_MEMBER_EMAIL;
+-- Table TBL_MEMBER이(가) 변경되었습니다.
+
+select * 
+from user_constraints
+where table_name = 'TBL_MEMBER';
+
+create or replace procedure pcd_member_insert
+(p_userid   IN  varchar2
+,p_name     IN  varchar2
+,p_gender   IN  char)
+is
+begin
+   for i in 1..100 loop
+      insert into tbl_member(userid, pwd, name, email, mobile, postcode, address, detailaddress, extraaddress, gender, birthday) 
+      values(p_userid||i, '18006e2ca1c2129392c66d87334bd2452c572058d406b4e85f43c1f72def10f5', p_name||i, 'J15zVMtECQ/z6ZC2H6nu0WEiWUxZ35kxa6tq/iXee2w=', 'JEQsZ5uDgcoIBfu7Nz3bXA==', 
+            '15864', '마포구 월드컵로 14', '101동 101호', ' (합정동)', p_gender, '1996-02-27'); 
+   end loop;
+end pcd_member_insert; 
+/
+-- Procedure PCD_MEMBER_INSERT이(가) 컴파일되었습니다.
+
+exec pcd_member_insert('byeonwooseok', '변우석', 1);
+-- PL/SQL 프로시저가 성공적으로 완료되었습니다.
+commit;
+
+exec pcd_member_insert('iyou', '아이유', 2);
+-- PL/SQL 프로시저가 성공적으로 완료되었습니다.
+commit;
+
+select *
+from tbl_member
+order by userid asc;
+
+select count(*)
+from tbl_member
+order by userid asc;
+
+insert into tbl_member(userid, pwd, name, email, mobile, postcode, address, detailaddress, extraaddress, gender, birthday) 
+values('kimyousin', '9695b88a59a1610320897fa84cb7e144cc51f2984520efb77111d94b402a8382', '김유신', 'jnfHk9MlyFJUs2pN34jOUKnMAbGd8kHbm7wgNqMDWIc=', '0W8j3vcLbVOrOBwdXHFJFQ==', 
+       '15864', '경기 군포시 오금로 15-17', '101동 102호', ' (금정동)', '1', '1984-10-11'); 
+
+insert into tbl_member(userid, pwd, name, email, mobile, postcode, address, detailaddress, extraaddress, gender, birthday) 
+values('youinna', '9695b88a59a1610320897fa84cb7e144cc51f2984520efb77111d94b402a8382', '유인나', 'jnfHk9MlyFJUs2pN34jOUKnMAbGd8kHbm7wgNqMDWIc=', '0W8j3vcLbVOrOBwdXHFJFQ==', 
+       '15864', '경기 군포시 오금로 15-17', '101동 102호', ' (금정동)', '2', '2001-10-11');
+       
+commit;       
+
+update tbl_member set pwd='18006e2ca1c2129392c66d87334bd2452c572058d406b4e85f43c1f72def10f5';
+
+select count(*)
+from tbl_member
+order by userid asc;
+-- 207
+
+select *
+from tbl_member
+where userid != 'admin'
+order by registerday desc;
+
+
+select *
+from tbl_member
+where userid != 'admin' and name like '%'||'유'||'%'
+order by registerday desc;
+
+
+select *
+from tbl_member
+where userid != 'admin' and userid like '%'||'iyou'||'%'
+order by registerday desc;
+
+SELECT RNO, userid, name, email, gender
+  FROM 
+  (
+      SELECT rownum AS RNO, userid, name, email, gender
+      FROM
+      (
+        select userid, name, email, gender
+        from tbl_member
+        where userid != 'admin'
+        order by registerday desc
+      ) V
+  ) T
+  WHERE T.RNO BETWEEN 1 AND 10;  -- 
+ /*
+    === 페이징처리의 공식 ===
+    where RNO between (조회하고자하는페이지번호 * 한페이지당보여줄행의개수) - (한페이지당보여줄행의개수 - 1) and (조회하고자하는페이지번호 * 한페이지당보여줄행의개수);
+    
+    where RNO between (1 * 3) - (3 - 1) and (1 * 3);
+    where RNO between (3) - (2) and (3);
+    where RNO between 1 and 3;
+ */
+

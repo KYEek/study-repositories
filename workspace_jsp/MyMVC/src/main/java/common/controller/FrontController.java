@@ -39,14 +39,14 @@ public class FrontController extends HttpServlet {
 	      그러므로 init(ServletConfig config) 메소드에는 FrontController 서블릿이 동작해야할 환경설정을 잡아주는데 사용된다.
 	  */		
 		// *** 확인용 *** //
-	  // System.out.println("~~~ 확인용 => 서블릿 FrontController 의 init(ServletConfig config) 메소드가 실행됨.");
+	   System.out.println("~~~ 확인용 => 서블릿 FrontController 의 init(ServletConfig config) 메소드가 실행됨.");
 	  // ~~~ 확인용 => 서블릿 FrontController 의 init(ServletConfig config) 메소드가 실행됨.
 		
 		 FileInputStream fis = null;
 		 // 특정 파일에 있는 내용을 읽어오기 위한 용도로 쓰이는 객체
 		 
 		 String props = config.getInitParameter("propertyConfig");
-	  // System.out.println("~~~ 확인용 props => " + props);
+	   System.out.println("~~~ 확인용 props => " + props);
 		 // ~~~ 확인용 props => C:/NCS/workspace_jsp/MyMVC/src/main/webapp/WEB-INF/Command.properties
 		 
 		 try {
@@ -78,8 +78,8 @@ public class FrontController extends HttpServlet {
 				
 				String key = (String) en.nextElement();
 				
-			//	System.out.println("~~~ 확인용 key => " + key);
-			//	System.out.println("~~~ 확인용 value => " + pr.getProperty(key) + "\n");
+//				System.out.println("~~~ 확인용 key => " + key);
+//				System.out.println("~~~ 확인용 value => " + pr.getProperty(key) + "\n");
 			/*	
 				~~~ 확인용 key => /test/test2.up
 				~~~ 확인용 value => test.controller.Test2Controller
@@ -137,19 +137,19 @@ public class FrontController extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-	//	System.out.println("~~~~ 확인용 => 서블릿 FrontController 의 doGet 메소드가 실행됨.");
+		System.out.println("~~~~ 확인용 => 서블릿 FrontController 의 doGet 메소드가 실행됨.");
 		
 	//  웹브라우저의 주소 입력창에서 
 	//  http://localhost:9090/MyMVC/member/idDuplicateCheck.up?userid=leess 와 같이 입력되었더라면
-	//	String url = request.getRequestURL().toString();
-	//	System.out.println("~~~~ 확인용 url => " + url);
+		String url = request.getRequestURL().toString();
+		System.out.println("~~~~ 확인용 url => " + url);
 		// ~~~~ 확인용 url => http://localhost:9090/MyMVC/member/idDuplicateCheck.up
 		
 		
    //  웹브라우저의 주소 입력창에서 
    //  http://localhost:9090/MyMVC/member/idDuplicateCheck.up?userid=leess 와 같이 입력되었더라면
 	   String uri =	request.getRequestURI();
-   //  System.out.println("~~~~ 확인용 uri => " + uri);
+     System.out.println("~~~~ 확인용 uri => " + uri);
 	   // ~~~~ 확인용 uri => /MyMVC/member/idDuplicateCheck.up
        // ~~~~ 확인용 uri => /MyMVC/test1.up
        // ~~~~ 확인용 uri => /MyMVC/test/test2.up
