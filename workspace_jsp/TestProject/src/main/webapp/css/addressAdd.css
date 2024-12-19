@@ -2,7 +2,7 @@
 
 div#menu_container {
   border: 0px solid black;
-  width: 70vw;
+  width: 50vw;
 }
 
 div#address_header {
@@ -46,14 +46,6 @@ form > div:nth-child(6) {
   width: 50%;
 }
 
-/* 주소 버튼이 있는 곳 */
-div#zip_area {
-  display: flex;
-}
-div#zip_area > input[type="text"] {
-  margin-right: auto;
-}
-
 /* 주소 입력 부분의 높이를 최대로  */
 input.input_area {
   height: 100%;
@@ -91,16 +83,54 @@ form > button {
 div.input_area > label {
   position: relative;
   margin-left: 1vw;
-  animation-duration: 1s;
-  animation-name: slidein;
-  animation-fill-mode: forwards;
+  bottom: 65%;
   color: #d3d3d3;
+  height: 0;
 }
-@keyframes slidein {
+
+div.input_area > label {
+  position: relative;
+  margin-left: 1vw;
+  bottom: 65%;
+  color: #d3d3d3;
+  height: 0;
+}
+
+div.input_area > div > label[for="input2"] {
+  width: 0px;
+  white-space: nowrap;
+  top: 40%;
+  right: 73%;
+}
+
+div.input_area > label[for="input5"] {
+  bottom: 100%;
+}
+/* 주소 버튼이 있는 곳 */
+div#zip_area {
+  display: flex;
+}
+div#zip_area > input[type="text"] {
+  margin-right: auto;
+}
+
+div.warning_div {
+  font-size: 10px;
+  display: none;
+}
+div.warning_div > span:first-child {
+  margin-right: 5px;
+}
+
+label.position_move {
+  bottom: 110% !important;
+}
+
+/* @keyframes slidein {
   from {
     bottom: 65%;
   }
   to {
     bottom: 110%;
   }
-}
+} */

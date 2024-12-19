@@ -26,12 +26,14 @@ document.addEventListener("DOMContentLoaded", function () {
       for (let info in item) {
         // console.log(item[info]);
         // li태그 생성
+        //기본 주소인 경우
         if (info == "addr_isdefault") {
           if (item[info] == 1) {
             html +=
               "<li style ><div id='is_default_address'>기본 주소</div></li>";
           }
         } else {
+          //기본 주소가 아닌 경우
           html = html + "<li>" + item[info] + "</li>";
         }
       }
