@@ -88,7 +88,7 @@ div.input_area > label {
   height: 0;
 }
 
-div.input_area > label {
+div#zip_input > label {
   position: relative;
   margin-left: 1vw;
   bottom: 65%;
@@ -96,10 +96,11 @@ div.input_area > label {
   height: 0;
 }
 
-div.input_area > div > label[for="input2"] {
+div.input_area > div#zip_input > label[for="input2"] {
+  position: relative;
   width: 0px;
   white-space: nowrap;
-  top: 40%;
+  bottom: -30%;
   right: 73%;
 }
 
@@ -108,22 +109,33 @@ div.input_area > label[for="input5"] {
 }
 /* 주소 버튼이 있는 곳 */
 div#zip_area {
-  display: flex;
+  height: 100%;
 }
-div#zip_area > input[type="text"] {
+div#zip_input {
+  display: flex;
+  height: 100%;
+}
+div#zip_input > input[type="text"] {
   margin-right: auto;
+  height: 45.5px;
 }
 
 div.warning_div {
   font-size: 10px;
   display: none;
+  white-space: nowrap;
 }
 div.warning_div > span:first-child {
   margin-right: 5px;
 }
 
 label.position_move {
-  bottom: 110% !important;
+  /* bottom: 110% !important; */
+  top: -6.5vh !important;
+}
+label.position_move2 {
+  /* bottom: 110% !important; */
+  top: -0.5vh !important;
 }
 
 /* @keyframes slidein {

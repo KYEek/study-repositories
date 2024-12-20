@@ -40,22 +40,30 @@ document.addEventListener("DOMContentLoaded", function () {
     else {
       item.addEventListener("focus", function (e) {
         // const warning_div = e.target.parentElement.querySelector(".warning_div");
-        const warning_div = getSibilingElement(e.target, ".warning_div");
-
+        let warning_div;
+        if (index != 1) {
+          warning_div = getSibilingElement(e.target, ".warning_div");
+        } else {
+          warning_div = e.target.parentElement.nextElementSibling;
+        }
         const label = getSibilingElement(item, "label");
-        label.classList.add("position_move");
+        if (index == 1) {
+          label.classList.add("position_move2");
+        } else {
+          label.classList.add("position_move");
+        }
         warning_div.style.display = "block";
         warning_div.style.color = "black";
-        let html = warning_icon;
+        let html = "";
         switch (index) {
           case 0:
-            html += name_condition;
+            html = warning_icon + name_condition;
             break;
           case 3:
-            html += addition_address_condition;
+            html = warning_icon + addition_address_condition;
             break;
           case 5:
-            html += mobile_condition;
+            html = warning_icon + mobile_condition;
             break;
         }
 
@@ -64,11 +72,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // 블러 이벤트
       item.addEventListener("blur", function (e) {
-        const warning_div = getSibilingElement(e.target, ".warning_div");
+        let warning_div;
+        if (index != 1) {
+          warning_div = getSibilingElement(e.target, ".warning_div");
+        } else {
+          warning_div = e.target.parentElement.nextElementSibling;
+        }
         warning_red(e.target, warning_div, index);
         const label = getSibilingElement(item, "label");
-        label.classList.remove("position_move");
+        if (index == 1) {
+          label.classList.remove("position_move2");
+        } else {
+          label.classList.remove("position_move");
+        }
       }); //end of blur--------------------------
+      //값이 입력됐을 때 플레이스 홀더를 위로 올리기 위해해
+      item.addEventListener("change", function (e) {
+        if (index == 1 || index == 2) {
+          console.log("change");
+          if (e.target.value != "") {
+            const label = getSibilingElement(item, "label");
+            if (index == 1) {
+              label.classList.add("position_move2");
+            } else {
+              label.classList.add("position_move");
+            }
+          }
+        }
+      }); //end of change--------------------------
     }
   });
 
@@ -116,7 +147,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // 우편번호와 주소 정보를 해당 필드에 넣는다.
         document.getElementById("input2").value = data.zonecode;
+        getSibilingElement(
+          document.getElementById("input2"),
+          "label"
+        ).classList.add("position_move2");
         document.getElementById("input3").value = addr;
+        getSibilingElement(
+          document.getElementById("input3"),
+          "label"
+        ).classList.add("position_move");
         // 커서를 상세주소 필드로 이동한다.
         document.getElementById("input4").focus();
       },
