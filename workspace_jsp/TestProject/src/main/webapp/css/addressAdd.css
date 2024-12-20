@@ -83,29 +83,31 @@ form > button {
 div.input_area > label {
   position: relative;
   margin-left: 1vw;
-  bottom: 65%;
+  /* bottom: 65%; */
   color: #d3d3d3;
+  transform: translateY(40px);
   height: 0;
 }
 
 div#zip_input > label {
   position: relative;
   margin-left: 1vw;
-  bottom: 65%;
+  white-space: nowrap;
+  transform: translateY(25px);
   color: #d3d3d3;
   height: 0;
+  width: 0px;
 }
 
 div.input_area > div#zip_input > label[for="input2"] {
   position: relative;
   width: 0px;
   white-space: nowrap;
-  bottom: -30%;
-  right: 73%;
+  background-color: violet;
 }
 
 div.input_area > label[for="input5"] {
-  bottom: 100%;
+  transform: translateY(10px);
 }
 /* 주소 버튼이 있는 곳 */
 div#zip_area {
@@ -129,13 +131,21 @@ div.warning_div > span:first-child {
   margin-right: 5px;
 }
 
+div.warning_div:nth-child(2) {
+  height: 10px;
+}
+
 label.position_move {
   /* bottom: 110% !important; */
-  top: -6.5vh !important;
+  /* top: -6.5vh !important; */
+  transform: translateY(20px) !important;
+  transition-duration: 1s;
 }
 label.position_move2 {
   /* bottom: 110% !important; */
-  top: -0.5vh !important;
+  /* top: -0.5vh !important; */
+  transform: translateY(-5px) !important;
+  transition-duration: 1s;
 }
 
 /* @keyframes slidein {

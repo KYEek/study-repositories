@@ -28,16 +28,36 @@ public interface MemberDAO {
 
 	// 비밀번호 변경하기 
 	int pwdUpdate(Map<String, String> paraMap) throws SQLException;
-	
+
 	// 회원의 코인 및 포인트 증가하기 
 	int coinUpdateLoginUser(Map<String, String> paraMap) throws SQLException;
 
-	boolean duplicatePwdCheck(Map<String, String> paraMap);
+	// 회원정보 수정시 email 중복검사 (현재 해당 사용자가 사용중인 email 이라면 true, 새로운 email 이라면 false)  
+	boolean emailDuplicateCheck2(Map<String, String> paraMap) throws SQLException;
+	
+	// 비밀번호 변경시 현재 사용중인 비밀번호인지 아닌지 알아오기(현재 사용중인 비밀번호 이라면 true, 새로운 비밀번호이라면 false) 
+	boolean duplicatePwdCheck(Map<String, String> paraMap) throws SQLException;
 
-	List<MemberVO> select_Member_nopaging()throws SQLException;
+	// 회원의 개인정보 변경하기
+	int updateMember(MemberVO member) throws SQLException;
 
-	//페이징 처리를 한 모든 회원목록 검색
-	List<MemberVO> select_Member_paging(Map<String, String> paraMap) throws SQLException; 
+	// **** 페이징 처리를 안한 모든 회원목록 보여주기 **** // 
+	List<MemberVO> select_Member_nopaging() throws SQLException;
+	
+	// **** 페이징 처리를 한 모든 회원목록 또는 검색한 회원목록 보여주기 **** //
+	List<MemberVO> select_Member_paging(Map<String, String> paraMap) throws SQLException;
+
+	// 페이징 처리를 위한 검색이 있는 또는 검색이 없는 회원에 대한 총페이지수 알아오기 //
+	int getTotalPage(Map<String, String> paraMap) throws SQLException;
+	
+	/* >>> 뷰단(memberList.jsp)에서 "페이징 처리시 보여주는 순번 공식" 에서 사용하기 위해 
+       검색이 있는 또는 검색이 없는 회원의 총개수 알아오기 시작 <<< */
+	int getTotalMemberCount(Map<String, String> paraMap) throws SQLException;
+
+	// 입력받은 userid 를 가지고 한명의 회원정보를 리턴시켜주는 메소드 
+	MemberVO selectOneMember(String userid) throws SQLException;
+
+	
 	
 	
 }

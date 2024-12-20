@@ -30,6 +30,7 @@ const mobile_condition = "-를 제외한 숫자만 입력해 주십시오.";
 //문서가 로드되면 실행
 document.addEventListener("DOMContentLoaded", function () {
   const input_text = document.querySelectorAll("input.input_area");
+  const submit_btn = document.querySelector("button#submit_btn");
   input_text.forEach((item, index) => {
     //주소, 지역 버튼일 때
     if (index == 2 || index == 4) {
@@ -68,6 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         warning_div.innerHTML = html;
+        e.stopPropagation();
       }); //end of focus--------------------------
 
       // 블러 이벤트
@@ -78,20 +80,26 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
           warning_div = e.target.parentElement.nextElementSibling;
         }
+        //오류 메시지를 띄어주기 위한 함수
         warning_red(e.target, warning_div, index);
         const label = getSibilingElement(item, "label");
         if (index == 1) {
           label.classList.remove("position_move2");
         } else {
-          label.classList.remove("position_move");
+          if (e.target.value == "") {
+            label.classList.remove("position_move");
+          }
         }
+        e.stopPropagation();
       }); //end of blur--------------------------
-      //값이 입력됐을 때 플레이스 홀더를 위로 올리기 위해해
+      //값이 입력됐을 때 플레이스 홀더를 위로 올리기 위해
       item.addEventListener("change", function (e) {
+        console.log(e.target);
         if (index == 1 || index == 2) {
-          console.log("change");
+          //값이 비어 있지 않을 때
           if (e.target.value != "") {
             const label = getSibilingElement(item, "label");
+            //우편번호 인풋에는 다른 클래스를 적용
             if (index == 1) {
               label.classList.add("position_move2");
             } else {
@@ -99,9 +107,29 @@ document.addEventListener("DOMContentLoaded", function () {
             }
           }
         }
+        e.stopPropagation();
       }); //end of change--------------------------
     }
   });
+  //저장 버튼 클릭시
+  submit_btn.addEventListener("click", function (e) {
+    let is_submit = true;
+    input_text.forEach((item, index) => {
+      if (index == 0 || index == 1 || index == 2 || index == 5) {
+        if (item.value == "") {
+          item.dispatchEvent(new Event("blur"));
+          is_submit = false;
+        }
+      }
+    });
+    if (is_submit) {
+      const form = document.querySelector("#address_form");
+      form.setAttribute("method", "get");
+      form.setAttribute("action", "");
+      form.submit();
+    }
+    e.stopPropagation();
+  }); //end of click--------------------------
 
   //우편번호 찾기 버튼클릭시
   document.querySelector("#find_Zip").addEventListener("click", function () {
@@ -191,7 +219,8 @@ function getSibilingElement(target, selector) {
 function warning_red(target, warning_div, index) {
   //값이 비어있을 때
   if (target.value == "") {
-    if (index == 0 || index == 1 || index == 5) {
+    if (index == 0 || index == 1 || index == 2 || index == 5) {
+      warning_div.style.display = "block";
       warning_div.style.color = "red";
       warning_div.innerHTML = warning_icon + is_blanc;
     } else {

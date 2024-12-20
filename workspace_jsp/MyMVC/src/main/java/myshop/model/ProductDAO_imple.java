@@ -81,7 +81,35 @@ public class ProductDAO_imple implements ProductDAO {
 	}// end of public List<ImageVO> imageSelectAll() throws SQLException-------
 
 	
-	
+	// 제품의 스펙별(HIT, NEW, BEST) 상품의 전체개수를 알아오기
+	   @Override
+	   public int totalPspecCount(String fk_snum) throws SQLException {
+	      
+	      int totalCount = 0;
+	      
+	      try {
+	         conn = ds.getConnection();
+	         
+	         String sql = " select count(*) "
+	                  + " from tbl_product "
+	                  + " where fk_snum = ? ";
+	         
+	         pstmt = conn.prepareStatement(sql);
+	         pstmt.setString(1, fk_snum);
+	         
+	         rs = pstmt.executeQuery();
+	         
+	         rs.next();
+	         
+	         totalCount = rs.getInt(1);
+	         
+	      } finally {
+	         close();
+	      }
+	      
+	      return totalCount;
+	      
+	   }// end of public int totalPspecCount(String string) throws SQLException------
 	
 	
 }

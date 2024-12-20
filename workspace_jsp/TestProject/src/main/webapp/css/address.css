@@ -39,6 +39,23 @@ div#is_default_address {
   margin-top: 1vh;
 }
 
+/* 부트스트랩 드롭다운 설정 변경 */
+.btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+.dropdown-toggle::after {
+  display: none;
+}
+
+.dropdown-menu {
+  border: 0.7px solid black;
+  border-radius: 0;
+}
+.dropdown-item:hover {
+  background-color: white;
+}
+
 /* 풀 화면이 아닐 때의 폰트 사이즈 */
 @media (max-width: 1919px) {
   div#address_header {

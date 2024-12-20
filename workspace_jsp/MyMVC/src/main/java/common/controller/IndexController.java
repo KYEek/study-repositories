@@ -19,7 +19,7 @@ public class IndexController extends AbstractController {
 	
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse respone) throws Exception {
-		System.out.println("IndexController 실행됨");
+		
 		try {
 			List<ImageVO> imgList = pdao.imageSelectAll();
 			request.setAttribute("imgList", imgList); 

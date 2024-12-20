@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+    
 <%
     String ctxPath = request.getContextPath();
     //    /MyMVC
@@ -56,20 +59,28 @@
            <li class="nav-item active">
               <a class="nav-link menufont_size" href="<%= ctxPath %>/member/memberRegister.up">회원가입</a>
            </li>
-          <li class="nav-item">
-             <a class="nav-link menufont_size" href="<%= ctxPath %>/member/memberList.up">회원목록</a>
-          </li>
-          <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle menufont_size text-primary" href="#" id="navbarDropdown" data-toggle="dropdown"> 
-                 Dropdown                                <%-- .text-primary 는 글자색으로 파랑색임 --%>  
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                 <a class="dropdown-item text-primary" href="#">Action</a>
-                 <a class="dropdown-item text-primary" href="#">Another action</a>
-                 <div class="dropdown-divider"></div>
-                 <a class="dropdown-item text-primary" href="#">Something else here</a>
-              </div>
+          <li class="nav-item active">
+              <a class="nav-link menufont_size" href="<%= ctxPath %>/shop/mallHomeMore.up">쇼핑몰홈[더보기]</a>
            </li>
+           <li class="nav-item active">
+              <a class="nav-link menufont_size" href="<%= ctxPath %>/shop/mallHomeScroll.up">쇼핑몰홈[스크롤]</a>
+           </li>
+          
+          
+          <c:if test="${not empty sessionScope.loginuser and sessionScope.loginuser.userid == 'admin'}"> <%-- admin 으로 로그인 했으면 --%>     
+	          <li class="nav-item dropdown">
+	              <a class="nav-link dropdown-toggle menufont_size text-primary" href="#" id="navbarDropdown" data-toggle="dropdown"> 
+	                 관리자전용                                <%-- .text-primary 는 글자색으로 파랑색임 --%>  
+	              </a>
+	              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+	                 <a class="dropdown-item text-primary" href="<%= ctxPath%>/member/memberList.up">회원목록</a>
+	                 <a class="dropdown-item text-primary" href="#">제품등록</a>
+	                 <div class="dropdown-divider"></div>
+	                 <a class="dropdown-item text-primary" href="#">전체주문내역</a>
+	              </div>
+	           </li>
+           </c:if>
+           
         </ul>
       </div>
    </nav>

@@ -60,19 +60,22 @@
       </div>
       <div id="menu_container">
         <div id="address_input">
-          <form>
+          <form id="address_form">
             <div class="input_area">
-              <input class="input_area" type="text" id="input1" /><label
-                for="input1"
-                >이름</label
-              >
+              <label for="input1">이름</label>
+              <input class="input_area" name="name" type="text" id="input1" />
               <div class="warning_div"></div>
             </div>
             <div>
               <div id="zip_area" class="input_area">
                 <div id="zip_input">
-                  <input class="input_area" type="text" id="input2" />
                   <label for="input2">우편번호</label>
+                  <input
+                    class="input_area"
+                    name="zipNo"
+                    type="text"
+                    id="input2"
+                  />
                   <button id="find_Zip" type="button">
                     <span>우편번호 찾기</span>
                   </button>
@@ -82,32 +85,50 @@
               </div>
             </div>
             <div class="input_area">
-              <input class="input_area" type="text" id="input3" />
               <label for="input3">주소</label>
+              <input
+                class="input_area"
+                name="address"
+                type="text"
+                id="input3"
+              />
+
               <div class="warning_div"></div>
             </div>
             <div class="input_area">
-              <input class="input_area" type="text" id="input4" />
               <label for="input4">선택사항</label>
+              <input
+                class="input_area"
+                name="addr_detail"
+                type="text"
+                id="input4"
+              />
+
               <div class="warning_div"></div>
             </div>
             <div class="input_area">
-              <input class="input_area" type="text" id="input5" />
               <label for="input5">지역</label>
+              <input class="input_area" type="text" id="input5" />
               <div class="warning_div"></div>
             </div>
             <div class="input_area">
-              <input class="input_area" type="text" id="input6" />
-              <label for="input6">지역번호</label>
+              <label for="input6">전화번호</label>
+              <input
+                class="input_area"
+                name="mobile_num"
+                type="text"
+                id="input6"
+              />
               <div class="warning_div"></div>
             </div>
             <input
               class="input_area"
+              name="addr_extraaddr"
               type="text"
               id="extraAddress"
               style="display: none"
             />
-            <button type="button" onclick="submit">저장</button>
+            <button type="button" id="submit_btn">저장</button>
           </form>
         </div>
       </div>

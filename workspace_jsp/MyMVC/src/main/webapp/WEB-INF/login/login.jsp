@@ -282,10 +282,10 @@
                   <span style="font-weight: bold;">포인트&nbsp;:</span>&nbsp;&nbsp; <fmt:formatNumber value="${(sessionScope.loginuser).point}" pattern="###,###" /> POINT  
                </div>
                <br>로그인 중...<br><br>
-               [<a href="">나의정보</a>]&nbsp;&nbsp;
+               [<a href="javascript:goEditMyInfo('${(sessionScope.loginuser).userid}','<%= ctx_Path%>')">나의정보</a>]&nbsp;&nbsp;
                [<a href="javascript:goCoinPurchaseTypeChoice('${(sessionScope.loginuser).userid}','<%= ctx_Path%>')">코인충전</a>] 
                <br><br>
-               <button type="button" class="btn btn-danger btn-sm" onclick="javascript:goLogOut('<%= ctx_Path%>')">로그아웃</button>   
+               <button type="button" class="btn btn-danger btn-sm" onclick="javascript:goLogOut('<%= ctx_Path%>')">로그아웃</button>  
            </td>
        </tr>
    </table>
