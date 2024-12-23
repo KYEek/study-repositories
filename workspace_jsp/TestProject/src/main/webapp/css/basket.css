@@ -1,0 +1,55 @@
+:root {
+  --border_size: 0.7px solid black;
+}
+
+/* 장바구니 헤더 */
+div#basket_header {
+  margin-top: 5vh;
+  display: flex;
+  border-bottom: var(--border_size);
+}
+
+/* 장바구니 이름과 개수  */
+div#basket_header > div {
+  font-weight: bold;
+  text-align: center;
+  width: 25%;
+  padding: 0.5% 0;
+  border: var(--border_size);
+  border-collapse: collapse;
+  border-bottom: 0;
+  position: fixed;
+}
+
+/* 장바구니 설명문 */
+div#basket_explain {
+  background-color: rgb(235, 235, 235);
+  border: var(--border_size);
+  padding: 1% 1%;
+  border-top: 0;
+}
+
+/* 장바구니 목록 */
+div#basket_list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+
+/* 장바구니 목록의 각 항목 */
+div#basket_list > div {
+  height: 80vh;
+  border-right: var(--border_size);
+  border-bottom: var(--border_size);
+}
+
+.basket_img {
+  width: 100%;
+  height: 75%;
+  background-color: antiquewhite;
+  border-bottom: var(--border_size);
+}
+
+.basket_product_info {
+  background-color: red;
+  height: 25%;
+}

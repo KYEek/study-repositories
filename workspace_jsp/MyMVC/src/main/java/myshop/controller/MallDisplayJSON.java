@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import common.controller.AbstractController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,6 +39,40 @@ public class MallDisplayJSON extends AbstractController {
 		paraMap.put("end", end);
 
 		List<ProductVO> productList = pdao.selectBySpecName(paraMap);
+		
+		JSONArray jsonArr = new JSONArray();
+		
+		if(productList.size()> 0) {
+			for(ProductVO pvo : productList) {
+				JSONObject jsonObj = new JSONObject();
+				
+				jsonObj.put("pnum", pvo.getPnum());
+				jsonObj.put("pname", pvo.getPname());
+				jsonObj.put("cname", pvo.getCategvo().getCname());
+				jsonObj.put("pcompany", pvo.getPcompany());
+	            jsonObj.put("pimage1", pvo.getPimage1());
+	            jsonObj.put("pimage2", pvo.getPimage2());
+	            jsonObj.put("pqty", pvo.getPqty());
+	            jsonObj.put("price", pvo.getPrice());
+	            jsonObj.put("saleprice", pvo.getSaleprice());
+	            jsonObj.put("sname", pvo.getPinputdate());
+	            jsonObj.put("pcontent", pvo.getPcontent());
+	            jsonObj.put("point", pvo.getPoint());
+	            jsonObj.put("pinputdate", pvo.getPinputdate());
+	            
+	            jsonObj.put("discountPercent", pvo.getDiscountPercent());
+	            
+	            jsonArr.put(jsonObj);
+			}
+		}//end of if----------------------------
+		
+		String json = jsonArr.toString(); //문자열로 변환
+		
+		System.out.println("~~확인용 josn : " + json);
+		request.setAttribute("json", json);
+		
+		super.setRedirect(false);
+		super.setViewPage("/WEB-INF/jsonview.jsp");
 	}
 
 }
