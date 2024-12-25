@@ -26,6 +26,7 @@
  */
 //장바구니 개수
 let basketCount = 0;
+
 //장바구니 목록을 가져오는 함수
 async function getBasketList() {
   try {
@@ -95,7 +96,7 @@ async function getBasketList() {
             break;
         }
       } // end of for-------------------------------
-      html += `<div id="basket${PK_BASKET_NO}">
+      html += `<div id="basket_${PK_BASKET_NO}" class="basket_item" data-basket_no="${PK_BASKET_NO}" >
             <div class="basket_img">
               <a><img src="${PRODUCT_IMAGE_PATH}" /></a>
             </div>
@@ -104,7 +105,9 @@ async function getBasketList() {
                 <div><a class="product_link">${PRODUCT_NAME}</a></div>
                 <div id= "basket_delete_${PK_BASKET_NO}" class = "basket_delete">⨉</div>
               </div>
-              <div class="basket_pruduct_price"><span class="price_text">${PRODUCT_PRICE}</span>₩</div>
+              <div class="basket_pruduct_price"><span class="price_text" data-price ="${PRODUCT_PRICE}">${
+        PRODUCT_PRICE * BASKET_QUANTITY
+      }</span>₩</div>
               <div class="basket_pruduct_size_category">
                 <span class="basket_product_size">${PRODUCT_SIZE}</span>&nbsp;|&nbsp;<span
                   class="basket_product_category"
@@ -112,11 +115,11 @@ async function getBasketList() {
                 >
               </div>
               <div class="basket_product_count_container">
-                <button class="minus_count">+</button>
+                <button class="plus_count">+</button>
                 <div class="basket_product_count">
                   <span class="pruduct_count_num">${BASKET_QUANTITY}</span>
                 </div>
-                <button class="plus_count">-</button>
+                <button class="minus_count">-</button>
               </div>
             </div>
           </div>`;
@@ -124,6 +127,23 @@ async function getBasketList() {
       basketCount = basketCount + 1;
     }); // end of forEach-------------------------------
     return html;
+  } catch {
+    console.log("error");
+  }
+}
+
+async function deleteBasketList(basket_no) {
+  try {
+    const response = await fetch("json/delete.txt", {
+      method: "get",
+      headers: { "Content-Type": "text/plain" },
+      body: basket_no,
+    });
+    response.text().then((text) => {
+      if (text == "success") {
+        console.log("성공");
+      }
+    });
   } catch {
     console.log("error");
   }
@@ -143,6 +163,7 @@ function calculateTotalPrice() {
 
 document.addEventListener("DOMContentLoaded", function () {
   const basket_list = document.querySelector("div#basket_list");
+
   //장바구니 목록을 가져오기—
   getBasketList().then((html) => {
     basket_list.innerHTML = html;
@@ -157,8 +178,52 @@ document.addEventListener("DOMContentLoaded", function () {
   basket_list.addEventListener(
     "click",
     (e) => {
+      const basket_item = e.target.closest("div.basket_item");
+      const basket_No = basket_item.getAttribute("data-basket_no");
+      //상품의 가격을 가져온다
+      const product_price = basket_item.querySelector("span.price_text");
+      //삭제버튼 클릭시시
       if (e.target.className == "basket_delete") {
-        // console.log("삭제 버튼 클릭");
+        // 요소를 삭제시킨다
+        basket_item.remove();
+        //삭제시킨 상품의 가격을 뺀다
+        calculateTotalPrice();
+      }
+      //+ 버튼 클릭시시
+      else if (e.target.className == "plus_count") {
+        // console.log(e.target.nextElementSibling.firstElementChild);
+        //span 태그를 가져온다
+        const count_num = e.target.nextElementSibling.firstElementChild;
+        //상품의 가격에서 증가시킨다다
+        const after_price =
+          Number(product_price.textContent) +
+          Number(product_price.getAttribute("data-price"));
+        //span태그의 값을 증가시킨다
+        count_num.textContent = Number(count_num.textContent) + 1;
+        product_price.textContent = after_price;
+        // 가격을 다시 계산한다.
+        calculateTotalPrice();
+      }
+      // -버튼 클릭시
+      else if (e.target.className == "minus_count") {
+        // console.log(e.target.previousElementSibling.firstElementChild);
+        //span 태그를 가져온다
+        const count_num = e.target.previousElementSibling.firstElementChild;
+        //상품의 가격에서 감소시킨다
+        console.log(product_price.getAttribute("data_price"));
+        const after_price =
+          Number(product_price.textContent) -
+          Number(product_price.getAttribute("data-price"));
+
+        if (count_num.textContent == 1) {
+          console.log(basket_item);
+          return;
+        }
+        //span태그의 값을 감소시킨다
+        count_num.textContent = Number(count_num.textContent) - 1;
+        product_price.textContent = after_price;
+        // 가격을 다시 계산한다.
+        calculateTotalPrice();
       }
     },
     true
