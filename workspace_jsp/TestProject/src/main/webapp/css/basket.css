@@ -164,3 +164,7 @@ div#basket_footer_next_button:hover {
   cursor: pointer;
   background-color: rgb(83, 83, 83);
 }
+
+span.basket_item {
+  font-size: 30px;
+}
