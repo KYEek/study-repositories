@@ -40,6 +40,7 @@
       type="text/javascript"
       src="jquery-ui-1.13.1.custom/jquery-ui.min.js"
     ></script>
+    <script type="text/javascript" src="js/basket.js"></script>
     <!-- 유저 js -->
     <title>장바구니</title>
     <!-- <link rel="stylesheet" href="styles.css"> -->
@@ -58,53 +59,7 @@
           </span>
         </div>
         <!-- 상품 목록 -->
-        <div id="basket_list">
-          <div>
-            <div class="basket_img">
-              <a><img src="images/basket/00155055500-p.jpg" /></a>
-            </div>
-            <div class="basket_product_info">
-              <div class="basket_product_info_header">
-                <div><a class="product_link">스웨이드 레더 점퍼</a></div>
-                <div>⨉</div>
-              </div>
-              <div class="basket_pruduct_price">27,000₩</div>
-              <div class="basket_pruduct_size_category">
-                <span class="basket_product_size">XL (KR 105-110) </span>|<span
-                  class="basket_product_category"
-                  >샌드</span
-                >
-              </div>
-              <div class="basket_product_count_container">
-                <button class="minus_count">+</button>
-                <div class="basket_product_count">
-                  <span class="pruduct_count_num">1</span>
-                </div>
-                <button class="plus_count">-</button>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div class="basket_img">이미지</div>
-            <div class="basket_product_info"></div>
-          </div>
-          <div>
-            <div class="basket_img">이미지</div>
-            <div class="basket_product_info"></div>
-          </div>
-          <div>
-            <div class="basket_img">이미지</div>
-            <div class="basket_product_info"></div>
-          </div>
-          <div>
-            <div class="basket_img">이미지</div>
-            <div class="basket_product_info"></div>
-          </div>
-          <div>
-            <div class="basket_img">이미지</div>
-            <div class="basket_product_info"></div>
-          </div>
-        </div>
+        <div id="basket_list"></div>
         <div id="basket_footer">
           <div id="basket_footer_info">
             <div>
@@ -113,7 +68,7 @@
             </div>
           </div>
           <div id="basket_footer_total_price">
-            <div>총 <span>₩739,400</span></div>
+            <div>총 <span> ₩ 739,400</span></div>
             <div>부가세 포함함</div>
           </div>
           <div id="basket_footer_next_button">
