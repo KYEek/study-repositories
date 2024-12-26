@@ -4,7 +4,6 @@
 
 /* 장바구니 헤더 */
 div#basket_header {
-  margin-top: 5vh;
   top: 2%;
   width: 100%;
   display: flex;
@@ -167,4 +166,26 @@ div#basket_footer_next_button:hover {
 
 span.basket_item {
   font-size: 30px;
+}
+
+/* 로딩화면 */
+div#roading_container {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  background-color: rgba(255, 255, 255, 0.5);
+  display: none;
+}
+
+div#roading_box {
+  position: fixed;
+  top: 45%;
+  left: 40%;
+  border: 1px solid black;
+  z-index: 101;
+  width: 20vw;
+  height: 10vh;
+  text-align: center;
+  background-color: white;
 }

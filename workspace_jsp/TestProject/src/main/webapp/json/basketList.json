@@ -42,7 +42,7 @@
     "PRODUCT_IMAGE_NAME ": "6.png "
   },
   {
-    "PK_BASKET_NO": "1004",
+    "PK_BASKET_NO": "1005",
     "FK_MEMBER_NO": "51",
     "FK_PRODUCT_DETAIL_NO": "173",
     "BASKET_QUANTITY": "10",
@@ -56,7 +56,7 @@
     "PRODUCT_IMAGE_NAME ": "77.png "
   },
   {
-    "PK_BASKET_NO": "1004",
+    "PK_BASKET_NO": "1006",
     "FK_MEMBER_NO": "51",
     "FK_PRODUCT_DETAIL_NO": "173",
     "BASKET_QUANTITY": "10",
@@ -70,7 +70,7 @@
     "PRODUCT_IMAGE_NAME ": "test2.png "
   },
   {
-    "PK_BASKET_NO": "1004",
+    "PK_BASKET_NO": "1007",
     "FK_MEMBER_NO": "51",
     "FK_PRODUCT_DETAIL_NO": "173",
     "BASKET_QUANTITY": "10",
@@ -84,7 +84,7 @@
     "PRODUCT_IMAGE_NAME ": "test556.png "
   },
   {
-    "PK_BASKET_NO": "1005",
+    "PK_BASKET_NO": "1008",
     "FK_MEMBER_NO": "51",
     "FK_PRODUCT_DETAIL_NO": "85",
     "BASKET_QUANTITY": "10",

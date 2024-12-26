@@ -1,31 +1,9 @@
-/* <div>
-            <div class="basket_img">
-              <a><img src="images/basket/00155055500-p.jpg" /></a>
-            </div>
-            <div class="basket_product_info">
-              <div class="basket_product_info_header">
-                <div><a class="product_link">스웨이드 레더 점퍼</a></div>
-                <div>⨉</div>
-              </div>
-              <div class="basket_pruduct_price">27,000₩</div>
-              <div class="basket_pruduct_size_category">
-                <span class="basket_product_size">XL (KR 105-110) </span>|<span
-                  class="basket_product_category"
-                  >샌드</span
-                >
-              </div>
-              <div class="basket_product_count_container">
-                <button class="minus_count">+</button>
-                <div class="basket_product_count">
-                  <span class="pruduct_count_num">1</span>
-                </div>
-                <button class="plus_count">-</button>
-              </div>
-            </div>
-          </div>
- */
 //장바구니 개수
 let basketCount = 0;
+
+const loading = () => {
+  document.getElementById;
+};
 
 //장바구니 목록을 가져오는 함수
 async function getBasketList() {
@@ -132,20 +110,60 @@ async function getBasketList() {
   }
 }
 
+//장바구니 삭제 비동기 메서드
 async function deleteBasketList(basket_no) {
   try {
+    // console.log(basket_no);
+    //자바 실행 요청
     const response = await fetch("json/delete.txt", {
       method: "get",
-      headers: { "Content-Type": "text/plain" },
-      body: basket_no,
+      // headers: { "Content-Type": "text/plain" },
+      // body: basket_no,
     });
-    response.text().then((text) => {
-      if (text == "success") {
-        console.log("성공");
-      }
+    //자바의 실행 결과를 받는다
+    const text = await response.text();
+    //자바에서 반환 된 값이 success인 경우(정상적으로 실행)
+    if (text == "success") {
+      console.log("삭제 함수 성공");
+      return "success";
+    }
+    //자바에서 반환 된 값이 success가 아닌 경우(실패)
+    else {
+      console.log("fail");
+      return "fail";
+    }
+  } catch (error) {
+    //에러 발생시
+    console.error(error.message);
+    return "fail";
+  }
+}
+
+//개수 변경 비동기 메서드
+async function changeBasketCount(json) {
+  try {
+    //자바 실행 요청
+    const response = await fetch("json/decrement.txt", {
+      method: "get",
+      // headers: { "Content-Type": "application/json" },
+      // body: JSON.stringify(json),
     });
-  } catch {
-    console.log("error");
+    //자바의 실행 결과를 문자형태로 저장한다
+    const result = await response.text();
+    //자바의 실행 결과가 success인 경우
+    if (result == "success") {
+      console.log("개수변경성공");
+      return "success";
+    }
+    //자바의 실행 결과가 success가 아닌 경우
+    else {
+      console.log("실패");
+      return "fail";
+    }
+  } catch (error) {
+    //에러 발생시
+    console.error(error.message);
+    return "fail";
   }
 }
 
@@ -161,9 +179,19 @@ function calculateTotalPrice() {
   document.querySelector("span#total_price").textContent = totlaPrice;
 }
 
+//로딩화면을 보여주는 함수
+function showLoading(loading_box) {
+  loading_box.style.display = "block";
+}
+
+//로딩화면을 숨기는 함수
+function hideLoading(loading_box) {
+  loading_box.style.display = "none";
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   const basket_list = document.querySelector("div#basket_list");
-
+  const loading_box = document.getElementById("roading_container");
   //장바구니 목록을 가져오기—
   getBasketList().then((html) => {
     basket_list.innerHTML = html;
@@ -180,50 +208,116 @@ document.addEventListener("DOMContentLoaded", function () {
     (e) => {
       const basket_item = e.target.closest("div.basket_item");
       const basket_No = basket_item.getAttribute("data-basket_no");
+      //데이터 전송을 위한 json객체 생성
+      let request_json;
+
       //상품의 가격을 가져온다
       const product_price = basket_item.querySelector("span.price_text");
-      //삭제버튼 클릭시시
+      //삭제버튼 클릭시
       if (e.target.className == "basket_delete") {
-        // 요소를 삭제시킨다
-        basket_item.remove();
-        //삭제시킨 상품의 가격을 뺀다
-        calculateTotalPrice();
+        //삭제 비동기 실행
+        deleteBasketList(basket_No)
+          .then((result) => {
+            console.log("비동기 실행결과 : ", result);
+            if (result == "success") {
+              console.log("삭제성공");
+              // 요소를 삭제시킨다
+              basket_item.remove();
+              //삭제시킨 상품의 가격을 뺀다
+              calculateTotalPrice();
+              //장바구니 개수를 변경
+              basketCount--;
+              document.querySelector(
+                "span#basket_count"
+              ).textContent = `(${basketCount})`;
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
       //+ 버튼 클릭시시
       else if (e.target.className == "plus_count") {
         // console.log(e.target.nextElementSibling.firstElementChild);
         //span 태그를 가져온다
         const count_num = e.target.nextElementSibling.firstElementChild;
-        //상품의 가격에서 증가시킨다다
-        const after_price =
-          Number(product_price.textContent) +
-          Number(product_price.getAttribute("data-price"));
-        //span태그의 값을 증가시킨다
-        count_num.textContent = Number(count_num.textContent) + 1;
-        product_price.textContent = after_price;
-        // 가격을 다시 계산한다.
-        calculateTotalPrice();
+
+        //요청 json객체 생성
+        request_json = { basket_No: basket_No, status: "plus" };
+        changeBasketCount(request_json)
+          .then((result) => {
+            if (result == "success") {
+              console.log("증가성공");
+              //상품의 가격에서 증가시킨다
+              const after_price =
+                Number(product_price.textContent) +
+                Number(product_price.getAttribute("data-price"));
+              //span태그의 값을 증가시킨다
+              count_num.textContent = Number(count_num.textContent) + 1;
+              product_price.textContent = after_price;
+              // 가격을 다시 계산한다.
+              calculateTotalPrice();
+            } else {
+              console.log("실패");
+            }
+          })
+          //에러 발생시
+          .catch((error) => {
+            console.log(error);
+          });
       }
       // -버튼 클릭시
       else if (e.target.className == "minus_count") {
         // console.log(e.target.previousElementSibling.firstElementChild);
         //span 태그를 가져온다
         const count_num = e.target.previousElementSibling.firstElementChild;
-        //상품의 가격에서 감소시킨다
-        console.log(product_price.getAttribute("data_price"));
-        const after_price =
-          Number(product_price.textContent) -
-          Number(product_price.getAttribute("data-price"));
-
-        if (count_num.textContent == 1) {
-          console.log(basket_item);
-          return;
-        }
-        //span태그의 값을 감소시킨다
-        count_num.textContent = Number(count_num.textContent) - 1;
-        product_price.textContent = after_price;
-        // 가격을 다시 계산한다.
-        calculateTotalPrice();
+        //요청 json객체 생성
+        request_json = { basket_No: basket_No, status: "minus" };
+        changeBasketCount(request_json)
+          .then((result) => {
+            if (result == "success") {
+              console.log("감소성공");
+              //상품의 가격에서 감소시킨다
+              const after_price =
+                Number(product_price.textContent) -
+                Number(product_price.getAttribute("data-price"));
+              //만약 상품의 개수가 1개일 때 -버튼을 누르면 삭제
+              if (count_num.textContent == 1) {
+                //삭제 비동기 실행
+                deleteBasketList(basket_No)
+                  .then((result) => {
+                    console.log("비동기 실행결과 : ", result);
+                    if (result == "success") {
+                      console.log("삭제성공");
+                    }
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                  }); // end of deleteBasketList(basket_No)-------------------------------
+                basket_item.remove();
+                //삭제시킨 상품의 가격을 뺀다
+                calculateTotalPrice();
+                console.log(basket_item);
+                //장바구니 개수를 변경
+                basketCount--;
+                document.querySelector(
+                  "span#basket_count"
+                ).textContent = `(${basketCount})`;
+                return;
+              } //end of if(count_num.textContent == 1)-------------------------------
+              //span태그의 값을 감소시킨다
+              count_num.textContent = Number(count_num.textContent) - 1;
+              product_price.textContent = after_price;
+              // 가격을 다시 계산한다.
+              calculateTotalPrice();
+            } else {
+              console.log("실패");
+            }
+          })
+          //에러 발생시
+          .catch((error) => {
+            console.log(error);
+          });
       }
     },
     true
