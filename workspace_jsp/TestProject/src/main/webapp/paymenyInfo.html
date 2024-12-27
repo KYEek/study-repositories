@@ -2,9 +2,73 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Payment Information</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="bootstrap-4.6.2-dist/css/bootstrap.min.css"
+    />
+
+    <!-- Font Awesome 6 Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+    />
+
+    <!-- Optional JavaScript -->
+    <script type="text/javascript" src="js/jquery-3.7.1.min.js"></script>
+    <script
+      type="text/javascript"
+      src="bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js"
+    ></script>
+    <!-- 유저 CSS -->
+    <link rel="stylesheet" type="text/css" href="css/basket.css" />
+    <link rel="stylesheet" type="text/css" href="css/paymenyInfo.css" />
+    <!--jQueryUI CSS 및 JS   -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="jquery-ui-1.13.1.custom/jquery-ui.min.css"
+    />
+    <script
+      type="text/javascript"
+      src="jquery-ui-1.13.1.custom/jquery-ui.min.js"
+    ></script>
+    <!-- 유저 js -->
+    <script type="text/javascript" src="js/basket.js"></script>
+    <title>배송지 선택 페이지</title>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
   </head>
   <body>
-    <h1>Payment Information</h1>
+    <div id="loading">
+      <div id="roading_container">
+        <div id="roading_box">변경사항 저장중입니다.</div>
+      </div>
+    </div>
+    <main>
+      <div id="payment_info_container">
+        <!-- 배송지 본문 -->
+        <div id="paymanet_main"></div>
+        <!-- 푸터 -->
+        <div id="basket_footer">
+          <div id="basket_footer_info">
+            <div></div>
+          </div>
+          <div id="basket_footer_total_price">
+            <div>배송 <span id="total_price">₩3000</span></div>
+          </div>
+          <div id="basket_footer_next_button">
+            <span>계속</span>
+          </div>
+        </div>
+      </div>
+    </main>
   </body>
 </html>
