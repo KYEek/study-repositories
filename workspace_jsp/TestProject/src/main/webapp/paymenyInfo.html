@@ -30,6 +30,7 @@
     ></script>
     <!-- 유저 CSS -->
     <link rel="stylesheet" type="text/css" href="css/basket.css" />
+    <link rel="stylesheet" type="text/css" href="css/payAddress.css" />
     <link rel="stylesheet" type="text/css" href="css/paymenyInfo.css" />
     <!--jQueryUI CSS 및 JS   -->
     <link
@@ -55,7 +56,50 @@
     <main>
       <div id="payment_info_container">
         <!-- 배송지 본문 -->
-        <div id="paymanet_main"></div>
+        <div id="paymanet_main">
+          <div id="payment_detail">
+            <div id="payment_shipment_box">
+              <h1>배송</h1>
+              <div
+                id="payment_shiptment_content"
+                class="payment_content_container"
+              >
+                배송정보
+              </div>
+            </div>
+            <div id="payment_pay_box">
+              <h1>결제</h1>
+              <div id="payment_pay_method" class="payment_content_container">
+                결제 정보
+              </div>
+            </div>
+          </div>
+          <div id="payment_product_list_container">
+            <h1>배송 요약</h1>
+            <div
+              id="payment_product_list_box"
+              class="payment_content_container"
+            >
+              <div>
+                <div>
+                  <span id="delivery_day"
+                    >화요일 31, 12월 - 목요일 02, 1월</span
+                  >
+                </div>
+                <div>3 아이템</div>
+                <div id="delivery_product_list">
+                  <img src="images/basket/00155055500-p.jpg" /><img
+                    src="images/basket/00155055500-p.jpg"
+                  /><img src="images/basket/00155055500-p.jpg" /><img
+                    src="images/basket/00155055500-p.jpg"
+                  /><img src="images/basket/00155055500-p.jpg" /><img
+                    src="images/basket/00155055500-p.jpg"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <!-- 푸터 -->
         <div id="basket_footer">
           <div id="basket_footer_info">
