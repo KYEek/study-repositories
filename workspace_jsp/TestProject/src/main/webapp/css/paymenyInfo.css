@@ -26,13 +26,12 @@ div#payment_product_list {
   width: 60%;
 }
 
-div#payment_shipment_box {
+div#payment_shipment_method {
+  padding: 2vh 2vw;
 }
 
-div#payment_pay_box {
-}
-
-div#payment_product_list_box {
+div#payment_pay_method {
+  text-align: center;
 }
 .payment_content_container {
   width: 30vw;
