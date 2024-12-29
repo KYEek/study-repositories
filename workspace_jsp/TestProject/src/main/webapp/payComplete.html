@@ -31,7 +31,6 @@
     <!-- 유저 CSS -->
     <link rel="stylesheet" type="text/css" href="css/basket.css" />
     <link rel="stylesheet" type="text/css" href="css/payAddress.css" />
-    <link rel="stylesheet" type="text/css" href="css/paynicepay.css" />
 
     <!--jQueryUI CSS 및 JS   -->
     <link
@@ -47,29 +46,62 @@
     <script type="text/javascript" src="js/payAddress.js"></script>
     <title>배송지 선택 페이지</title>
     <!-- <link rel="stylesheet" href="styles.css"> -->
+    <style>
+      div#order_info {
+        text-align: center;
+        border: var(--border-var);
+        width: 30vw;
+        margin: 5vh 0;
+      }
+
+      div#order_info > div {
+        padding: 2vh 0 2vh 2vw;
+        text-align: left;
+      }
+
+      div#order_info_button {
+        border-top: var(--border-var);
+        padding: 1vh 0 1vh 0 !important;
+        text-align: center !important;
+      }
+
+      a {
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: none;
+      }
+    </style>
   </head>
   <body>
-    <!-- 결제 완료 글자자 -->
-    <div id="payment_complete">계속버튼을 눌러 결제를 완료하세요!</div>
     <!-- 로딩창 -->
-    <div id="payment_loading_container">
-      <img src="images/ZKZg.gif" id="payment_loading" />
-    </div>
+    <!-- <div id="loading">
+      <div id="roading_container">
+        <div id="roading_box">변경사항 저장중입니다.</div>
+      </div>
+    </div> -->
     <!-- 주소 리스트 -->
+
     <main>
       <div id="select_shipment_container">
         <!-- 배송지 본문 -->
-        <div style="padding-top: 101.053%; position: relative"></div>
-        <!-- 푸터 -->
-        <div id="basket_footer">
-          <div id="basket_footer_info">
-            <div></div>
-          </div>
-          <div id="basket_footer_total_price">
-            <div>배송 <span id="total_price">₩3000</span></div>
-          </div>
-          <div id="basket_footer_next_button">
-            <span>계속</span>
+        <div id="shipment_main">
+          <h1><span>연규영</span>님, Trid에서 쇼핑해 주셔서 감사합니다.</h1>
+          <div id="order_info">
+            <div>
+              <div>예상 배송일</div>
+              <div><strong>배송 화요일 - 목요일</strong></div>
+            </div>
+            <div>
+              <div>배송지</div>
+              <div>모든 배송지 주소</div>
+            </div>
+            <div>
+              <div>주문번호 : <sapn>000111122233454</sapn></div>
+            </div>
+            <div id="order_info_button">
+              <div><a href="">주문 정보 보기 </a></div>
+            </div>
           </div>
         </div>
       </div>

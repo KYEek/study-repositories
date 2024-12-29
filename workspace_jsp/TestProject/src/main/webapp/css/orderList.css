@@ -1,0 +1,21 @@
+@charset "UTF-8";
+
+:root {
+  --border-var: 0.7px solid black;
+}
+
+div.order_item_images {
+  display: flex;
+  white-space: nowrap;
+  overflow: auto;
+  background-color: violet;
+  width: 100%;
+  height: 40vh;
+  border: var(--border-var);
+}
+
+img {
+  border-bottom: var(--border-var);
+  border-top: var(--border-var);
+  border-right: var(--border-var);
+}
