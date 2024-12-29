@@ -78,7 +78,7 @@ async function getBasketList() {
             <div class="basket_img">
               <a><img src="${PRODUCT_IMAGE_PATH}" /></a>
             </div>
-            <div class="basket_product_info">
+            <div class="basket_product_info" data-product_detail_no="${FK_PRODUCT_DETAIL_NO}">
               <div class="basket_product_info_header">
                 <div><a class="product_link">${PRODUCT_NAME}</a></div>
                 <div id= "basket_delete_${PK_BASKET_NO}" class = "basket_delete">⨉</div>
@@ -189,9 +189,11 @@ function hideLoading(loading_box) {
   loading_box.style.display = "none";
 }
 
+// dom이 로드되었을 때
 document.addEventListener("DOMContentLoaded", function () {
   const basket_list = document.querySelector("div#basket_list");
   const loading_box = document.getElementById("roading_container");
+  const next_button = document.querySelector("#basket_footer_next_button");
   //장바구니 목록을 가져오기—
   getBasketList().then((html) => {
     basket_list.innerHTML = html;
@@ -322,4 +324,35 @@ document.addEventListener("DOMContentLoaded", function () {
     },
     true
   );
+
+  next_button.addEventListener("click", (e) => {
+    const basket_item_arry = [];
+    const basket_item_list = document.querySelectorAll("div.basket_item");
+    basket_item_list.forEach((element) => {
+      const imgSrc = element.querySelector(".basket_img img").src;
+      const productDetailNo = element
+        .querySelector(".basket_product_info")
+        .getAttribute("data-product_detail_no");
+      const productCountNum =
+        element.querySelector(".pruduct_count_num").textContent;
+      const productPrice = element
+        .querySelector(".price_text")
+        .getAttribute("data-price");
+
+      let item = {
+        imgSrc: imgSrc,
+        productDetailNo: productDetailNo,
+        productCountNum: productCountNum,
+        productPrice: productPrice,
+      };
+
+      basket_item_arry.push(item);
+    });
+    console.log(basket_item_arry);
+    sessionStorage.setItem(
+      "basket_item_arry",
+      JSON.stringify(basket_item_arry)
+    );
+    this.location.href = "payAddress.html";
+  });
 });

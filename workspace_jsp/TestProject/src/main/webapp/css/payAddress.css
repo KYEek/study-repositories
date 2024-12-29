@@ -133,4 +133,5 @@ a:hover {
 
 .address_list_item {
   padding: 2vh 2vw;
+  cursor: pointer;
 }
