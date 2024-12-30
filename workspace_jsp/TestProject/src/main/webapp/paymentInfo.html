@@ -31,7 +31,7 @@
     <!-- 유저 CSS -->
     <link rel="stylesheet" type="text/css" href="css/basket.css" />
     <link rel="stylesheet" type="text/css" href="css/payAddress.css" />
-    <link rel="stylesheet" type="text/css" href="css/paymenyInfo.css" />
+    <link rel="stylesheet" type="text/css" href="css/paymentInfo.css" />
     <!--jQueryUI CSS 및 JS   -->
     <link
       rel="stylesheet"
@@ -43,8 +43,8 @@
       src="jquery-ui-1.13.1.custom/jquery-ui.min.js"
     ></script>
     <!-- 유저 js -->
-    <script type="text/javascript" src="js/basket.js"></script>
-    <title>배송지 선택 페이지</title>
+    <script type="text/javascript" src="js/paymentInfo.js"></script>
+    <title>배송지 정보 사이트</title>
     <!-- <link rel="stylesheet" href="styles.css"> -->
   </head>
   <body>
@@ -70,11 +70,11 @@
                   <div>편집</div>
                 </div>
                 <div id="payment_address_info" class="address_list_item">
-                  <div>연규영</div>
-                  <div>주소</div>
-                  <div>부가주소</div>
-                  <div>우편번호</div>
-                  <div>전화번호</div>
+                  <div id="payment_address_name">연규영</div>
+                  <div id="payment_address">주소</div>
+                  <div id="payment_address_extra">부가주소</div>
+                  <div id="payment_address_post_num">우편번호</div>
+                  <div id="payment_address_mobile">전화번호</div>
                 </div>
               </div>
             </div>
@@ -97,15 +97,9 @@
                     >화요일 31, 12월 - 목요일 02, 1월</span
                   >
                 </div>
-                <div><sapn>3</sapn> 상품</div>
+                <div><sapn id="item_count">3</sapn> 상품</div>
                 <div id="delivery_product_list">
-                  <img src="images/basket/00155055500-p.jpg" /><img
-                    src="images/basket/00155055500-p.jpg"
-                  /><img src="images/basket/00155055500-p.jpg" /><img
-                    src="images/basket/00155055500-p.jpg"
-                  /><img src="images/basket/00155055500-p.jpg" /><img
-                    src="images/basket/00155055500-p.jpg"
-                  />
+                  <!-- <img src="images/basket/00155055500-p.jpg" /> -->
                 </div>
               </div>
             </div>
@@ -120,7 +114,7 @@
             </div>
           </div>
           <div id="basket_footer_total_price">
-            <div>배송 <span id="total_price">₩3000</span></div>
+            <div>총 <span id="total_price">₩3000</span></div>
           </div>
           <div id="basket_footer_next_button">
             <span>결제승인</span>
@@ -128,5 +122,8 @@
         </div>
       </div>
     </main>
+    <form id="payComplete" action="patnicepay.html">
+      <input type="hidden" name="total_price" />
+    </form>
   </body>
 </html>
