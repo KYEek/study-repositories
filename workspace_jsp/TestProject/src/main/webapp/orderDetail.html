@@ -29,7 +29,8 @@
       src="bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js"
     ></script>
     <!-- 유저 CSS -->
-    <!-- <link rel="stylesheet" type="text/css" href="css/basket.css" /> -->
+    <link rel="stylesheet" type="text/css" href="css/basket.css" />
+    <link rel="stylesheet" type="text/css" href="css/orderDetail.css" />
     <!--jQueryUI CSS 및 JS   -->
     <link
       rel="stylesheet"
@@ -41,7 +42,7 @@
       src="jquery-ui-1.13.1.custom/jquery-ui.min.js"
     ></script>
     <!-- 유저 js -->
-    <!-- <script type="text/javascript" src="js/basket.js"></script> -->
+    <script type="text/javascript" src="js/orderDetail.js"></script>
     <title>주문상세</title>
     <!-- <link rel="stylesheet" href="styles.css"> -->
   </head>
@@ -52,28 +53,41 @@
       </div>
     </div>
     <main>
-      <div id="order_detail">
-        <!-- 장바구니 설명문 -->
-        <div id="basket_explain">
-          <span
-            >장바구니에 담긴 상품은 구매가 완료될 때까지 예약되지 않습니다.
-          </span>
+      <div id="order_detail_header">
+        <div>주문번호<span>1000</span></div>
+        <div id="order_date_box">
+          <div>구매날짜</div>
+          <div>2024/12/19</div>
         </div>
+        <div><span>주문상태</span></div>
+      </div>
+      <div id="order_detail">
         <!-- 상품 목록 -->
         <div id="basket_list"></div>
-        <div id="basket_footer">
-          <div id="basket_footer_info">
+        <div id="order_detail_footer">
+          <div id="order_address_summary">
+            <div>발송주소</div>
             <div>
-              * 계속 진행함으로써 본인은 구매 조건을 읽고 이에 동의하며 Zara의
-              개인정보 및 쿠키 정책을 이해했음을 선언합니다.
+              <div>연규영</div>
+              <div>경기 성남시 분당구 판교역로 4</div>
+              <div>202호</div>
+              <div>13536</div>
+              <div>01040209698</div>
             </div>
           </div>
-          <div id="basket_footer_total_price">
-            <div>총 <span id="total_price">₩739,400</span></div>
-            <div>부가세 포함함</div>
-          </div>
-          <div id="basket_footer_next_button">
-            <span>계속</span>
+          <div id="order_price_summary">
+            <div id="order_price_summary_header">요약</div>
+            <div class="order_price_summary_item">
+              <div>제품 <span id="item_count_number">2</span>개</div>
+              <div>₩10000</div>
+            </div>
+            <div class="order_price_summary_item">
+              <div>배송비</div>
+              <div>₩3000</div>
+            </div>
+            <div class="order_price_summary_item">
+              <div>합계</div>
+              <div>₩13000</div>
           </div>
         </div>
       </div>
