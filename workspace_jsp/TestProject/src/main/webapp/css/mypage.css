@@ -55,8 +55,8 @@ label {
 
 @media (max-width: 1025px) {
   /* body {
-    font-size: 13px;
-  } */
+      font-size: 13px;
+    } */
 }
 
 @media (max-width: 768px) {
@@ -67,7 +67,10 @@ label {
   }
   ul#menu_ul > li {
     display: block;
-    border: 1px solid black;
+    border-top: 1px solid black;
     border-collapse: collapse;
+  }
+  ul#menu_ul > li:last-child {
+    border-bottom: 1px solid black;
   }
 }

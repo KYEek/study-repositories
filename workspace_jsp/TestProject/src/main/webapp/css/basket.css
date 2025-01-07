@@ -175,10 +175,11 @@ div#roading_container {
   height: 100%;
   z-index: 100;
   background-color: rgba(255, 255, 255, 0.5);
-  display: none;
+  display: block;
 }
 
 div#roading_box {
+  padding-top: 1vh;
   position: fixed;
   top: 45%;
   left: 40%;
@@ -188,4 +189,9 @@ div#roading_box {
   height: 10vh;
   text-align: center;
   background-color: white;
+}
+
+img#roading_img {
+  width: 40px;
+  height: 40px;
 }
