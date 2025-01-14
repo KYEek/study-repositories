@@ -12,6 +12,7 @@ div#payment_complete {
 }
 
 div#payment_loading_container {
+  display: none;
   padding-top: 45vh;
   position: fixed;
   text-align: center;

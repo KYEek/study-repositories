@@ -1,4 +1,3 @@
-
 async function add_list(url) {
   try {
     const response = await fetch(url);

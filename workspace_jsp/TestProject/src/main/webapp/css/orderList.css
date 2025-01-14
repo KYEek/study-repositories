@@ -33,7 +33,9 @@ div.order_itme_header > div {
 div.order_itme_price_detail > span {
   margin-right: 1vw;
 }
-
+main {
+  height: 100%;
+}
 a {
   color: black;
 }

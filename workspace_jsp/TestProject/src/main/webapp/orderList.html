@@ -46,6 +46,17 @@
     <!-- <script type="text/javascript" src="js/basket.js"></script> -->
     <title>주문상세</title>
     <!-- <link rel="stylesheet" href="styles.css"> -->
+    <script>
+      window.addEventListener("scroll", (e) => {
+        // console.log("적용");
+        // console.log(window.scrollY);
+        const scrollY = window.scrollY;
+        const window_height = document.documentElement.scrollHeight;
+        const client_height = document.documentElement.clientHeight;
+        // console.log(window_height);
+        console.log((scrollY / (window_height - client_height)).toFixed(1));
+      });
+    </script>
   </head>
   <body>
     <!-- <div id="loading">
@@ -67,21 +78,7 @@
             <img src="images/basket/00155055500-p.jpg" /><img
               src="images/basket/00155055500-p.jpg"
             />
-            <img src="images/basket/00155055500-p.jpg" /><img
-              src="images/basket/00155055500-p.jpg"
-            />
-            <img src="images/basket/00155055500-p.jpg" /><img
-              src="images/basket/00155055500-p.jpg"
-            />
-            <img src="images/basket/00155055500-p.jpg" /><img
-              src="images/basket/00155055500-p.jpg"
-            />
-            <img src="images/basket/00155055500-p.jpg" /><img
-              src="images/basket/00155055500-p.jpg"
-            />
-            <img src="images/basket/00155055500-p.jpg" /><img
-              src="images/basket/00155055500-p.jpg"
-            />
+            <img src="images/basket/00155055500-p.jpg" />
           </div>
         </div>
         <div class="order_list_item">
@@ -112,15 +109,33 @@
             <img src="images/basket/00155055500-p.jpg" /><img
               src="images/basket/00155055500-p.jpg"
             />
+            <img src="images/basket/00155055500-p.jpg" />
+          </div>
+        </div>
+        <div class="order_list_item">
+          <div class="order_itme_header">
+            <div>주문 상태</div>
+            <div class="order_itme_price_detail">
+              <span>¥가격</span> <a href="">주문 보기</a>
+            </div>
+          </div>
+          <div class="order_item_images">
             <img src="images/basket/00155055500-p.jpg" /><img
               src="images/basket/00155055500-p.jpg"
             />
             <img src="images/basket/00155055500-p.jpg" /><img
               src="images/basket/00155055500-p.jpg"
             />
-            <img src="images/basket/00155055500-p.jpg" /><img
-              src="images/basket/00155055500-p.jpg"
-            />
+          </div>
+        </div>
+        <div class="order_list_item">
+          <div class="order_itme_header">
+            <div>주문 상태</div>
+            <div class="order_itme_price_detail">
+              <span>¥가격</span> <a href="">주문 보기</a>
+            </div>
+          </div>
+          <div class="order_item_images">
             <img src="images/basket/00155055500-p.jpg" /><img
               src="images/basket/00155055500-p.jpg"
             />
