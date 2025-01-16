@@ -1,11 +1,13 @@
 package com.spring.app.begin.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import com.spring.app.begin.domain.BeginDateVO;
 import com.spring.app.begin.domain.BeginVO;
 import com.spring.app.begin.model.BeginDAO;
 
@@ -21,17 +23,66 @@ public class BeginService_imple implements BeginService {
 	// Type 에 따라 Spring 컨테이너가 알아서 bean 으로 등록된 com.spring.app.begin.model.BeginDAO_imple 의 bean 을  dao 에 주입시켜준다.  
     // 그러므로 dao 는 null 이 아니다.
 	
+	//spring_test 테이블에 insert 하기
 	@Override
 	public int insert() {
 		int n = dao.insert();
 		return n;
 	}
 
+	// spring_test 테이블에 select 하기
 	@Override
 	public List<BeginVO> select() {
 		List<BeginVO> beginvoList = dao.select();
 		
 		return beginvoList;
+	}
+	
+	// spring_test 테이블에 select 하기
+	@Override
+	public List<BeginDateVO> select_datevo() {
+		
+		List<BeginDateVO> begindatevoList = dao.select_datevo();
+		return begindatevoList;
+	}
+
+	// spring_test 테이블에 select 하기
+	@Override
+	public List<Map<String, String>> select_map() {
+		List<Map<String, String>> mapList = dao.select_map();
+		return mapList;
+	}
+
+	// view단의 form 태그에서 입력받은 값을 spring_test 테이블에 insert 하기
+	@Override
+	public int insert_no(BeginVO bvo) {
+		int n = dao.insert_vo(bvo);
+		return n;
+	}
+
+	@Override
+	public int insert_datevo(BeginDateVO bdatevo) {
+		int n = dao.insert_datevo(bdatevo);
+		return n;
+	}
+
+	@Override
+	public int insert_map(Map<String, String> paraMap) {
+		int n = dao.insert_map(paraMap);
+		return n;
+	}
+
+	//spring_test 테이블에서 하나만 select 하기
+	@Override
+	public BeginVO selectOne(String no) {
+		BeginVO bvo = dao.selectOne(no); 
+		return bvo;
+	}
+
+	@Override
+	public BeginVO select_one_vo_PathVariable(Long no) {
+		BeginVO bvo = dao.selectOne(String.valueOf(no)); 
+		return bvo;
 	}
 
 }

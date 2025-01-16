@@ -1,7 +1,9 @@
 package com.spring.app.begin.model;
 
 import java.util.List;
+import java.util.Map;
 
+import com.spring.app.begin.domain.BeginDateVO;
 import com.spring.app.begin.domain.BeginVO;
 
 public interface BeginDAO {
@@ -10,5 +12,15 @@ public interface BeginDAO {
 
 	// spring_test 테이블에 select 하기
 	List<BeginVO> select();
+	List<BeginDateVO> select_datevo();
+	List<Map<String, String>> select_map();
+
+	// view단의 form 태그에서 입력받은 값을 spring_test 테이블에 insert 하기
+	int insert_vo(BeginVO bvo);
+	int insert_datevo(BeginDateVO bdatevo);
+	int insert_map(Map<String, String> paraMap);
+
+	//spring_test 테이블에서 하나만 select 하기
+	BeginVO selectOne(String no);
 
 }

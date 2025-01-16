@@ -2,6 +2,7 @@ package com.spring.app.begin.model;
 
 
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 //import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
+import com.spring.app.begin.domain.BeginDateVO;
 import com.spring.app.begin.domain.BeginVO;
 
 
@@ -87,6 +89,47 @@ public class BeginDAO_imple implements BeginDAO {
 	public List<BeginVO> select() {
 		List<BeginVO> beginvoList = sqlsession.selectList("begin.select");
 		return beginvoList;
+	}
+
+	// spring_test 테이블에 select 하기
+	@Override
+	public List<BeginDateVO> select_datevo() {
+		List<BeginDateVO> beginvoList = sqlsession.selectList("begin.select_datevo");
+		return beginvoList;
+	}
+	
+	// spring_test 테이블에 select 하기
+	@Override
+	public List<Map<String, String>> select_map() {
+		List<Map<String, String>> mapList = sqlsession.selectList("begin.select_map");
+		return mapList;
+	}
+
+	// view단의 form 태그에서 입력받은 값을 spring_test 테이블에 insert 하기
+	@Override
+	public int insert_vo(BeginVO bvo) {
+		int n = sqlsession.insert("begin.insert_vo", bvo);
+		
+		return n;
+	}
+
+	@Override
+	public int insert_datevo(BeginDateVO bdatevo) {
+		int n = sqlsession.insert("begin.insert_datevo",bdatevo);
+		return n;
+	}
+
+	@Override
+	public int insert_map(Map<String, String> paraMap) {
+		int n = sqlsession.insert("begin.insert_map", paraMap);
+		return n;
+	}
+
+	//spring_test 테이블에서 하나만 select 하기
+	@Override
+	public BeginVO selectOne(String no) {
+		BeginVO bvo = sqlsession.selectOne("begin.selectOne", no);
+		return bvo;
 	}
 
 }

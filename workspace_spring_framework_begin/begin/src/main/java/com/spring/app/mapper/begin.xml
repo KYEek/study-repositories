@@ -14,5 +14,50 @@
 		from spring_test
 		order by no desc
 	</select>
+	<select id="select_datevo" resultType="com.spring.app.begin.domain.BeginDateVO">
+		select no, name, writeday
+		from spring_test
+		order by no desc
+	</select>
+	
+	<resultMap type="HashMap" id="testMap">
+		<result property="NO" column="no" javaType="String"/>
+		<result property="NAME" column="name" javaType="String"/>
+		<result property="WRITEDAY" column="writeday" javaType="String"/>
+	</resultMap>
+	<select id="select_map" resultMap="testMap">
+		select no, name, to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') AS writeday
+		from spring_test
+		order by no desc
+	</select>
 
+	<insert id="insert_vo" parameterType="BeginVO"><!--원래는 패키지 이름까지 다 적어줘야 하는데 mybatis-config에서 설정을 해줘서 패키지 이름은 생략 가능하다  -->
+		insert into spring_test(no, name, writeday)
+		values(#{no}, #{name}, default)
+	</insert>
+	
+	<insert id="insert_datevo" parameterType="BeginDateVO">
+		insert into spring_test(no, name, writeday)
+		values(#{no}, #{name}, #{writeday})
+	</insert>
+	
+	
+	<!-- #### 중요 #### 
+       HashMap 타입으로 매개변수를 받아온 것을 꺼내서 사용할때 
+       1. 데이터로 사용할때는 #{key명} 이고,
+       2. 식별자(테이블명, 컬럼명)로 사용할때는 ${key명} 이고,
+       3. myBatis 에서 제공하는 if 엘리먼트나 choose 엘리먼트 안에서 사용할때는 
+             그냥 <if test="key명"> <when test="key명"> 으로 사용한다. 
+   -->
+	<insert id="insert_map" parameterType="HashMap">
+		insert into spring_test(no, name, writeday)
+		values(#{no}, #{name}, default)
+	</insert>
+	
+	<select id="selectOne" parameterType="String" resultType="BeginVO">
+		select no, name, to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') AS writeday
+		from spring_test
+		where no = #{no}
+		order by no desc
+	</select>
 </mapper>

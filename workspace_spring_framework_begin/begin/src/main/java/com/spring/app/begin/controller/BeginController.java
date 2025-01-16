@@ -1,6 +1,8 @@
 package com.spring.app.begin.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -8,12 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.spring.app.begin.domain.BeginDateVO;
 import com.spring.app.begin.domain.BeginVO;
 import com.spring.app.begin.service.BeginService;
+
+import oracle.jdbc.proxy.annotation.Post;
 
 /*
 사용자 웹브라우저 요청(View)  ==> DispatcherServlet ==> @Controller 클래스 <==>> Service단(핵심업무로직단, business logic단) <==>> Model단[Repository](DAO, DTO) <==>> myBatis <==>> DB(오라클)           
@@ -126,7 +133,7 @@ public class BeginController { //beginController이렇게 객체화
 	      을 먼저 하고서 다음의 것을 한다. 
 	   */
 	
-	@GetMapping("select.action") //http://localhost:9099/begin/test.select.action
+	@GetMapping("select.action") //http://localhost:9099/begin/test/select.action
 	public String select(HttpServletRequest request) {
 		
 		List<BeginVO> beginvoList = service.select();
@@ -139,4 +146,226 @@ public class BeginController { //beginController이렇게 객체화
 	}
 	
 	
+	@GetMapping("select_datevo.action") //http://localhost:9099/begin/test/select_datevo.action
+	public String select_datevo(HttpServletRequest request) {
+		
+		List<BeginDateVO> begindatevoList = service.select_datevo();
+		
+		request.setAttribute("begindatevoList", begindatevoList);
+		
+		return "begin/select_datevo";
+		///WEB-INF/views/begin/select.jsp 페이지를 만들어야 한다
+		
+	}
+	
+	@GetMapping("select_map.action") //http://localhost:9099/begin/test/select_map.action
+	public String select_mapo(HttpServletRequest request) {
+		
+		List<Map<String, String>> mapList= service.select_map();
+		
+		request.setAttribute("mapList", mapList);
+		
+		return "begin/select_map";
+		///WEB-INF/views/begin/select.jsp 페이지를 만들어야 한다
+		
+	}
+	
+	
+//	@RequestMapping(value ="form_request.action", method= {RequestMethod.GET})// 오로지 GET방식만 허락하는 것임.
+//	@RequestMapping(value ="form_request.action", method= {RequestMethod.POST})// 오로지 POST방식만 허락하는 것임.
+//	@RequestMapping(value ="form_request.action")// GET방식 또는 POST방식 둘 모두 허락하는 것임. 
+	@RequestMapping(path ="form_request.action")// GET방식 또는 POST방식 둘 모두 허락하는 것임. 
+	public String form_request(HttpServletRequest request) {
+		String method = request.getMethod();
+		if("GET".equalsIgnoreCase(method)) {	//GET방식이라면
+			return "begin/form_request";	//view단 페이지를 띄워준다
+			///WEB-INF/views/begin/form_request.jsp 페이지를 만들어 줘야 한다
+		}
+		else {
+			String no = request.getParameter("no");
+			String name = request.getParameter("name");
+			
+			BeginVO bvo = new BeginVO();
+			bvo.setNo(no);
+			bvo.setName(name);
+			
+			int n = service.insert_no(bvo);
+			
+			if(n==1) {
+				return "redirect:/test/select.action";
+				///test/select.action URL로 redirect(페이지이동) 하라는 말이다
+			}else {
+				return "redirect:/test/form_request.action";
+			}
+		}
+	}
+	
+	
+	@RequestMapping(path ="form_vo.action")// GET방식 또는 POST방식 둘 모두 허락하는 것임. 
+	public String form_vo(HttpServletRequest request, BeginVO bvo) {
+		// BeginVO bvo 의 setXXX() 은 from  태그의 value 값과 일치해야만 한다.
+		
+		
+		String method = request.getMethod();
+		if("GET".equalsIgnoreCase(method)) {	//GET방식이라면
+			return "begin/form_vo";	//view단 페이지를 띄워준다
+			///WEB-INF/views/begin/form_request.jsp 페이지를 만들어 줘야 한다
+		}
+		else {
+			
+			int n = service.insert_no(bvo);
+			
+			if(n==1) {
+				return "redirect:/test/select.action";
+				///test/select.action URL로 redirect(페이지이동) 하라는 말이다
+			}else {
+				return "redirect:/test/form_request.action";
+			}
+		}
+	}
+	
+	
+	@GetMapping("form_beginvo.action") //GET방식만 허락하는 것임.
+	public String form_beginvo() {
+		
+		
+		return "begin/form_beginvo"; //view 단 페이지를 띄어라
+		///WEB-INF/views/begin/form_beginvo.jsp 페이지를 만들어 줘야 한다
+	}
+	@PostMapping("form_beginvo.action")
+	public String form_beginvo(BeginVO bvo) {
+		
+		int n = service.insert_no(bvo);
+		
+		if(n==1) {
+			return "redirect:/test/select.action";
+			///test/select.action URL로 redirect(페이지이동) 하라는 말이다
+		}else {
+			return "redirect:/test/form_request.action";
+			///test/form_beginvo.action URL로 redirect(페이지이동) 하라는 말이다
+		}
+	}
+	
+	
+	@GetMapping("form_datevo.action")
+	public String form_datevo() {
+		
+		
+		return "begin/form_datevo";
+	}
+	
+	@PostMapping("form_datevo.action")
+	public String form_datevo(BeginDateVO bdatevo) {
+		int n =service.insert_datevo(bdatevo);
+		System.out.println(n);
+		if(n==1) {
+			return "redirect:/test/select_datevo.action";
+		}
+		else {
+			return "redirect:/test/form_datevo.action";
+		}
+	}
+	
+	@GetMapping("form_request_map.action")
+	public String form_request_map() {
+		return "begin/form_request_map";
+	}
+	
+	@PostMapping("form_request_map.action")
+	public String form_request_map(HttpServletRequest request) {
+		String no = request.getParameter("no");
+		String name = request.getParameter("name");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("no", no);
+		paraMap.put("name", name);
+		
+		int n = service.insert_map(paraMap);
+		
+		if(n==1) {
+			return "redirect:/test/select_map.action";
+		}
+		else {
+			return "redirect:/test/form_request_map.action";
+		}
+	}
+	
+	@GetMapping("form_RequestParam_Map.action")
+	public String form_RequestParam_Map() {
+		return "begin/form_RequestParam_Map";
+	}
+	
+	@PostMapping("form_RequestParam_Map.action")
+	public String form_RequestParam_Map(@RequestParam Map<String, String> paraMap) {
+		/* 폼에서 건네준 값들을 컨트롤러에서 Map 으로 받을수 있음. 
+        반드시 @ReqestParam 을 Map 앞에 붙여 주어야 함. 안 붙이면 오류발생함!!!
+        이때 Map 의 key 값은 자동적으로 폼의 name 명이 key 값이 되어짐. */
+		
+		int n = service.insert_map(paraMap);
+		
+		if(n==1) {
+			return "redirect:/test/select_map.action";
+		}
+		else {
+			return "redirect:/test/form_RequestParam_Map.action";
+		}
+
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	@GetMapping("select_all_1.action")  // http://localhost:9099/begin/test/select_all.action
+	   public String select_all_1(HttpServletRequest request) {
+	      
+	      List<BeginVO> beginvoList = service.select();
+	      
+	      request.setAttribute("beginvoList", beginvoList);
+	      
+	      return "begin/select_all_1";
+	      //   /WEB-INF/views/begin/select_all.jsp 페이지를 만들어야 한다.
+	   }
+	
+//		@GetMapping("select_one.action") // http://localhost:9099/begin/test/select_all.action
+//		public String select_one(HttpServletRequest request) {
+//
+//			String no = request.getParameter("no");
+//			BeginVO bvo = service.selectOne(no);
+//
+//			request.setAttribute("bvo", bvo);
+//			request.setAttribute("name", bvo.getName());
+//			request.setAttribute("writeday", bvo.getWriteday());
+//			return "begin/select_one";
+//			// /WEB-INF/views/begin/select_all.jsp 페이지를 만들어야 한다.
+//		}
+	
+//		또는
+		@GetMapping("select_one.action") // http://localhost:9099/begin/test/select_all.action
+		public String select_one(/*@RequestParam(name="no") String num*/
+								 /*@RequestParam(value="no") String num*/
+								   @RequestParam(defaultValue = "101") String no, HttpServletRequest request) {
+			
+			BeginVO bvo = service.selectOne(no);
+			request.setAttribute("bvo", bvo);
+			return "begin/select_one";
+		}
+	
+	
+		// == @PathVariable 어노테이션에 대해서 알아보기 ==
+		@GetMapping("select_all_2.action") // http://localhost:9099/begin/test/select_all.action
+		public String select_all_PathVariable(HttpServletRequest request) {
+
+			List<BeginVO> beginvoList = service.select();
+
+			request.setAttribute("beginvoList", beginvoList);
+
+			return "begin/select_all_2";
+			// /WEB-INF/views/begin/select_all.jsp 페이지를 만들어야 한다.
+		}
+		
+		@GetMapping("select_one/{no}.action")	//http://localhost:9099/begin/test/select_one/101.action
+		public String select_one_PathVariable(@PathVariable Long no, HttpServletRequest request) {
+			BeginVO bvo = service.select_one_vo_PathVariable(no);request.setAttribute("bvo", bvo);
+			return "begin/select_one_PathVariable";
+		}
 }

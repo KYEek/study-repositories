@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
     
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
     
 <!DOCTYPE html>
 <html>
@@ -19,7 +20,7 @@
 </head>
 <body>
 
-	<h3>오라클 서버에 있는 데이터 조회</h3>
+	<h3>오라클 서버에 있는 데이터 조회(BeginDateVO)</h3>
 	<table>
 		<tr>
 			<th>번호</th>
@@ -28,12 +29,13 @@
 			<th>작성일자</th>
 		</tr>
 		
-		<c:forEach var="beginvo" items="${requestScope.beginvoList}" varStatus="status"> 
+		<c:forEach var="begindatevo" items="${requestScope.begindatevoList}" varStatus="status"> 
 		   <tr>
 		      <td>${status.count}</td>
-		      <td>${beginvo.no}</td>
-		      <td>${beginvo.name}</td>
-		      <td>${beginvo.writeday}</td>
+		      <td>${begindatevo.no}</td>
+		      <td>${begindatevo.name}</td>
+<%-- 		      <td>${begindatevo.writeday}</td> --%>
+			  <td><fmt:formatDate value="${begindatevo.writeday}" type="date" pattern="yyyy-MM-dd HH:mm:ss" /></td>
 		   </tr>
 		</c:forEach>
 
