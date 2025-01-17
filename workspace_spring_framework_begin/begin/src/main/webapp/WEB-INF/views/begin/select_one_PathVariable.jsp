@@ -2,6 +2,12 @@
     pageEncoding="UTF-8"%>
     
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+
+<%
+    String ctxPath = request.getContextPath();
+    //     /begin
+%>
+    
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,32 +15,26 @@
 <title>select 연습</title>
 
 <style type="text/css">
-	table, th, td {
-		border: solid 1px gray;
-		border-collapse: collapse;
+	span {
+		display: inline-block;
+		width: 100px;
 	}
 </style>
 
 </head>
 <body>
 
-	<h3>오라클 서버에 있는 데이터 조회(begin/select_one/{no}.action)</h3>
-	<table>
-		<tr>
-			<th>번호</th>
-			<th>입력번호</th>
-			<th>성명</th>
-			<th>작성일자</th>
-		</tr>
-		
-		   <tr>
-		      <td>1</td>
-		      <td>${requestScope.bvo.no}</td>
-		      <td>${requestScope.bvo.name}</td>
-		      <td>${requestScope.bvo.writeday}</td>
-		   </tr>
-    </table>
-    
-	<button onclick="location.href='/begin/test/select_all_2.action'">돌아가기</button>
+	<h3>오라클 서버에 있는 데이터 조회(/begin/test/select_one/{no}.action 페이지)</h3>
+	
+	<div>
+	   <ul>
+	   	  <li><span>입력번호 : </span>${requestScope.bvo.no}</li>
+	   	  <li><span>성&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;명 : </span>${requestScope.bvo.name}</li>
+	   	  <li><span>작성일자 : </span>${requestScope.bvo.writeday}</li>
+	   </ul>
+	     
+	   <button onclick="location.href='<%= ctxPath%>/test/select_all_2.action'">전체보기</button>
+	</div>
+	
 </body>
 </html>

@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>    
     
 <!DOCTYPE html>
 <html>
@@ -34,8 +34,10 @@
 		      <td>${status.count}</td>
 		      <td>${begindatevo.no}</td>
 		      <td>${begindatevo.name}</td>
-<%-- 		      <td>${begindatevo.writeday}</td> --%>
-			  <td><fmt:formatDate value="${begindatevo.writeday}" type="date" pattern="yyyy-MM-dd HH:mm:ss" /></td>
+		<%--  <td>${begindatevo.writeday}</td>
+		        Wed Jan 15 17:20:54 GMT+09:00 2025 형식으로 출력됨
+		--%>    
+		      <td><fmt:formatDate value="${begindatevo.writeday}" type="date" pattern="yyyy-MM-dd HH:mm:ss" /></td> 
 		   </tr>
 		</c:forEach>
 

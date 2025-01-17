@@ -44,7 +44,9 @@ values(103, '변우석', default);
 
 commit; 
 
-   
+delete from spring_test where no=5004;
+commit;
 select no, name, to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') AS writeday
 from spring_test
+where no = 5005
 order by no desc;

@@ -7,7 +7,8 @@ import com.spring.app.begin.domain.BeginDateVO;
 import com.spring.app.begin.domain.BeginVO;
 
 public interface BeginDAO {
-	//spring_test 테이블에 insert 하기
+
+	// spring_test 테이블에 insert 하기
 	int insert();
 
 	// spring_test 테이블에 select 하기
@@ -20,7 +21,16 @@ public interface BeginDAO {
 	int insert_datevo(BeginDateVO bdatevo);
 	int insert_map(Map<String, String> paraMap);
 
-	//spring_test 테이블에서 하나만 select 하기
-	BeginVO selectOne(String no);
+	// spring_test 테이블에서 1개 행만 select 하기
+	BeginVO select_one_vo(String no);
+	Map<String, String> select_one_map(Long no);
 
 }
+
+
+
+
+
+
+
+
