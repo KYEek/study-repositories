@@ -32,9 +32,9 @@ from spring_exam
 order by writeday desc;
 
 -------------------------------------------------------------
-
 show user;
 -- USER이(가) "MYMVC_USER"입니다.
+
 
 insert into spring_test(no, name, writeday)
 values(102, '김태희', default);
@@ -42,11 +42,8 @@ values(102, '김태희', default);
 insert into spring_test(no, name, writeday)
 values(103, '변우석', default);
 
-commit; 
-
-delete from spring_test where no=5004;
 commit;
+
 select no, name, to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') AS writeday
 from spring_test
-where no = 5005
 order by no desc;

@@ -4,68 +4,76 @@
 	   xmlns:tx="http://www.springframework.org/schema/tx"
 	   xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
 	   xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
-						   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-						   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+		                   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		                   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
-		
-	<!-- ==== myBatis(JDBC)설정 : DBCP 2.x를 위한 DataSource 객체 생성하기  ==== -->
-   <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
-      <property name="driverClassName" value="net.sf.log4jdbc.DriverSpy" />
-      <property name="url" value="jdbc:log4jdbc:oracle:thin:@//127.0.0.1:1521/xe" />
-      <property name="username" value="mymvc_user" />
-      <property name="password" value="gclass" />
-      
-      <property name="initialSize" value="20"/>   <!-- BasicDataSource 클래스 생성 후 최초로 getConnection() 메소드를 호출할 때 커넥션 풀에 채워 넣을 커넥션 개수(default=0). initialSize 값이 maxTotal 값보다 커버리면 논리적으로 오류가 있는 설정이다. -->   
-      <property name="maxTotal" value="20"/>      <!-- 동시에 사용할 수 있는 최대 커넥션 개수(default=8). initialSize 값과 maxTotal 값과 maxIdle 값과 minIdle 값 4개 모두 동일한 값으로 통일해도 무방하다. 커넥션 개수와 관련된 가장 중요한 성능 요소는 일반적으로 커넥션의 최대 개수이다 -->  
-      <property name="maxIdle" value="20"/>      <!-- Connection Pool에 반납할 때, 최대로 유지될 수 있는 커넥션 개수(default=8). maxTotal 값 과 maxIdle 값이 같은 것이 바람직하다. 왜냐하면, 만약에 maxTotal 값이 20 이고 maxIdle 값이 15 일때, 15개의 커넥션이 모두 사용중일 때 커넥션이 한개 더 생긴다면, maxTotal 은 아직 여유가 있으므로 프로세스는 계속 진행되고, 그러면 새로 연결을 하고, 반환하려고 하는데 15개의 커넥션이 모두 사용중 이라서 반납할 수 있는 여유공간이 없이 이미 꽉차 있으므로 그 커넥션은 반납하지 못하고 그냥 닫히게 된다. 15개의 커넥션이 계속해서 사용중이라면, 계속해서 새로 연결, 다시 닫기가 반복되므로 DBCP 를 사용하는 의미가 아예 없어진다. 그러므로  maxIdle 값과  maxTotal 값은 같은 값이거나 큰 차이가 없어야 바람직하다. -->     
-      <property name="minIdle" value="20"/>      <!-- Connection Pool에 반납할 때, 최소한으로 유지할 커넥션 개수(default=0). minIdle 값이 maxIdle 값  보다 커버리면 논리적으로 오류가 있는 설정이다. --> 
-           
-      <property name="maxWaitMillis" value="10000" />      <!-- pool이 고갈되었을 경우 최대 대기 시간(ms단위, default=-1 : 무한정) -->
-      <property name="defaultAutoCommit" value="true" /> <!-- defaultAutoCommit 속성은 true가 기본값이다. --> 
-   </bean>
-   
-   <!-- ==== myBatis(JDBC)설정 : mapper 파일 위치 지정하기  ==== -->
-   <!-- mapper 파일이란 sql 문을 가지고 있는 xml 파일을 말한다. -->
-   <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-      <property name="mapperLocations" value="classpath*:com/spring/app/mapper/*.xml" /> <!-- com.spring.app.mapper 이 아니라 com/spring/app/mapper 임  -->
-      <property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />   <!-- mybatis-config.xml에 vo클래스의 별칭 정보를 기술함 --> 
-      <property name="dataSource" ref="dataSource" />
-   </bean>
-   <!-- ==== myBatis(JDBC)설정 : sqlSessionTemplate 의존 객체 설정 ==== -->
-   <bean id="sqlsession" class="org.mybatis.spring.SqlSessionTemplate"> 
-      <constructor-arg index="0" ref="sqlSessionFactory" />
-   </bean>
-   
-	<!-- ————————————————————————————————————————————————————————— -->
-	<!-- 로컬 오라클 서버의 hr 연결 시작 -->
-	<!-- ==== myBatis(JDBC)설정 : DBCP 2.x를 위한 DataSource 객체 생성하기  ==== -->
-   <bean id="dataSource_2" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
-      <property name="driverClassName" value="net.sf.log4jdbc.DriverSpy" />
-      <property name="url" value="jdbc:log4jdbc:oracle:thin:@//127.0.0.1:1521/xe" />
-      <property name="username" value="hr" />
-      <property name="password" value="gclass" />
-      
-      <property name="initialSize" value="20"/>   <!-- BasicDataSource 클래스 생성 후 최초로 getConnection() 메소드를 호출할 때 커넥션 풀에 채워 넣을 커넥션 개수(default=0). initialSize 값이 maxTotal 값보다 커버리면 논리적으로 오류가 있는 설정이다. -->   
-      <property name="maxTotal" value="20"/>      <!-- 동시에 사용할 수 있는 최대 커넥션 개수(default=8). initialSize 값과 maxTotal 값과 maxIdle 값과 minIdle 값 4개 모두 동일한 값으로 통일해도 무방하다. 커넥션 개수와 관련된 가장 중요한 성능 요소는 일반적으로 커넥션의 최대 개수이다 -->  
-      <property name="maxIdle" value="20"/>      <!-- Connection Pool에 반납할 때, 최대로 유지될 수 있는 커넥션 개수(default=8). maxTotal 값 과 maxIdle 값이 같은 것이 바람직하다. 왜냐하면, 만약에 maxTotal 값이 20 이고 maxIdle 값이 15 일때, 15개의 커넥션이 모두 사용중일 때 커넥션이 한개 더 생긴다면, maxTotal 은 아직 여유가 있으므로 프로세스는 계속 진행되고, 그러면 새로 연결을 하고, 반환하려고 하는데 15개의 커넥션이 모두 사용중 이라서 반납할 수 있는 여유공간이 없이 이미 꽉차 있으므로 그 커넥션은 반납하지 못하고 그냥 닫히게 된다. 15개의 커넥션이 계속해서 사용중이라면, 계속해서 새로 연결, 다시 닫기가 반복되므로 DBCP 를 사용하는 의미가 아예 없어진다. 그러므로  maxIdle 값과  maxTotal 값은 같은 값이거나 큰 차이가 없어야 바람직하다. -->     
-      <property name="minIdle" value="20"/>      <!-- Connection Pool에 반납할 때, 최소한으로 유지할 커넥션 개수(default=0). minIdle 값이 maxIdle 값  보다 커버리면 논리적으로 오류가 있는 설정이다. --> 
-           
-      <property name="maxWaitMillis" value="10000" />      <!-- pool이 고갈되었을 경우 최대 대기 시간(ms단위, default=-1 : 무한정) -->
-      <property name="defaultAutoCommit" value="true" /> <!-- defaultAutoCommit 속성은 true가 기본값이다. --> 
-   </bean>
-   
-   <!-- ==== myBatis(JDBC)설정 : mapper 파일 위치 지정하기  ==== -->
-   <!-- mapper 파일이란 sql 문을 가지고 있는 xml 파일을 말한다. -->
-   <bean id="sqlSessionFactory_2" class="org.mybatis.spring.SqlSessionFactoryBean">
-      <property name="mapperLocations" value="classpath*:com/spring/app/mapper/*.xml" /> <!-- com.spring.app.mapper 이 아니라 com/spring/app/mapper 임  -->
-      <property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />   <!-- mybatis-config.xml에 vo클래스의 별칭 정보를 기술함 --> 
-      <property name="dataSource" ref="dataSource_2" />
-   </bean>
-   <!-- ==== myBatis(JDBC)설정 : sqlSessionTemplate 의존 객체 설정 ==== -->
-   <bean id="sqlsession_2" class="org.mybatis.spring.SqlSessionTemplate"> 
-      <constructor-arg index="0" ref="sqlSessionFactory_2" />
-   </bean>
-   <!-- 로컬 오라클 서버의 hr 연결 끝 -->
 	
+	<!-- === 로컬 오라클서버의 MYMVC_USER 연결 시작 === -->
+	<!-- ==== myBatis(JDBC)설정 : DBCP 2.x를 위한 DataSource 객체 생성하기  ==== -->
+	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="net.sf.log4jdbc.DriverSpy" />
+		<property name="url" value="jdbc:log4jdbc:oracle:thin:@//127.0.0.1:1521/xe" />
+		<property name="username" value="mymvc_user" />
+		<property name="password" value="gclass" />
+		
+		<property name="initialSize" value="20"/>	<!-- BasicDataSource 클래스 생성 후 최초로 getConnection() 메소드를 호출할 때 커넥션 풀에 채워 넣을 커넥션 개수(default=0). initialSize 값이 maxTotal 값보다 커버리면 논리적으로 오류가 있는 설정이다. -->   
+		<property name="maxTotal" value="20"/>		<!-- 동시에 사용할 수 있는 최대 커넥션 개수(default=8). initialSize 값과 maxTotal 값과 maxIdle 값과 minIdle 값 4개 모두 동일한 값으로 통일해도 무방하다. 커넥션 개수와 관련된 가장 중요한 성능 요소는 일반적으로 커넥션의 최대 개수이다 -->  
+		<property name="maxIdle" value="20"/>		<!-- Connection Pool에 반납할 때, 최대로 유지될 수 있는 커넥션 개수(default=8). maxTotal 값 과 maxIdle 값이 같은 것이 바람직하다. 왜냐하면, 만약에 maxTotal 값이 20 이고 maxIdle 값이 15 일때, 15개의 커넥션이 모두 사용중일 때 커넥션이 한개 더 생긴다면, maxTotal 은 아직 여유가 있으므로 프로세스는 계속 진행되고, 그러면 새로 연결을 하고, 반환하려고 하는데 15개의 커넥션이 모두 사용중 이라서 반납할 수 있는 여유공간이 없이 이미 꽉차 있으므로 그 커넥션은 반납하지 못하고 그냥 닫히게 된다. 15개의 커넥션이 계속해서 사용중이라면, 계속해서 새로 연결, 다시 닫기가 반복되므로 DBCP 를 사용하는 의미가 아예 없어진다. 그러므로  maxIdle 값과  maxTotal 값은 같은 값이거나 큰 차이가 없어야 바람직하다. -->     
+		<property name="minIdle" value="20"/>		<!-- Connection Pool에 반납할 때, 최소한으로 유지할 커넥션 개수(default=0). minIdle 값이 maxIdle 값  보다 커버리면 논리적으로 오류가 있는 설정이다. --> 
+	  		
+		<property name="maxWaitMillis" value="10000" />	   <!-- pool이 고갈되었을 경우 최대 대기 시간(ms단위, default=-1 : 무한정) -->
+		<property name="defaultAutoCommit" value="true" /> <!-- defaultAutoCommit 속성은 true가 기본값이다. --> 
+	</bean>
+	
+	<!-- ==== myBatis(JDBC)설정 : mapper 파일 위치 지정하기  ==== -->
+	<!-- mapper 파일이란 sql 문을 가지고 있는 xml 파일을 말한다. -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="mapperLocations" value="classpath*:com/spring/app/mapper/*.xml" /> <!-- com.spring.app.mapper 이 아니라 com/spring/app/mapper 임  -->
+   	    <property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />   <!-- mybatis-config.xml에 VO클래스의 별칭 정보를 기술함 --> 
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- ==== myBatis(JDBC)설정 : sqlSessionTemplate 의존 객체 설정 ==== -->
+	<bean id="sqlsession" class="org.mybatis.spring.SqlSessionTemplate"> 
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+	<!-- === 로컬 오라클서버의 MYMVC_USER 연결 끝 === -->
+	
+	
+	<!-- ================================================= -->
+	
+	
+	<!-- === 로컬 오라클서버의 HR 연결 시작 === -->
+	<!-- ==== myBatis(JDBC)설정 : DBCP 2.x를 위한 DataSource 객체 생성하기  ==== -->
+	<bean id="dataSource_2" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="net.sf.log4jdbc.DriverSpy" />
+		<property name="url" value="jdbc:log4jdbc:oracle:thin:@//127.0.0.1:1521/xe" />
+		<property name="username" value="hr" />
+		<property name="password" value="gclass" />
+		
+		<property name="initialSize" value="20"/>	<!-- BasicDataSource 클래스 생성 후 최초로 getConnection() 메소드를 호출할 때 커넥션 풀에 채워 넣을 커넥션 개수(default=0). initialSize 값이 maxTotal 값보다 커버리면 논리적으로 오류가 있는 설정이다. -->   
+		<property name="maxTotal" value="20"/>		<!-- 동시에 사용할 수 있는 최대 커넥션 개수(default=8). initialSize 값과 maxTotal 값과 maxIdle 값과 minIdle 값 4개 모두 동일한 값으로 통일해도 무방하다. 커넥션 개수와 관련된 가장 중요한 성능 요소는 일반적으로 커넥션의 최대 개수이다 -->  
+		<property name="maxIdle" value="20"/>		<!-- Connection Pool에 반납할 때, 최대로 유지될 수 있는 커넥션 개수(default=8). maxTotal 값 과 maxIdle 값이 같은 것이 바람직하다. 왜냐하면, 만약에 maxTotal 값이 20 이고 maxIdle 값이 15 일때, 15개의 커넥션이 모두 사용중일 때 커넥션이 한개 더 생긴다면, maxTotal 은 아직 여유가 있으므로 프로세스는 계속 진행되고, 그러면 새로 연결을 하고, 반환하려고 하는데 15개의 커넥션이 모두 사용중 이라서 반납할 수 있는 여유공간이 없이 이미 꽉차 있으므로 그 커넥션은 반납하지 못하고 그냥 닫히게 된다. 15개의 커넥션이 계속해서 사용중이라면, 계속해서 새로 연결, 다시 닫기가 반복되므로 DBCP 를 사용하는 의미가 아예 없어진다. 그러므로  maxIdle 값과  maxTotal 값은 같은 값이거나 큰 차이가 없어야 바람직하다. -->     
+		<property name="minIdle" value="20"/>		<!-- Connection Pool에 반납할 때, 최소한으로 유지할 커넥션 개수(default=0). minIdle 값이 maxIdle 값  보다 커버리면 논리적으로 오류가 있는 설정이다. --> 
+	  		
+		<property name="maxWaitMillis" value="10000" />	   <!-- pool이 고갈되었을 경우 최대 대기 시간(ms단위, default=-1 : 무한정) -->
+		<property name="defaultAutoCommit" value="true" /> <!-- defaultAutoCommit 속성은 true가 기본값이다. --> 
+	</bean>
+	
+	<!-- ==== myBatis(JDBC)설정 : mapper 파일 위치 지정하기  ==== -->
+	<!-- mapper 파일이란 sql 문을 가지고 있는 xml 파일을 말한다. -->
+	<bean id="sqlSessionFactory_2" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="mapperLocations" value="classpath*:com/spring/app/mapper/*.xml" /> <!-- com.spring.app.mapper 이 아니라 com/spring/app/mapper 임  -->
+   	    <property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />   <!-- mybatis-config.xml에 VO클래스의 별칭 정보를 기술함 --> 
+		<property name="dataSource" ref="dataSource_2" />
+	</bean>
+	
+	<!-- ==== myBatis(JDBC)설정 : sqlSessionTemplate 의존 객체 설정 ==== -->
+	<bean id="sqlsession_2" class="org.mybatis.spring.SqlSessionTemplate"> 
+		<constructor-arg index="0" ref="sqlSessionFactory_2" />
+	</bean>
+	<!-- === 로컬 오라클서버의 HR 연결 끝 === -->
+	
+		
 </beans>

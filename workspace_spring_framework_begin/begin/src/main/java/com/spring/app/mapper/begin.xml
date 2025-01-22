@@ -68,21 +68,14 @@
         where no = #{no}
     </select>
     
+    
     <select id="select_one_map" parameterType="Long" resultMap="testMap">
-    	select no, name, to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') AS writeday
+        select no, name, to_char(writeday, 'yyyy-mm-dd hh24:mi:ss') AS writeday
         from spring_test
         where no = #{no}
     </select>
     
-    <update id="update_map" parameterType="HashMap">
-    	update spring_test set name =#{name}
-    	where no = #{no}
-    </update>
 
-	<delete id="delete_one" parameterType="Long">
-		delete from spring_test
-		where no = #{no}
-	</delete>
 </mapper>
 
 

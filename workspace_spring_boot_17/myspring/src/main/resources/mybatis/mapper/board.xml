@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="board">
+   
+   <!-- #31. 파일첨부가 없는 글쓰기 -->
+	<insert id="add" parameterType="BoardVO">
+		insert into tbl_board(seq, fk_userid, name, subject, content, pw, readCount, regDate, status)
+		values(boardSeq.nextval, #{fk_userid}, #{name}, #{subject}, #{content}, #{pw}, default, default, default)
+	</insert>
+	<!-- #34. 페이징 처리를 안한 검색어가 없는 전체 글목록 보여주기 -->
+	<select id="boardListNoSearch" resultType="BoardVO">
+		select seq, fk_userid, name, case when length(subject) > 19 then substr(subject, 1, 16) || '...' else subject end as subject 
+	           , readCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate
+	      from tbl_board
+	      where status = 1
+	      order by seq desc
+	</select>
+	
+	<select id="getView" resultType="BoardVO" parameterType="HashMap">
+	select previous_no 
+            ,previous_subject 
+            ,seq 
+            ,subject 
+            ,content 
+            ,next_no 
+            ,next_subject 
+            ,REGDATE
+            ,readcount
+            ,name
+      from
+      (
+          select lag (seq) over(order by seq desc) previous_no
+                -- boardno(글번호) 컬럼의 값을 내림차순 정렬했을 위쪽으로 1칸 올라간 행에서 boardno 컬럼의 값을 가져온다.
+                
+                ,lag (case when length(subject) > 19 then substr(subject, 1, 16) || '...' else subject end) over(order by seq desc) previous_subject 
+                -- boardno(글번호) 컬럼의 값을 내림차순 정렬했을 위쪽으로 1칸 올라간 행에서 subject 컬럼의 값을 가져온다.
+                ,seq 
+                ,subject 
+                ,content
+                ,lead (seq) over(order by seq desc) next_no
+                -- boardno(글번호) 컬럼의 값을 내림차순 정렬했을 아래쪽으로 1칸 내려간 행에서 boardno 컬럼의 값을 가져온다.
+                
+                ,lead (case when length(subject) > 19 then substr(subject, 1, 16) || '...' else subject end) over(order by seq desc) next_subject
+                -- boardno(글번호) 컬럼의 값을 내림차순 정렬했을 아래쪽으로 1칸 내려간 행에서 subject 컬럼의 값을 가져온다.
+                ,REGDATE
+                ,readcount
+                ,name
+          from tbl_board
+      )V
+      where V.seq = #{seq}
+	
+	</select>
+	
+	<update id="increase_readCount">
+		update tbl_board set readCount = readCount + 1
+		where seq = to_number(#{seq})
+	</update>
+</mapper>
+
+
+
+
+
+
+
