@@ -6,58 +6,116 @@
 <!-- ==== 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="board">
    
-   <!-- #31. 파일첨부가 없는 글쓰기 -->
-	<insert id="add" parameterType="BoardVO">
-		insert into tbl_board(seq, fk_userid, name, subject, content, pw, readCount, regDate, status)
-		values(boardSeq.nextval, #{fk_userid}, #{name}, #{subject}, #{content}, #{pw}, default, default, default)
-	</insert>
-	<!-- #34. 페이징 처리를 안한 검색어가 없는 전체 글목록 보여주기 -->
-	<select id="boardListNoSearch" resultType="BoardVO">
-		select seq, fk_userid, name, case when length(subject) > 19 then substr(subject, 1, 16) || '...' else subject end as subject 
-	           , readCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate
-	      from tbl_board
-	      where status = 1
-	      order by seq desc
+   <!-- === #31. 파일첨부가 없는 글쓰기 === -->
+   <insert id="add" parameterType="BoardVO">
+      insert into tbl_board(seq, fk_userid, name, subject, content, pw, readCount, regDate, status)
+      values(boardSeq.nextval, #{fk_userid}, #{name}, #{subject}, #{content}, #{pw}, default, default, default) 
+   </insert>
+   
+   
+   <!-- === #35. 페이징 처리를 안한 검색어가 없는 전체 글목록 보여주기 === -->
+   <select id="boardListNoSearch" resultType="BoardVO">
+	  select seq, fk_userid, name, subject
+	       , readCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate
+	  from tbl_board
+	  where status = 1
+	  order by seq desc
+   </select>
+   
+   
+   <!-- === #39. 글 1개 조회하기 === -->
+   <select id="getView" resultType="BoardVO" parameterType="HashMap">
+		SELECT previousseq, 
+		       case when length(previoussubject) &lt; 30 then previoussubject 
+                    else substr(previoussubject, 1, 28)||'..' end AS previoussubject
+		     , seq, fk_userid, name, subject, content, readCount, regDate, pw
+		     , nextseq, 
+		       case when length(nextsubject) &lt; 30 then nextsubject 
+                    else substr(nextsubject, 1, 28)||'..' end AS nextsubject
+		FROM
+		 (
+		     select lag(seq) over(order by seq desc) AS previousseq
+		          , lag(subject) over(order by seq desc) AS previoussubject
+		          , seq, fk_userid, name, subject, content, readCount, regDate, pw  
+		          , lead(seq) over(order by seq desc) AS nextseq
+		          , lead(subject) over(order by seq desc) AS nextsubject
+		     from tbl_board
+		     where status = 1
+		 ) V
+		WHERE V.seq = #{seq}
+   </select>
+   
+   
+   <!-- === #41. 글조회수 1증가 하기 === -->
+   <update id="increase_readCount" parameterType="String">
+        update tbl_board set readCount = readCount + 1
+        where seq = to_number(#{seq})
+   </update>
+   
+   
+   <!-- === #50. 1개글 수정하기 === -->
+   <update id="edit" parameterType="BoardVO">
+   	    update tbl_board set subject = #{subject}
+   	                       , content = #{content} 
+   	    where seq = #{seq}
+   </update>
+   
+   
+   <!-- === #55. 1개글 삭제하기 === -->
+   <delete id="del" parameterType="String">
+        delete from tbl_board
+        where seq = #{seq}
+   </delete>
+   
+   <!-- === #62.1 댓글쓰기(tbl_comment 테이블에 insert) === -->
+   
+   <insert id="addComment" parameterType="CommentVO">
+   <!-- 첨부파일이 없는 경우 -->
+   		insert into tbl_comment(seq, fk_userid, name, content, regDate, parentSeq, status)
+   		values(commentSeq.nextval, #{fk_userid}, #{name}, #{content}, default, #{parentSeq}, default)
+   <!-- 첨부파일이 있는 경우 -->
+   
+   </insert>
+   
+   
+   <!-- === #62.2 tbl_board 테이블에 commentCount 컬럼이 1증가(update) === -->
+   <update id="updateCommentCount" parameterType="String">
+   		update tbl_board set commentCount = commentCount + 1
+   		where seq = to_number(#{parentSeq})
+   </update>
+   
+   <!-- === #62.3 tbl_member 테이블의 point 컬럼의 값을 50점을 증가(update) === -->
+   <update id="updateMemberPoint" parameterType="HashMap">
+   		update tbl_member set point = point + to_number(#{point})
+   		where userid = #{userid}
+   </update>
+   
+	<!-- === #66.원 게시물에 딸린 댓글들을 조횧해오기 -->
+	<!-- 첨부파일이 없는 경우 -->
+	<select id="getCommentList" parameterType="String" resultType="CommentVO">
+		select seq, fk_userid, name, content, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+		from tbl_comment
+		where parentSeq = 3
+		order by seq desc
 	</select>
 	
-	<select id="getView" resultType="BoardVO" parameterType="HashMap">
-	select previous_no 
-            ,previous_subject 
-            ,seq 
-            ,subject 
-            ,content 
-            ,next_no 
-            ,next_subject 
-            ,REGDATE
-            ,readcount
-            ,name
-      from
-      (
-          select lag (seq) over(order by seq desc) previous_no
-                -- boardno(글번호) 컬럼의 값을 내림차순 정렬했을 위쪽으로 1칸 올라간 행에서 boardno 컬럼의 값을 가져온다.
-                
-                ,lag (case when length(subject) > 19 then substr(subject, 1, 16) || '...' else subject end) over(order by seq desc) previous_subject 
-                -- boardno(글번호) 컬럼의 값을 내림차순 정렬했을 위쪽으로 1칸 올라간 행에서 subject 컬럼의 값을 가져온다.
-                ,seq 
-                ,subject 
-                ,content
-                ,lead (seq) over(order by seq desc) next_no
-                -- boardno(글번호) 컬럼의 값을 내림차순 정렬했을 아래쪽으로 1칸 내려간 행에서 boardno 컬럼의 값을 가져온다.
-                
-                ,lead (case when length(subject) > 19 then substr(subject, 1, 16) || '...' else subject end) over(order by seq desc) next_subject
-                -- boardno(글번호) 컬럼의 값을 내림차순 정렬했을 아래쪽으로 1칸 내려간 행에서 subject 컬럼의 값을 가져온다.
-                ,REGDATE
-                ,readcount
-                ,name
-          from tbl_board
-      )V
-      where V.seq = #{seq}
+	<!-- 첨부파일이 있는 경우 -->
+
+	<update id="updateComment" parameterType="HashMap">
+		update tbl_comment set content = #{content}, regDate = sysdate
+		where seq = #{seq}
+	</update>
 	
-	</select>
+	<!-- === #75.1 댓글 삭제(Ajax로 처리) -->
+	<delete id="deleteComment" parameterType="String">
+		delete from tbl_comment
+		where seq = to_number(${seq})
+	</delete>
 	
-	<update id="increase_readCount">
-		update tbl_board set readCount = readCount + 1
-		where seq = to_number(#{seq})
+	<!-- === #75.2 댓글삭제시 tbl_board 테이블에 commentCount 컬럼이 1감소(update) -->
+	<update id="updateCommentCount_decrease" parameterType="String">
+	update tbl_board set commentCount = commentCount -1
+	where seq = to_number(${parentSeq})
 	</update>
 </mapper>
 

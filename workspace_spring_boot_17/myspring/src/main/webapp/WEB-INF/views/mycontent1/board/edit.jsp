@@ -39,8 +39,8 @@
 	  <%--  ==== 스마트 에디터 구현 끝 ==== --%>
 	  
 	  
-	  // 글쓰기 버튼
-	  $("button#btnWrite").click(function(){
+	  // 수정완료 버튼
+	  $("button#btnUpdate").click(function(){
 		  
 		  <%-- === 스마트 에디터 구현 시작 === --%>
 		   // id가 content인 textarea에 에디터에서 대입
@@ -91,12 +91,18 @@
 	      if(pw == "") {
 	    	  alert("글암호를 입력하세요!!");
 	    	  return; // 종료
-	      }	  
+	      }	
+	      else {
+	    	  if("${requestScope.boardvo.pw}" != pw) {
+	    		  alert("입력하신 글암호가 원래암호와 일치하지 않습니다.");
+		    	  return; // 종료
+	    	  }
+	      }
 	    	  
 	      // 폼(form)을 전송(submit)
-	      const frm = document.addFrm;
+	      const frm = document.editFrm;
 	      frm.method = "post";
-	      frm.action = "<%= ctxPath%>/board/add";
+	      frm.action = "<%= ctxPath%>/board/edit";
 	      frm.submit();
 	  });
 	  
@@ -107,14 +113,14 @@
 <div style="display: flex;">
   <div style="margin: auto; padding-left: 3%;"> 
    
-   <h2 style="margin-bottom: 30px;">글쓰기</h2>
+   <h2 style="margin-bottom: 30px;">글수정</h2>
    
-   <form name="addFrm">
+   <form name="editFrm">
    		<table style="width: 1024px" class="table table-bordered">
 			 <tr>
 				<th style="width: 15%; background-color: #DDDDDD;">성명</th>
 			    <td>
-			       <input type="hidden" name="fk_userid" value="${sessionScope.loginuser.userid}" />
+			       <input type="hidden" name="seq" value="${requestScope.boardvo.seq}" />
 			       <input type="text" name="name" value="${sessionScope.loginuser.name}" readonly>
 			    </td>	
    		     </tr>
@@ -122,14 +128,14 @@
    		     <tr>
    		        <th style="width: 15%; background-color: #DDDDDD;">제목</th>
    		        <td>
-   		            <input type="text" name="subject" size="100" maxlength="200" />
+   		            <input type="text" name="subject" size="100" maxlength="200" value="${requestScope.boardvo.subject}" />
    		        </td>
    		     </tr>
    		     
    		     <tr>
 				<th style="width: 15%; background-color: #DDDDDD;">내용</th> 
 				<td>
-				    <textarea style="width: 100%; height: 612px;" name="content" id="content"></textarea>
+				    <textarea style="width: 100%; height: 612px;" name="content" id="content">${requestScope.boardvo.content}</textarea>
 				</td>
 			 </tr>
    		    
@@ -142,7 +148,7 @@
    		</table>
    		
    		<div style="margin: 20px;">
-            <button type="button" class="btn btn-secondary btn-sm mr-3" id="btnWrite">글쓰기</button>
+            <button type="button" class="btn btn-secondary btn-sm mr-3" id="btnUpdate">수정완료</button>
             <button type="button" class="btn btn-secondary btn-sm" onclick="javascript:history.back()">취소</button>  
         </div>
    		

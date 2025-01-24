@@ -38,28 +38,28 @@ public class CommonAop {
 	@Pointcut("execution(public * com.spring.app..*Controller.requiredLogin_*(..))")
 	public void requiredLogin() {}
 	
-	// === Before Advice(공통관심사, 보조업무)를 구현한다 ===
-	@Before("requiredLogin")
-	public void loginCheck(JoinPoint joinpoint) {	//로그인 유무 검사를 하는 메소드 작성하
-		//JoinPoint joinpoint는 포인트컷 되어진 주업무의 메소드이다
+	// === Before Advice(공통관심사, 보조업무)를 구현한다. === //
+	@Before("requiredLogin()")
+	public void loginCheck(JoinPoint joinpoint) { // 로그인 유무 검사를 하는 메소드 작성하기 
+		// JoinPoint joinpoint 는 포인트컷 되어진 주업무의 메소드이다.  
 		
-		//로그인 유무를 확인하기 위해서는 request 를 통해 session을 얻어와야 한다.
-		HttpServletRequest request =  (HttpServletRequest)joinpoint.getArgs()[0]; //주업무 메소드의 첫번째 파라미터를 얻어오는 것이다.
-		HttpServletResponse response =  (HttpServletResponse)joinpoint.getArgs()[1]; //주업무 메소드의 첫번째 파라미터를 얻어오는 것이다.
+		// 로그인 유무를 확인하기 위해서는 request 를 통해 session 을 얻어와야 한다.
+		HttpServletRequest request = (HttpServletRequest) joinpoint.getArgs()[0];    // 주업무 메소드의 첫번째 파라미터를 얻어오는 것이다. 
+		HttpServletResponse response = (HttpServletResponse) joinpoint.getArgs()[1]; // 주업무 메소드의 두번째 파라미터를 얻어오는 것이다.
+		
 		HttpSession session = request.getSession();
-		
 		if(session.getAttribute("loginuser") == null) {
 			String message = "먼저 로그인 하세요~~ (AOP Before Advice 활용)";
-			String loc = request.getContextPath() + "/member/login";
-
-			request.setAttribute("message", message);
-			request.setAttribute("loc", loc);
-			
-			// >>> 로그인 성공후 로그인 하기전 페이지로 돌아가는 작업 만들기 <<<
-			String url = MyUtil.getCurrentURL(request);
-			session.setAttribute("goBackURL", url);
-
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/msg.jsp");
+	 		String loc = request.getContextPath()+"/member/login";
+	 		
+	 		request.setAttribute("message", message);
+	 		request.setAttribute("loc", loc);
+	 		
+	 		// >>> 로그인 성공후 로그인 하기전 페이지로 돌아가는 작업 만들기 <<< //
+	 		String url = MyUtil.getCurrentURL(request);
+	 		session.setAttribute("goBackURL", url); // 세션에 url 정보를 저장시켜둔다.
+	 		
+	 		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/msg.jsp");
 			try {
 				dispatcher.forward(request, response);
 			} catch (ServletException | IOException e) {
@@ -68,6 +68,7 @@ public class CommonAop {
 		}
 		
 	}
+	
 	
 	// ===== After Advice(보조업무) 만들기 ====== // 
 	
