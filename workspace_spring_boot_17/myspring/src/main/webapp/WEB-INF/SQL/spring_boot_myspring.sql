@@ -325,13 +325,271 @@ order by seq desc;
 
 select userid, point
 from tbl_member
-where userid in ('eomjh','dltnstls89');
+where userid in ('eomjh','seoyh');
 
 
-select seq, fk_userid, name, content, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+select seq, fk_userid, name, content, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate
 from tbl_comment
 where parentSeq = 3
 order by seq desc;
+
+
+--- === 이제는 Transaction 처리를 위한 시나리오 때문에 만들었던 포인트 체크제약을 없애겠다. === ---
+alter table tbl_member
+drop constraint CK_tbl_member_point;
+-- Table TBL_MEMBER이(가) 변경되었습니다.
+
+select userid, point
+from tbl_member
+where userid in('seoyh', 'eomjh');
+
+
+select subject
+from tbl_board
+where status = 1 
+and lower(subject) like '%'||lower('jAvA')||'%';
+
+select subject
+from tbl_board
+where status = 1 
+and lower(subject) like '%'||lower('dsfkjsdkfjlksjfd')||'%';
+
+
+select distinct name
+from tbl_board
+where status = 1 
+and lower(name) like '%'||lower('정화')||'%';
+
+
+select name
+from tbl_board
+where status = 1 
+and lower(name) like '%'||lower('ㄴㅇㄹㄴㅇㄹㅇㄴㄹ')||'%';
+
+
+/*
+   select 문에서 distinct 와 order by 절을 함께 사용할때는 조심해야 한다.
+   order by 절에는 select 문에서 사용된 컬럼만 들어올 수가 있다.
+   또는 order by 절을 사용하지 않아야 한다.
+*/
+select distinct name
+from tbl_board
+where status = 1 
+and lower(name) like '%'||lower('정화')||'%'
+order by regdate desc;
+-- ORA-01791: SELECT 식이 부적합합니다
+
+select distinct name
+from tbl_board
+where status = 1 
+and lower(name) like '%'||lower('정화')||'%';
+
+select distinct name
+from tbl_board
+where status = 1 
+and lower(name) like '%'||lower('정화')||'%'
+order by name asc;
+
+-----------------------------------------------------------------------------------
+
+begin
+    for i in 1..100 loop
+        insert into tbl_board(seq, fk_userid, name, subject, content, pw, readCount, regDate, status, commentCount)
+        values(boardSeq.nextval, 'seoyh', '서영학', '서영학 입니다'||i, '안녕하세요? 서영학'|| i ||' 입니다.', '1234', default, default, default, default);
+    end loop;
+end;
+
+begin
+    for i in 101..200 loop
+        insert into tbl_board(seq, fk_userid, name, subject, content, pw, readCount, regDate, status, commentCount)
+        values(boardSeq.nextval, 'eomjh', '엄정화', '엄정화 입니다'||i, '안녕하세요? 엄정화'|| i ||' 입니다.', '1234', default, default, default, default);
+    end loop;
+end;
+
+commit;
+-- 커밋 완료.
+
+select *
+from tbl_board
+order by seq desc;
+
+
+select count(*)
+from tbl_board
+order by seq desc;
+
+
+-- 아래의 방법은 Oracle 11g 와 호환됨. 
+SELECT seq, fk_userid, name, subject, readCount, regDate, commentCount 
+FROM 
+(
+    select row_number() over(order by seq desc) AS rno 
+         , seq, fk_userid, name, subject
+         , readCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate 
+         , commentCount 
+    from tbl_board
+    where status = 1 
+    -- and lower(subject) like '%'||lower('입니다')||'%'
+    -- and lower(content) like '%'||lower('안녕하세요')||'%'
+    -- and (lower(subject) like '%'||lower('JavA')||'%' or lower(content) like '%'||lower('안녕하세요')||'%')
+    and lower(name) like '%'||lower('정화')||'%'
+) V
+-- WHERE rno BETWEEN 1 AND 10;    -- 1 페이지
+-- WHERE rno BETWEEN 11 AND 20;   -- 2 페이지 
+WHERE rno BETWEEN 21 AND 30;      -- 3 페이지
+
+
+-- 아래의 방법은 Oracle 12c 이상에서만 가능함.
+select seq, fk_userid, name, subject
+     , readCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate 
+     , commentCount 
+from tbl_board
+where status = 1 
+-- and lower(subject) like '%'||lower('입니다')||'%'
+-- and lower(content) like '%'||lower('안녕하세요')||'%'
+-- and (lower(subject) like '%'||lower('JavA')||'%' or lower(content) like '%'||lower('안녕하세요')||'%')
+and lower(name) like '%'||lower('정화')||'%'
+ORDER BY seq DESC
+OFFSET (1-1)*10 ROW     -- 1 페이지 
+-- OFFSET (2-1)*10 ROW  -- 2 페이지 
+-- OFFSET (3-1)*10 ROW  -- 3 페이지 
+FETCH NEXT 10 ROW ONLY;
+
+---------------------------------------------
+delete from tbl_board
+where seq = 149;
+-- 1 행 이(가) 삭제되었습니다.
+
+commit;
+-- 커밋 완료.
+
+delete from tbl_board
+where seq = 150;
+-- 1 행 이(가) 삭제되었습니다.
+
+commit;
+-- 커밋 완료.
+----------------------------------------------------------------------
+
+      ---- **** 댓글 및 답변글 및 파일첨부가 있는 게시판 **** ----
+      
+--- *** 답변글쓰기는 일반회원은 불가하고 직원(관리파트)들만 답변글쓰기가 가능하도록 한다. *** ---    
+
+--- *** tbl_member(회원) 테이블에 gradelevel 이라는 컬럼을 추가하겠다. *** ---
+alter table tbl_member
+add gradelevel number default 1;
+-- Table TBL_MEMBER이(가) 변경되었습니다.
+
+-- *** 직원(관리자)들에게는 gradelevel 컬럼의 값을 10 으로 부여하겠다. 
+--     gradelevel 컬럼의 값이 10 인 직원들만 답변글쓰기가 가능하다 *** --
+update tbl_member set gradelevel = 10
+where userid in ('admin', 'seoyh');
+-- 2개 행 이(가) 업데이트되었습니다.
+
+commit;
+-- 커밋 완료.
+
+select *
+from tbl_member
+order by gradelevel desc;
+
+
+-- *** 이전글, 다음글 보기 *** --
+SELECT previousseq, previoussubject
+     , seq, fk_userid, name, subject, content, readCount, regDate, pw
+     , nextseq, nextsubject
+FROM
+ (
+     select lag(seq) over(order by seq desc) AS previousseq
+          , lag(subject) over(order by seq desc) AS previoussubject
+          , seq, fk_userid, name, subject, content, readCount, regDate, pw  
+          , lead(seq) over(order by seq desc) AS nextseq
+          , lead(subject) over(order by seq desc) AS nextsubject
+     from tbl_board
+     where status = 1
+     and lower(subject) like '%'||lower('jAvA')||'%'
+ ) V
+WHERE V.seq = 6;
+
+
+SELECT previousseq, previoussubject
+     , seq, fk_userid, name, subject, content, readCount, regDate, pw
+     , nextseq, nextsubject
+FROM
+ (
+     select lag(seq) over(order by seq desc) AS previousseq
+          , lag(subject) over(order by seq desc) AS previoussubject
+          , seq, fk_userid, name, subject, content, readCount, regDate, pw  
+          , lead(seq) over(order by seq desc) AS nextseq
+          , lead(subject) over(order by seq desc) AS nextsubject
+     from tbl_board
+     where status = 1
+     and lower(subject) like '%'||lower('jAvA')||'%'
+ ) V
+WHERE V.seq = 7;
+
+
+SELECT previousseq, previoussubject
+     , seq, fk_userid, name, subject, content, readCount, regDate, pw
+     , nextseq, nextsubject
+FROM
+ (
+     select lag(seq) over(order by seq desc) AS previousseq
+          , lag(subject) over(order by seq desc) AS previoussubject
+          , seq, fk_userid, name, subject, content, readCount, regDate, pw  
+          , lead(seq) over(order by seq desc) AS nextseq
+          , lead(subject) over(order by seq desc) AS nextsubject
+     from tbl_board
+     where status = 1
+     and lower(subject) like '%'||lower('jAvA')||'%'
+ ) V
+WHERE V.seq = 11;
+
+
+--- 댓글 페이징 처리 하기 ---
+SELECT seq, fk_userid, name, content, regDate
+FROM 
+(
+    select row_number() over(order by seq desc) AS rno
+         , seq, fk_userid, name, content
+         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate
+    from tbl_comment
+    where parentSeq = to_number('211')
+) V
+WHERE rno BETWEEN 1 AND 3;  -- 1페이지
+
+
+SELECT seq, fk_userid, name, content, regDate
+FROM 
+(
+    select row_number() over(order by seq desc) AS rno
+         , seq, fk_userid, name, content
+         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate
+    from tbl_comment
+    where parentSeq = to_number('211')
+) V
+WHERE rno BETWEEN 4 AND 6;  -- 2페이지
+
+
+select seq, fk_userid, name, content
+     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate
+from tbl_comment
+where parentSeq = to_number('211')
+ORDER BY seq DESC
+OFFSET (to_number('1')-1)*3 ROW  
+FETCH NEXT 3 ROW ONLY;  -- 1페이지
+
+
+select seq, fk_userid, name, content
+     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate
+from tbl_comment
+where parentSeq = to_number('211')
+ORDER BY seq DESC
+OFFSET (to_number('2')-1)*3 ROW  
+FETCH NEXT 3 ROW ONLY;  -- 2페이지
+
+
+
 
 
 

@@ -1,13 +1,19 @@
 package com.spring.app.aop;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.spring.app.board.service.BoardService;
 import com.spring.app.common.MyUtil;
 
 import jakarta.servlet.RequestDispatcher;
@@ -70,7 +76,36 @@ public class CommonAop {
 	}
 	
 	
-	// ===== After Advice(보조업무) 만들기 ====== // 
+	// ===== #78. After Advice(보조업무) 만들기 ====== // 
+	/*
+	    주업무(<예: 글쓰기, 제품구매 등등>)를 실행한 다음에  
+	    회원의 포인트를 특정점수(예: 100점, 200점, 300점) 증가해 주는 것이 공통의 관심사(보조업무)라고 보자.
+	    관심 클래스(Aspect 클래스)를 생성하여 포인트컷(주업무)과 어드바이스(보조업무)를 생성하여
+	    동작하도록 만들겠다.
+	*/
+	// === Pointcut(주업무)을 설정해야 한다. === //
+	//     Pointcut 이란 공통관심사를 필요로 하는 메소드를 말한다.
+	@Pointcut("execution(public * com.spring.app..*Controller.pointPlus_*(..))")
+	public void pointPlus() {}
+	
+	@Autowired  // Type 에 따라 알아서 Bean 을 주입해준다. 
+	private BoardService service;
+	
+	// === After Advice(공통관심사, 보조업무)를 구현한다. === //
+	// 회원의 포인트를 특정점수(예: 100점, 200점, 300점) 만큼 증가시키는 메소드 생성하기
+	@SuppressWarnings("unchecked")  // 앞으로는 노란줄 경고 표시를 하지말라는 뜻이다.
+ 	@AfterReturning("pointPlus()")  // @AfterReturning 는 주업무 메소드(Pointcut)가 성공한 다음에 발생
+ //	@AfterThrowing("pointPlus()")   // @AfterThrowing 는 주업무 메소드(Pointcut)가 실패한 다음에 발생
+ //	@After("pointPlus()")           // @After 는 주업무 메소드(Pointcut)가 성공하든 실패하든 끝난 다음에 발생
+	public void pointPlus(JoinPoint joinpoint) {
+		// JoinPoint joinpoint 는 포인트컷 되어진 주업무의 메소드이다.
+		
+		Map<String, String> paraMap = (Map<String, String>) joinpoint.getArgs()[0];
+		// 주업무 메소드의 첫번째 파라미터를 얻어오는 것이다.
+		
+		service.pointPlus(paraMap);
+	}
+	
 	
 	
 	
