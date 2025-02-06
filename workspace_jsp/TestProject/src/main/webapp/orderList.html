@@ -53,8 +53,30 @@
         const scrollY = window.scrollY;
         const window_height = document.documentElement.scrollHeight;
         const client_height = document.documentElement.clientHeight;
+        const order_list_box = document.querySelector("#order_list_box");
         // console.log(window_height);
-        console.log((scrollY / (window_height - client_height)).toFixed(2));
+        // console.log((scrollY / (window_height - client_height)).toFixed(2));
+        const scroll_percent = (
+          scrollY /
+          (window_height - client_height)
+        ).toFixed(2);
+        let html = `<div class="order_list_item">
+          <div class="order_itme_header">
+            <div>주문 상태</div>
+            <div class="order_itme_price_detail">
+              <span>¥가격</span> <a href="">주문 보기</a>
+            </div>
+          </div>
+          <div class="order_item_images">
+            <img src="images/basket/00155055500-p.jpg" /><img
+              src="images/basket/00155055500-p.jpg"
+            />
+            <img src="images/basket/00155055500-p.jpg" />
+          </div>
+        </div>`;
+        if (scroll_percent > 0.8) {
+          order_list_box.insertAdjacentHTML("beforeEnd", html);
+        }
       });
     </script>
   </head>
