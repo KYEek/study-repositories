@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+      @theme {
+        --color-clifford: #da373d;
+      }
+    </style>
+    <style>
+      div.hello_world {
+        div#a1 {
+          font-size: 2rem;
+        }
+        div#a2 {
+          color: aqua;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="text-3xl font-bold underline text-clifford">Hello world!</h1>
+    <div class="hello_world">
+      <div id="a1">안녕하세요</div>
+      <div id="a2">こんにちは</div>
+    </div>
+  </body>
+</html>
