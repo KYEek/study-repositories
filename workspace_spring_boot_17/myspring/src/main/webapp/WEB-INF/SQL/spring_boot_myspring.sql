@@ -691,3 +691,26 @@ commit;
 select * 
 from tbl_board 
 order by seq desc;
+
+
+create or replace function func_photo_upload_delete
+(p_seq in number)
+return varchar2
+is
+    v_content tbl_board.content%type := '';
+    v_result  varchar2(4000) := '';
+    v_length  number := 0;
+begin
+    select content into v_content 
+    from tbl_board
+    where seq = p_seq;
+    
+    v_length := length('<img src="/myspring/resources/photo_upload/');
+    
+    while not (instr(v_content, '<img src="/myspring/resources/photo_upload/', 1) = 0) loop
+        v_content := substr(v_content, instr(v_content, '<img src="/myspring/resources/photo_upload/', 1) + v_length);
+        v_result := v_result || '/' || substr(v_content, instr(v_content, '" title="', 1) - 1); 
+    end loop;
+    
+    return v_result;
+end func_photo_upload_delete;
