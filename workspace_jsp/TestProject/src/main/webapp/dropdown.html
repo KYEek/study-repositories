@@ -4,26 +4,113 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dropdown Example</title>
-    <style>
-      /* .flex {
-        display: flex;
-      } */
-      ul {
-        list-style: none;
-        border: 1px solid #ccc;
-        display: flex;
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+      :root {
+        --searchBox: #f8fafd;
+        --searchBox-active: #edf3f8;
+      }
+      #searchBox {
+        box-sizing: content-box;
+        width: 24rem;
+        position: relative;
+        #searchInput {
+          width: 82%;
+          background-color: var(--searchBox-active);
+          #SearchInputDiv {
+            width: 90%;
+
+            input {
+              width: 100%;
+              outline: none;
+            }
+          }
+          #SearchIconDiv {
+            width: 3rem;
+          }
+        }
+
+        #ul2 {
+          border: 1px solid #ccc;
+          background-color: white;
+        }
+        .hidden {
+          display: none;
+        }
+      }
+
+      .searchBoxShadow {
+        background-color: rgba(0, 0, 0, 0.5);
+        transition: background-color 0.5s;
+      }
+
+      .searchBoxActive {
+        border: 2px solid black;
+        width: 100% !important;
+        transition: width 0.5s;
       }
     </style>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        //객체 가져오기
+        const searchBoxInput = document.querySelector("#searchInput");
+        const ul = document.querySelector("#ul2");
+        const body = document.querySelector("body");
+
+        //검색 버튼 클릭시
+        searchBoxInput.addEventListener("click", (e) => {
+          e.stopPropagation();
+          if (ul.className.trim() == "hidden") {
+            ul.classList.toggle("hidden");
+            body.classList.toggle("searchBoxShadow");
+            searchBoxInput.classList.toggle("searchBoxActive");
+          }
+        });
+        //바디 선택시
+        body.addEventListener("click", (e) => {
+          const className = e.target.className;
+
+          if (
+            ul.className == "" &&
+            className.substring(0, "SearchBoxDropDow".length) !=
+              "SearchBoxDropDow"
+          ) {
+            ul.classList.toggle("hidden");
+            body.classList.toggle("searchBoxShadow");
+            searchBoxInput.classList.toggle("searchBoxActive");
+          }
+        });
+      });
+    </script>
   </head>
   <body>
-    <h1>Dropdown Example</h1>
-    <div id="searchDiv">
-      <form>
-        <input type="text" id="search" name="search" placeholder="Search.." />
-        <ul>
-          <li>hello</li>
+    <h1 class="text-lg">Dropdown Example</h1>
+    <div id="searchBox" class="h-9 ml-4">
+      <div id="searchInput" class="flex rounded-sm h-full">
+        <div id="SearchIconDiv" class="h-full">🔍</div>
+        <div id="SearchInputDiv" class="h-full">
+          <input
+            type="text"
+            name="globalSearch"
+            placeholder="검색"
+            class="h-full"
+          />
+        </div>
+      </div>
+      <div id="SearchBoxDropDown" class="SearchBoxDropDown">
+        <ul id="ul2" class="hidden">
+          <div id="searchBoxMenu" class="flex text-sm SearchBoxDropDow">
+            <dib class="w-4/5 SearchBoxDropDow"><strong>최근</strong></dib>
+            <dib class="w-1/5 SearchBoxDropDow"><button>모두 보기</button></dib>
+          </div>
+          <div class="SearchBoxDropDow"></div>
+          <li class="SearchBoxDropDow">fds</li>
         </ul>
-      </form>
+      </div>
     </div>
+    <div class="h-50">안녕</div>
+    <div class="h-50">안녕</div>
+    <div class="h-50">안녕</div>
+    <div class="h-50">안녕</div>
   </body>
 </html>
