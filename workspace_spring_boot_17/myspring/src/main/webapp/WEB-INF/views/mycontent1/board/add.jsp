@@ -107,9 +107,21 @@
 <div style="display: flex;">
   <div style="margin: auto; padding-left: 3%;"> 
    
-   <h2 style="margin-bottom: 30px;">글쓰기</h2>
+   <%-- === 원글쓰기인 경우 === --%>
+   <c:if test='${requestScope.fk_seq eq ""}'>
+      <h2 style="margin-bottom: 30px;">글쓰기</h2>
+   </c:if>
    
-   <form name="addFrm">
+   <%-- === 답변글쓰기인 경우 === --%>
+   <c:if test='${requestScope.fk_seq ne ""}'>
+      <h2 style="margin-bottom: 30px;">답변글쓰기</h2>
+   </c:if>
+   
+<%-- <form name="addFrm"> --%>
+<%-- === #144. 파일첨부하기 ===
+         먼저, 위의 <form name="addFrm"> 을 주석처리한 이후에 아래와 같이 해야 한다.
+         enctype="multipart/form-data" 를 해주어야만 파일첨부가 되어진다. --%>
+   <form name="addFrm" enctype="multipart/form-data">
    		<table style="width: 1024px" class="table table-bordered">
 			 <tr>
 				<th style="width: 15%; background-color: #DDDDDD;">성명</th>
@@ -122,7 +134,19 @@
    		     <tr>
    		        <th style="width: 15%; background-color: #DDDDDD;">제목</th>
    		        <td>
-   		            <input type="text" name="subject" size="100" maxlength="200" />
+   		        <%-- === 원글쓰기 및 답변글쓰기가 없었던 경우 ===
+   		            <input type="text" name="subject" size="100" maxlength="200" /> 
+   		        --%>
+   		            
+   		            <%-- === #135. 원글쓰기인 경우 === --%>
+                    <c:if test='${requestScope.fk_seq eq ""}'>
+   		                <input type="text" name="subject" size="100" maxlength="200" />
+   		            </c:if>
+   		            
+   		            <%-- === #135. 답변글쓰기인 경우 === --%>
+                    <c:if test='${requestScope.fk_seq ne ""}'>
+   		               <input type="text" name="subject" size="100" value="${requestScope.subject}" readonly /> 
+   		            </c:if> 
    		        </td>
    		     </tr>
    		     
@@ -132,7 +156,15 @@
 				    <textarea style="width: 100%; height: 612px;" name="content" id="content"></textarea>
 				</td>
 			 </tr>
-   		    
+			 
+			 <%-- === #145. 파일첨부 타입 추가하기 === --%>
+			 <tr>
+			    <th style="width: 15%; background-color: #DDDDDD;">파일첨부</th>
+			    <td>
+			        <input type="file" name="attach" />
+			    </td>
+			 </tr>
+			 
    		     <tr>
 				<th style="width: 15%; background-color: #DDDDDD;">글암호</th> 
 				<td>
@@ -140,6 +172,12 @@
 				</td>
 			 </tr>
    		</table>
+   		
+   		<%-- === #136. 답변글쓰기가 추가된 경우 시작 === --%>
+   		   <input type="hidden" name="fk_seq"  value="${requestScope.fk_seq}" />
+   		   <input type="hidden" name="groupno" value="${requestScope.groupno}" />
+   		   <input type="hidden" name="depthno" value="${requestScope.depthno}" />
+   		<%-- === 답변글쓰기가 추가된 경우 끝 === --%>
    		
    		<div style="margin: 20px;">
             <button type="button" class="btn btn-secondary btn-sm mr-3" id="btnWrite">글쓰기</button>

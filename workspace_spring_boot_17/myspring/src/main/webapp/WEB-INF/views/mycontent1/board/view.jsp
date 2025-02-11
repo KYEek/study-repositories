@@ -528,7 +528,6 @@
 		$("div#pageBar").html(pageBar_HTML);
 	  
   }// end of function makeCommentPageBar(currentShowPageNo, totalPage)-------------
-	  
   
 </script>
 
@@ -579,6 +578,19 @@
 	 	      <td>${requestScope.boardvo.regDate}</td>
 	 	   </tr>
 	 	   
+	 	   <%-- === #160. 첨부파일 이름 및 파일크기를 보여주고 첨부파일을 다운로드 되도록 만들기 === --%>
+	 	   <tr>
+	 	      <th>첨부파일</th>
+	 	      <td>
+	 	         <c:if test="${sessionScope.loginuser != null}">
+	 	            <a href="<%= ctxPath%>/board/download?seq=${requestScope.boardvo.seq}">${requestScope.boardvo.orgFilename}</a>
+	 	         </c:if>
+	 	         <c:if test="${sessionScope.loginuser == null}">
+	 	            ${requestScope.boardvo.orgFilename}
+	 	         </c:if>
+	 	      </td>
+	 	   </tr>
+	 	   
 	 	</table>
 	 </c:if> 
 	 
@@ -603,6 +615,11 @@
 		 <c:if test="${not empty sessionScope.loginuser && sessionScope.loginuser.userid == requestScope.boardvo.fk_userid}">
 		    <button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= ctxPath%>/board/edit/${requestScope.boardvo.seq}'">글수정하기</button>
 		    <button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= ctxPath%>/board/del/${requestScope.boardvo.seq}'">글삭제하기</button>
+		 </c:if>
+		 
+		 <%-- === #133. 어떤 글에 대한 답변글쓰기는 로그인 되어진 회원의 gradelevel 컬럼의 값이 10인 직원들만 답변글쓰기가 가능하다. === --%> 
+		 <c:if test="${not empty sessionScope.loginuser && sessionScope.loginuser.gradelevel == 10}"> 
+		     <button type="button" class="btn btn-secondary btn-sm mr-3" onclick="javascript:location.href='<%= ctxPath%>/board/add?subject=${requestScope.boardvo.subject}&fk_seq=${requestScope.boardvo.seq}&groupno=${requestScope.boardvo.groupno}&depthno=${requestScope.boardvo.depthno}'">답변글쓰기</button>
 		 </c:if>
 		 
 		 

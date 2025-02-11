@@ -58,12 +58,20 @@ public class BoardDAO_imple implements BoardDAO {
 	}
 
 
+	// === #165. 1개글 삭제할 때 먼저 첨부파일명을 알아오기 위한 것 === //
+	@Override
+	public Map<String, String> getView_delete(String seq) {
+		Map<String, String> boardmap = sqlsession.selectOne("board.getView_delete", seq);
+		return boardmap;
+	}
+	
 	// === #54. 1개글 삭제하기 === //
 	@Override
 	public int del(String seq) {
 		int n = sqlsession.delete("board.del", seq);
 		return n;
 	}
+	
 
     // === #61.1  댓글쓰기(tbl_comment 테이블에 insert) === //
 	@Override
@@ -172,16 +180,23 @@ public class BoardDAO_imple implements BoardDAO {
 		int totalCount = sqlsession.selectOne("board.getCommentTotalCount", parentSeq);
 		return totalCount;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+	// === #138. tbl_board 테이블에서 groupno 컬럼의 최대값 알아오기 ===
+	@Override
+	public int getGroupnoMax() {
+		int maxgroupno = sqlsession.selectOne("board.getGroupnoMax");
+		return maxgroupno;
+	}
+
+
+	// === #154. 글쓰기(파일첨부가 있는 글쓰기) 
+	@Override
+	public int add_withFile(BoardVO boardvo) {
+		int n = sqlsession.insert("board.add_withFile", boardvo);
+		return n;
+	}
+
 	
 	
 	

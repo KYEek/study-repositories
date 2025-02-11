@@ -270,8 +270,11 @@
 		                  <%-- === 댓글쓰기 및 답변형 및 파일첨부가 있는 게시판 시작 === --%>
 		                     <%-- 첨부파일이 없는 경우 시작 --%>
 			                  
-			                  <%-- 댓글이 있는 경우 시작 --%>
-				                  <c:if test="${boardvo.commentCount > 0}">
+			                  <%-- ========= #157. 첨부파일이 없는 경우 시작 ========= --%>
+			                  <c:if test="${empty boardvo.fileName}">
+			                  <%-- >>>>>>>>> #142. 원글인 경우 시작 <<<<<<<<< --%>
+			                      <%-- 댓글이 존재하는 경우 시작 --%>
+				                  <c:if test="${boardvo.depthno == 0 && boardvo.commentCount > 0}">
 					                  <c:if test="${fn:length(boardvo.subject) < 30}">
 					                     <span class="subject" onclick="goView('${boardvo.seq}')">${boardvo.subject}<span style="vertical-align: super;">[<span style="color: red; font-style: italic; font-size: 9pt; font-weight: bold;">${boardvo.commentCount}</span>]</span></span>
 					                  </c:if>
@@ -279,10 +282,10 @@
 					                     <span class="subject" onclick="goView('${boardvo.seq}')">${fn:substring(boardvo.subject, 0, 28)}..<span style="vertical-align: super;">[<span style="color: red; font-style: italic; font-size: 9pt; font-weight: bold;">${boardvo.commentCount}</span>]</span></span>
 					                  </c:if>
 				                  </c:if>
-			                  <%-- 댓글이 있는 경우 끝 --%>
+			                      <%-- 댓글이 존재하는 경우 끝 --%>
 			                  
-			                  <%-- 댓글이 없는 경우 시작 --%>
-			                  	  <c:if test="${boardvo.commentCount == 0}">
+			                      <%-- 댓글이 존재하지 않는 경우 시작 --%>
+			                  	  <c:if test="${boardvo.depthno == 0 && boardvo.commentCount == 0}">
 					                  <c:if test="${fn:length(boardvo.subject) < 30}">
 					                     <span class="subject" onclick="goView('${boardvo.seq}')">${boardvo.subject}</span>
 					                  </c:if>
@@ -290,9 +293,90 @@
 					                     <span class="subject" onclick="goView('${boardvo.seq}')">${fn:substring(boardvo.subject, 0, 28)}..</span>
 					                  </c:if>
 				                  </c:if>
-			                  <%-- 댓글이 없는 경우 끝 --%>
+			                      <%-- 댓글이 존재하지 않는 경우 끝 --%>
+			                  <%-- >>>>>>>>> 원글인 경우 끝 <<<<<<<<< --%>
 			                  
-		                     <%-- 첨부파일이 없는 경우 끝 --%>
+			                  
+			                  <%-- >>>>>>>>> #143. 답변글인 경우 들여쓰기 시작 <<<<<<<<< --%>
+			                      <%-- 댓글이 존재하는 경우 시작 --%>
+				                  <c:if test="${boardvo.depthno > 0 && boardvo.commentCount > 0}">
+					                  <c:if test="${fn:length(boardvo.subject) < 30}">
+					                     <span class="subject" onclick="goView('${boardvo.seq}')"><span style="color: red; font-style: italic; padding-left: ${boardvo.depthno * 20}px;">└Re&nbsp;</span>${boardvo.subject}<span style="vertical-align: super;">[<span style="color: red; font-style: italic; font-size: 9pt; font-weight: bold;">${boardvo.commentCount}</span>]</span></span>
+					                  </c:if>
+					                  <c:if test="${fn:length(boardvo.subject) >= 30}">
+					                     <span class="subject" onclick="goView('${boardvo.seq}')"><span style="color: red; font-style: italic; padding-left: ${boardvo.depthno * 20}px;">└Re&nbsp;</span>${fn:substring(boardvo.subject, 0, 28)}..<span style="vertical-align: super;">[<span style="color: red; font-style: italic; font-size: 9pt; font-weight: bold;">${boardvo.commentCount}</span>]</span></span>
+					                  </c:if>
+				                  </c:if>
+			                      <%-- 댓글이 존재하는 경우 끝 --%>
+			                  
+			                      <%-- 댓글이 존재하지 않는 경우 시작 --%>
+			                  	  <c:if test="${boardvo.depthno > 0 && boardvo.commentCount == 0}">
+					                  <c:if test="${fn:length(boardvo.subject) < 30}">
+					                     <span class="subject" onclick="goView('${boardvo.seq}')"><span style="color: red; font-style: italic; padding-left: ${boardvo.depthno * 20}px;">└Re&nbsp;</span>${boardvo.subject}</span>
+					                  </c:if>
+					                  <c:if test="${fn:length(boardvo.subject) >= 30}">
+					                     <span class="subject" onclick="goView('${boardvo.seq}')"><span style="color: red; font-style: italic; padding-left: ${boardvo.depthno * 20}px;">└Re&nbsp;</span>${fn:substring(boardvo.subject, 0, 28)}..</span>
+					                  </c:if>
+				                  </c:if>
+			                      <%-- 댓글이 존재하지 않는 경우 끝 --%>
+			                  <%-- >>>>>>>>> 답변글인 경우 들여쓰기 끝 <<<<<<<<< --%>
+			                  </c:if>
+			                <%-- ========= 첨부파일이 없는 경우 끝 ========= --%>
+			                
+			                
+			                <%-- ========= #158. 첨부파일이 있는 경우 시작 ========= --%>
+			                  <c:if test="${not empty boardvo.fileName}">
+			                  <%-- >>>>>>>>> #142. 원글인 경우 시작 <<<<<<<<< --%>
+			                      <%-- 댓글이 존재하는 경우 시작 --%>
+				                  <c:if test="${boardvo.depthno == 0 && boardvo.commentCount > 0}">
+					                  <c:if test="${fn:length(boardvo.subject) < 30}">
+					                     <span class="subject" onclick="goView('${boardvo.seq}')">${boardvo.subject}&nbsp;<img src="<%= ctxPath%>/images/disk.gif" /><span style="vertical-align: super;">[<span style="color: red; font-style: italic; font-size: 9pt; font-weight: bold;">${boardvo.commentCount}</span>]</span></span>
+					                  </c:if>
+					                  <c:if test="${fn:length(boardvo.subject) >= 30}">
+					                     <span class="subject" onclick="goView('${boardvo.seq}')">${fn:substring(boardvo.subject, 0, 28)}..&nbsp;<img src="<%= ctxPath%>/images/disk.gif" /><span style="vertical-align: super;">[<span style="color: red; font-style: italic; font-size: 9pt; font-weight: bold;">${boardvo.commentCount}</span>]</span></span>
+					                  </c:if>
+				                  </c:if>
+			                      <%-- 댓글이 존재하는 경우 끝 --%>
+			                  
+			                      <%-- 댓글이 존재하지 않는 경우 시작 --%>
+			                  	  <c:if test="${boardvo.depthno == 0 && boardvo.commentCount == 0}">
+					                  <c:if test="${fn:length(boardvo.subject) < 30}">
+					                     <span class="subject" onclick="goView('${boardvo.seq}')">${boardvo.subject}&nbsp;<img src="<%= ctxPath%>/images/disk.gif" /></span>
+					                  </c:if>
+					                  <c:if test="${fn:length(boardvo.subject) >= 30}">
+					                     <span class="subject" onclick="goView('${boardvo.seq}')">${fn:substring(boardvo.subject, 0, 28)}..&nbsp;<img src="<%= ctxPath%>/images/disk.gif" /></span>
+					                  </c:if>
+				                  </c:if>
+			                      <%-- 댓글이 존재하지 않는 경우 끝 --%>
+			                  <%-- >>>>>>>>> 원글인 경우 끝 <<<<<<<<< --%>
+			                  
+			                  
+			                  <%-- >>>>>>>>> #143. 답변글인 경우 들여쓰기 시작 <<<<<<<<< --%>
+			                      <%-- 댓글이 존재하는 경우 시작 --%>
+				                  <c:if test="${boardvo.depthno > 0 && boardvo.commentCount > 0}">
+					                  <c:if test="${fn:length(boardvo.subject) < 30}">
+					                     <span class="subject" onclick="goView('${boardvo.seq}')"><span style="color: red; font-style: italic; padding-left: ${boardvo.depthno * 20}px;">└Re&nbsp;</span>${boardvo.subject}&nbsp;<img src="<%= ctxPath%>/images/disk.gif" /><span style="vertical-align: super;">[<span style="color: red; font-style: italic; font-size: 9pt; font-weight: bold;">${boardvo.commentCount}</span>]</span></span>
+					                  </c:if>
+					                  <c:if test="${fn:length(boardvo.subject) >= 30}">
+					                     <span class="subject" onclick="goView('${boardvo.seq}')"><span style="color: red; font-style: italic; padding-left: ${boardvo.depthno * 20}px;">└Re&nbsp;</span>${fn:substring(boardvo.subject, 0, 28)}..&nbsp;<img src="<%= ctxPath%>/images/disk.gif" /><span style="vertical-align: super;">[<span style="color: red; font-style: italic; font-size: 9pt; font-weight: bold;">${boardvo.commentCount}</span>]</span></span>
+					                  </c:if>
+				                  </c:if>
+			                      <%-- 댓글이 존재하는 경우 끝 --%>
+			                  
+			                      <%-- 댓글이 존재하지 않는 경우 시작 --%>
+			                  	  <c:if test="${boardvo.depthno > 0 && boardvo.commentCount == 0}">
+					                  <c:if test="${fn:length(boardvo.subject) < 30}">
+					                     <span class="subject" onclick="goView('${boardvo.seq}')"><span style="color: red; font-style: italic; padding-left: ${boardvo.depthno * 20}px;">└Re&nbsp;</span>${boardvo.subject}&nbsp;<img src="<%= ctxPath%>/images/disk.gif" /></span>
+					                  </c:if>
+					                  <c:if test="${fn:length(boardvo.subject) >= 30}">
+					                     <span class="subject" onclick="goView('${boardvo.seq}')"><span style="color: red; font-style: italic; padding-left: ${boardvo.depthno * 20}px;">└Re&nbsp;</span>${fn:substring(boardvo.subject, 0, 28)}..&nbsp;<img src="<%= ctxPath%>/images/disk.gif" /></span>
+					                  </c:if>
+				                  </c:if>
+			                      <%-- 댓글이 존재하지 않는 경우 끝 --%>
+			                  <%-- >>>>>>>>> 답변글인 경우 들여쓰기 끝 <<<<<<<<< --%>
+			                  </c:if>
+			                <%-- ========= 첨부파일이 있는 경우 끝 ========= --%>			                
+			                  
 		                  <%-- === 댓글쓰기 및 답변형 및 파일첨부가 있는 게시판 끝 === --%>   
 		              </td>
 		              <td align="center">${boardvo.name}</td>

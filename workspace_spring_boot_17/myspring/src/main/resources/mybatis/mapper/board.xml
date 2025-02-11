@@ -7,9 +7,44 @@
 <mapper namespace="board">
    
    <!-- === #31. 파일첨부가 없는 글쓰기 === -->
+   <!--  
+     <insert id="add" parameterType="BoardVO">
+       insert into tbl_board(seq, fk_userid, name, subject, content, pw, readCount, regDate, status)
+       values(boardSeq.nextval, #{fk_userid}, #{name}, #{subject}, #{content}, #{pw}, default, default, default) 
+     </insert>
+   -->
+   
+   <!-- === #140. 원글쓰기 또는 답변글쓰기 (파일첨부가 없는 글쓰기) === 
+                  먼저, 위의 #31 을 주석처리 한 이후에 아래처럼 해야 한다. -->
    <insert id="add" parameterType="BoardVO">
-      insert into tbl_board(seq, fk_userid, name, subject, content, pw, readCount, regDate, status)
-      values(boardSeq.nextval, #{fk_userid}, #{name}, #{subject}, #{content}, #{pw}, default, default, default) 
+      <!-- 원글쓰기인 경우 -->
+      <if test='fk_seq.equals("")'>
+        insert into tbl_board(seq, fk_userid, name, subject, content, pw, readCount, regDate, status, groupno, fk_seq, depthno)
+        values(boardSeq.nextval, #{fk_userid}, #{name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, default, default) 
+      </if>
+      
+      <!-- 답변글쓰기인 경우 -->
+      <if test='!fk_seq.equals("")'>
+        insert into tbl_board(seq, fk_userid, name, subject, content, pw, readCount, regDate, status, groupno, fk_seq, depthno)
+        values(boardSeq.nextval, #{fk_userid}, #{name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, #{fk_seq}, #{depthno}+1) 
+      </if>  
+   </insert>
+   
+   
+   <!-- === #155. 원글쓰기 또는 답변글쓰기 (파일첨부가 있는 글쓰기) === 
+                  먼저, 위의 #31 을 주석처리 한 이후에 아래처럼 해야 한다. -->
+   <insert id="add_withFile" parameterType="BoardVO">
+      <!-- 원글쓰기인 경우 -->
+      <if test='fk_seq.equals("")'>
+        insert into tbl_board(seq, fk_userid, name, subject, content, pw, readCount, regDate, status, groupno, fk_seq, depthno, fileName, orgFilename, fileSize)  
+        values(boardSeq.nextval, #{fk_userid}, #{name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, default, default, #{fileName}, #{orgFilename}, #{fileSize}) 
+      </if>
+      
+      <!-- 답변글쓰기인 경우 -->
+      <if test='!fk_seq.equals("")'>
+        insert into tbl_board(seq, fk_userid, name, subject, content, pw, readCount, regDate, status, groupno, fk_seq, depthno, fileName, orgFilename, fileSize)
+        values(boardSeq.nextval, #{fk_userid}, #{name}, #{subject}, #{content}, #{pw}, default, default, default, #{groupno}, #{fk_seq}, #{depthno}+1, #{fileName}, #{orgFilename}, #{fileSize}) 
+      </if>  
    </insert>
    
    
@@ -38,6 +73,7 @@
    
    
    <!-- === #39. 글 1개 조회하기 === -->
+<!-- 
    <select id="getView" resultType="BoardVO" parameterType="HashMap">
 		SELECT previousseq, 
 		       case when length(previoussubject) &lt; 30 then previoussubject 
@@ -53,6 +89,111 @@
 		          , seq, fk_userid, name, subject, content, readCount, regDate, pw  
 		          , lead(seq) over(order by seq desc) AS nextseq
 		          , lead(subject) over(order by seq desc) AS nextsubject
+		     from tbl_board
+		     where status = 1
+-->		     
+		 <!-- === #109. 이전글제목, 다음글제목 보여줄때 검색이 있는지 여부를 넘겨주기 시작 === -->    
+<!--
+		     <choose>
+		        <when test='searchType == "subject" and searchWord != ""'>
+		          and lower(subject) like '%'||lower(#{searchWord})||'%'
+		        </when>
+		     
+		        <when test='searchType == "content" and searchWord != ""'>
+		          and lower(content) like '%'||lower(#{searchWord})||'%'
+		        </when>
+		     
+		        <when test='searchType == "subject_content" and searchWord != ""'>
+		          and (lower(subject) like '%'||lower(#{searchWord})||'%' or lower(content) like '%'||lower(#{searchWord})||'%') 
+		        </when>
+		        
+		        <when test='searchType == "name" and searchWord != ""'>
+		          and lower(name) like '%'||lower(#{searchWord})||'%'
+		        </when>
+		        
+		        <otherwise></otherwise>
+		     </choose>
+-->		     
+		 <!-- === 이전글제목, 다음글제목 보여줄때 검색이 있는지 여부를 넘겨주기 끝 === -->    
+<!--		 
+		 ) V
+		WHERE V.seq = #{seq}
+   </select>
+-->	   
+   
+   <!-- === #132. 댓글 및 답변글쓰기 게시판에서 글 1개 조회하기 === 
+                  먼저 위의 #39 을 주석처리 하고서 아래와 같이 한다. -->
+ <!--    
+   <select id="getView" resultType="BoardVO" parameterType="HashMap">
+		SELECT previousseq, 
+		       case when length(previoussubject) &lt; 30 then previoussubject 
+                    else substr(previoussubject, 1, 28)||'..' end AS previoussubject
+		     , seq, fk_userid, name, subject, content, readCount, regDate, pw
+		     , nextseq, 
+		       case when length(nextsubject) &lt; 30 then nextsubject 
+                    else substr(nextsubject, 1, 28)||'..' end AS nextsubject
+             , groupno, fk_seq, depthno       
+		FROM
+		 (
+		     select lag(seq) over(order by seq desc) AS previousseq
+		          , lag(subject) over(order by seq desc) AS previoussubject
+		          , seq, fk_userid, name, subject, content, readCount, regDate, pw  
+		          , lead(seq) over(order by seq desc) AS nextseq
+		          , lead(subject) over(order by seq desc) AS nextsubject
+		          , groupno, fk_seq, depthno
+		     from tbl_board
+		     where status = 1
+ -->		     
+		 <!-- === #109. 이전글제목, 다음글제목 보여줄때 검색이 있는지 여부를 넘겨주기 시작 === -->    
+ <!--		     
+		     <choose>
+		        <when test='searchType == "subject" and searchWord != ""'>
+		          and lower(subject) like '%'||lower(#{searchWord})||'%'
+		        </when>
+		     
+		        <when test='searchType == "content" and searchWord != ""'>
+		          and lower(content) like '%'||lower(#{searchWord})||'%'
+		        </when>
+		     
+		        <when test='searchType == "subject_content" and searchWord != ""'>
+		          and (lower(subject) like '%'||lower(#{searchWord})||'%' or lower(content) like '%'||lower(#{searchWord})||'%') 
+		        </when>
+		        
+		        <when test='searchType == "name" and searchWord != ""'>
+		          and lower(name) like '%'||lower(#{searchWord})||'%'
+		        </when>
+		        
+		        <otherwise></otherwise>
+		     </choose>
+ -->		     
+		 <!-- === 이전글제목, 다음글제목 보여줄때 검색이 있는지 여부를 넘겨주기 끝 === -->    
+ <!--		 
+		 ) V
+		WHERE V.seq = to_number(#{seq})
+   </select>
+ -->  
+   
+   <!-- === #159. 파일첨부가 있는 댓글 및 답변글쓰기 게시판에서 글 1개 조회하기 === 
+                  먼저 위의 #132 을 주석처리 하고서 아래와 같이 한다. -->
+   <select id="getView" resultType="BoardVO" parameterType="HashMap">
+		SELECT previousseq, 
+		       case when length(previoussubject) &lt; 30 then previoussubject 
+                    else substr(previoussubject, 1, 28)||'..' end AS previoussubject
+		     , seq, fk_userid, name, subject, content, readCount, regDate, pw
+		     , nextseq, 
+		       case when length(nextsubject) &lt; 30 then nextsubject 
+                    else substr(nextsubject, 1, 28)||'..' end AS nextsubject
+             , groupno, fk_seq, depthno
+             , fileName, orgFilename, fileSize     
+		FROM
+		 (
+		     select lag(seq) over(order by seq desc) AS previousseq
+		          , lag(subject) over(order by seq desc) AS previoussubject
+		          , seq, fk_userid, name, subject, content, readCount, regDate, pw  
+		          , lead(seq) over(order by seq desc) AS nextseq
+		          , lead(subject) over(order by seq desc) AS nextsubject
+		          , groupno, fk_seq, depthno
+		          , fileName, orgFilename, fileSize
 		     from tbl_board
 		     where status = 1
 		 <!-- === #109. 이전글제목, 다음글제목 보여줄때 검색이 있는지 여부를 넘겨주기 시작 === -->    
@@ -77,8 +218,8 @@
 		     </choose>
 		 <!-- === 이전글제목, 다음글제목 보여줄때 검색이 있는지 여부를 넘겨주기 끝 === -->    
 		 ) V
-		WHERE V.seq = #{seq}
-   </select>
+		WHERE V.seq = to_number(#{seq})
+   </select>   
    
    
    <!-- === #41. 글조회수 1증가 하기 === -->
@@ -95,6 +236,20 @@
    	    where seq = #{seq}
    </update>
    
+   
+   <!-- === #166. 1개글 삭제할 때 먼저 사진이미지파일명 및 첨부파일명을 알아오기 위한 것 === -->
+   <resultMap type="HashMap" id="getView_delete_map">
+      <result property="seq" 			column="seq"  			javaType="String" />
+      <result property="filename" 		column="filename"  		javaType="String" />
+      <result property="photofilename" 	column="photofilename"  javaType="String" />
+   </resultMap>
+   
+   <select id="getView_delete" parameterType="String" resultMap="getView_delete_map">
+		select seq, filename, substr(func_photo_upload_delete(seq), 2) AS photofilename
+		from tbl_board
+		where seq = #{seq}	   
+   </select>
+
    
    <!-- === #55. 1개글 삭제하기 === -->
    <delete id="del" parameterType="String">
@@ -254,7 +409,7 @@
    
    
    <!-- === #101. "Oracle 11g 와 호환" 글목록 가져오기(페이징 처리 했으며, 검색어가 있는 것 또는 검색어가 없는 것 모두 포함한 것이다.) === --> 
-   <!-- 
+ <!-- 
    <select id="boardListSearch_withPaging" parameterType="HashMap" resultType="BoardVO"> 
 		SELECT seq, fk_userid, name, subject, readCount, regDate, commentCount 
 		FROM 
@@ -283,9 +438,10 @@
 		) V
 		WHERE rno BETWEEN to_number(#{startRno}) AND to_number(#{endRno})
    </select>
-   -->
+ -->
    
    <!-- === #101. "Oracle 12c 이상에서만 가능함" 글목록 가져오기(페이징 처리 했으며, 검색어가 있는 것 또는 검색어가 없는 것 모두 포함한 것이다.) === --> 
+ <!--   
    <select id="boardListSearch_withPaging" parameterType="HashMap" resultType="BoardVO"> 
 		select seq, fk_userid, name, subject
 		     , readCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate 
@@ -311,7 +467,183 @@
 		OFFSET (to_number(#{currentShowPageNo})-1)*10 ROW  
 		FETCH NEXT 10 ROW ONLY
    </select>
+ -->  
    
+ <!-- === #141. "Oracle 11g 와 호환" 답변형 게시판의 글목록 가져오기(페이징 처리 했으며, 검색어가 있는 것 또는 검색어가 없는 것 모두 포함한 것이다.) ===
+                먼저, 위의 #101 을 주석처리 한 이후에 아래처럼 해야 한다. --> 
+ <!--    
+   <select id="boardListSearch_withPaging" parameterType="HashMap" resultType="BoardVO"> 
+		SELECT seq, fk_userid, name, subject, readCount, regDate, commentCount
+		     , groupno, fk_seq, depthno
+		FROM 
+		(  
+		  SELECT rownum AS rno
+		       , seq, fk_userid, name, subject, readCount, regDate, commentCount
+		       , groupno, fk_seq, depthno
+		  FROM 
+		  (
+		      select seq, fk_userid, name, subject
+		           , readCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate 
+		           , commentCount
+		           , groupno, fk_seq, depthno
+		      from tbl_board
+		      where status = 1 
+		      <choose>
+		       <when test='searchType == "subject" and searchWord != ""'>
+		         and lower(subject) like '%'||lower(#{searchWord})||'%'
+		       </when>
+		       <when test='searchType == "content" and searchWord != ""'>
+		         and lower(content) like '%'||lower(#{searchWord})||'%'
+		       </when>
+		       <when test='searchType == "subject_content" and searchWord != ""'>
+		         and (lower(subject) like '%'||lower(#{searchWord})||'%' or lower(content) like '%'||lower(#{searchWord})||'%')
+		       </when>
+		       <when test='searchType == "name" and searchWord != ""'>
+		         and lower(name) like '%'||lower(#{searchWord})||'%'
+		       </when>
+		       <otherwise></otherwise>
+		    </choose>
+		      start with fk_seq = 0 
+		      connect by prior seq = fk_seq
+		      order siblings by groupno desc, seq asc               
+		  ) V
+		) T   
+		WHERE rno BETWEEN to_number(#{startRno}) AND to_number(#{endRno})
+   </select>
+ -->  
+   <!-- 
+        order by 로 정렬할 경우는 select 되어진 모든 데이터를 가지고 정렬을 하는 것이고,
+        order siblings by 각 계층별로 정렬을 하는 것이다. 
+        order by 로만 정렬을 하게 되면 계층구조가 깨질수 있기 때문에 계층구조는 그대로 유지하면서 동일 부모를 가진 자식행들 끼리의 정렬 기준을 주는 것이 order siblings by 이다.
+   -->
+   
+   
+   <!-- === #141. "Oracle 12c 이상에서만 가능함" 답변형 게시판의 글목록 가져오기(페이징 처리 했으며, 검색어가 있는 것 또는 검색어가 없는 것 모두 포함한 것이다.) === --> 
+ <!-- 
+   <select id="boardListSearch_withPaging" parameterType="HashMap" resultType="BoardVO"> 
+		select seq, fk_userid, name, subject
+		     , readCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate 
+		     , commentCount
+		     , groupno, fk_seq, depthno 
+		from tbl_board
+		where status = 1 
+		<choose>
+	       <when test='searchType == "subject" and searchWord != ""'>
+	         and lower(subject) like '%'||lower(#{searchWord})||'%'
+	       </when>
+	       <when test='searchType == "content" and searchWord != ""'>
+	         and lower(content) like '%'||lower(#{searchWord})||'%'
+	       </when>
+	       <when test='searchType == "subject_content" and searchWord != ""'>
+	         and (lower(subject) like '%'||lower(#{searchWord})||'%' or lower(content) like '%'||lower(#{searchWord})||'%')
+	       </when>
+	       <when test='searchType == "name" and searchWord != ""'>
+	         and lower(name) like '%'||lower(#{searchWord})||'%'
+	       </when>
+	       <otherwise></otherwise>
+	    </choose>
+	    START WITH fk_seq = 0 
+		CONNECT BY PRIOR seq = fk_seq
+		ORDER SIBLINGS BY groupno DESC, seq ASC
+		OFFSET (to_number(#{currentShowPageNo})-1)*10 ROW  
+		FETCH NEXT 10 ROW ONLY
+   </select> 
+ -->
+   <!-- 
+        order by 로 정렬할 경우는 select 되어진 모든 데이터를 가지고 정렬을 하는 것이고,
+        order siblings by 각 계층별로 정렬을 하는 것이다. 
+        order by 로만 정렬을 하게 되면 계층구조가 깨질수 있기 때문에 계층구조는 그대로 유지하면서 동일 부모를 가진 자식행들 끼리의 정렬 기준을 주는 것이 order siblings by 이다.
+   -->
+
+
+ <!-- === #156. "Oracle 11g 와 호환" 파일첨부가 있는 답변형 게시판의 글목록 가져오기(페이징 처리 했으며, 검색어가 있는 것 또는 검색어가 없는 것 모두 포함한 것이다.) ===
+                먼저, 위의 #141 을 주석처리 한 이후에 아래처럼 해야 한다. --> 
+ <!--    
+   <select id="boardListSearch_withPaging" parameterType="HashMap" resultType="BoardVO"> 
+		SELECT seq, fk_userid, name, subject, readCount, regDate, commentCount
+		     , groupno, fk_seq, depthno
+		     , fileName
+		FROM 
+		(  
+		  SELECT rownum AS rno
+		       , seq, fk_userid, name, subject, readCount, regDate, commentCount
+		       , groupno, fk_seq, depthno
+		       , fileName
+		  FROM 
+		  (
+		      select seq, fk_userid, name, subject
+		           , readCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate 
+		           , commentCount
+		           , groupno, fk_seq, depthno
+		           , fileName
+		      from tbl_board
+		      where status = 1 
+		      <choose>
+		       <when test='searchType == "subject" and searchWord != ""'>
+		         and lower(subject) like '%'||lower(#{searchWord})||'%'
+		       </when>
+		       <when test='searchType == "content" and searchWord != ""'>
+		         and lower(content) like '%'||lower(#{searchWord})||'%'
+		       </when>
+		       <when test='searchType == "subject_content" and searchWord != ""'>
+		         and (lower(subject) like '%'||lower(#{searchWord})||'%' or lower(content) like '%'||lower(#{searchWord})||'%')
+		       </when>
+		       <when test='searchType == "name" and searchWord != ""'>
+		         and lower(name) like '%'||lower(#{searchWord})||'%'
+		       </when>
+		       <otherwise></otherwise>
+		    </choose>
+		      start with fk_seq = 0 
+		      connect by prior seq = fk_seq
+		      order siblings by groupno desc, seq asc               
+		  ) V
+		) T   
+		WHERE rno BETWEEN to_number(#{startRno}) AND to_number(#{endRno})
+   </select>
+ -->  
+   <!-- 
+        order by 로 정렬할 경우는 select 되어진 모든 데이터를 가지고 정렬을 하는 것이고,
+        order siblings by 각 계층별로 정렬을 하는 것이다. 
+        order by 로만 정렬을 하게 되면 계층구조가 깨질수 있기 때문에 계층구조는 그대로 유지하면서 동일 부모를 가진 자식행들 끼리의 정렬 기준을 주는 것이 order siblings by 이다.
+   -->
+   
+   
+   <!-- === #156. "Oracle 12c 이상에서만 가능함" 파일첨부가 있는 답변형 게시판의 글목록 가져오기(페이징 처리 했으며, 검색어가 있는 것 또는 검색어가 없는 것 모두 포함한 것이다.) === --> 
+   <select id="boardListSearch_withPaging" parameterType="HashMap" resultType="BoardVO"> 
+		select seq, fk_userid, name, subject
+		     , readCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate 
+		     , commentCount
+		     , groupno, fk_seq, depthno
+		     , fileName 
+		from tbl_board
+		where status = 1 
+		<choose>
+	       <when test='searchType == "subject" and searchWord != ""'>
+	         and lower(subject) like '%'||lower(#{searchWord})||'%'
+	       </when>
+	       <when test='searchType == "content" and searchWord != ""'>
+	         and lower(content) like '%'||lower(#{searchWord})||'%'
+	       </when>
+	       <when test='searchType == "subject_content" and searchWord != ""'>
+	         and (lower(subject) like '%'||lower(#{searchWord})||'%' or lower(content) like '%'||lower(#{searchWord})||'%')
+	       </when>
+	       <when test='searchType == "name" and searchWord != ""'>
+	         and lower(name) like '%'||lower(#{searchWord})||'%'
+	       </when>
+	       <otherwise></otherwise>
+	    </choose>
+	    START WITH fk_seq = 0 
+		CONNECT BY PRIOR seq = fk_seq
+		ORDER SIBLINGS BY groupno DESC, seq ASC
+		OFFSET (to_number(#{currentShowPageNo})-1)*10 ROW  
+		FETCH NEXT 10 ROW ONLY
+   </select> 
+   <!-- 
+        order by 로 정렬할 경우는 select 되어진 모든 데이터를 가지고 정렬을 하는 것이고,
+        order siblings by 각 계층별로 정렬을 하는 것이다. 
+        order by 로만 정렬을 하게 되면 계층구조가 깨질수 있기 때문에 계층구조는 그대로 유지하면서 동일 부모를 가진 자식행들 끼리의 정렬 기준을 주는 것이 order siblings by 이다.
+   -->
+ 
    
    <!-- === #121. 원게시물에 딸린 댓글내용들을 페이징 처리하기 === -->
    <select id="getCommentList_Paging" parameterType="HashMap" resultType="CommentVO">
@@ -351,6 +683,14 @@
        where parentSeq = to_number(#{parentSeq})
    </select>
    
+
+   <!-- === #139. tbl_board 테이블에서 groupno 컬럼의 최대값 알아오기 === -->
+   <select id="getGroupnoMax" resultType="int">
+       select nvl(max(groupno), 0) 
+       from tbl_board
+   </select> 
+
+
 
 </mapper>
 

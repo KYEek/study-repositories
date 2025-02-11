@@ -24,7 +24,9 @@ public interface BoardService {
 	int edit(BoardVO boardvo);
 
 	// 1개글 삭제하기
-	int del(String seq);
+//	int del(String seq); // 첨부파일 및 사진이미지가 없는 경우의 글삭제
+	Map<String, String> getView_delete(String seq); // 1개글 삭제할 때 먼저 사진이미지파일명 및 첨부파일명을 알아오기 위한 것 
+	int del(Map<String, String> paraMap); // 첨부파일 및 사진이미지가 있는 경우의 글삭제	
 
 	// 댓글쓰기(Transaction 처리)
 	int addComment(CommentVO commentvo);
@@ -58,14 +60,8 @@ public interface BoardService {
 
 	// 페이징 처리시 보여주는 순번을 나타내기 위한 것
 	int getCommentTotalCount(String parentSeq);
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+	// 글쓰기(파일첨부가 있는 글쓰기)
+	int add_withFile(BoardVO boardvo);
 
 }

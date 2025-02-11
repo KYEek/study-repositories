@@ -471,10 +471,8 @@ commit;
 -- 커밋 완료.
 ----------------------------------------------------------------------
 
-      ---- **** 댓글 및 답변글 및 파일첨부가 있는 게시판 **** ----
-      
---- *** 답변글쓰기는 일반회원은 불가하고 직원(관리파트)들만 답변글쓰기가 가능하도록 한다. *** ---    
-
+   
+--- 인터셉터(interceptor) 예제를 하기 위해서 아래와 같이 한다. ---
 --- *** tbl_member(회원) 테이블에 gradelevel 이라는 컬럼을 추가하겠다. *** ---
 alter table tbl_member
 add gradelevel number default 1;
@@ -588,13 +586,22 @@ ORDER BY seq DESC
 OFFSET (to_number('2')-1)*3 ROW  
 FETCH NEXT 3 ROW ONLY;  -- 2페이지
 
-/
+
+-------------------------------------------------------------------------------
+      ---- **** 댓글 및 답변글 및 파일첨부가 있는 게시판 **** ----
+      
+--- *** 답변글쓰기는 일반회원은 불가하고 직원(관리파트)들만 답변글쓰기가 가능하도록 한다. *** --- 
 
 drop table tbl_comment purge;
 drop sequence commentSeq;
 drop table tbl_board purge;
 drop sequence boardSeq;
-
+/*
+  Table TBL_COMMENT이(가) 삭제되었습니다.
+  Sequence COMMENTSEQ이(가) 삭제되었습니다.
+  Table TBL_BOARD이(가) 삭제되었습니다.
+  Sequence BOARDSEQ이(가) 삭제되었습니다.
+*/
 
 create table tbl_board
 (seq           number                not null    -- 글번호
@@ -627,13 +634,11 @@ create table tbl_board
 ,orgFilename    varchar2(255)                    -- 진짜 파일명(강아지.png)  // 사용자가 파일을 업로드 하거나 파일을 다운로드 할때 사용되어지는 파일명 
 ,fileSize       number                           -- 파일크기 
 
-
 ,constraint PK_tbl_board_seq primary key(seq)
 ,constraint FK_tbl_board_fk_userid foreign key(fk_userid) references tbl_member(userid)
 ,constraint CK_tbl_board_status check( status in(0,1) )
 );
 -- Table TBL_BOARD이(가) 생성되었습니다.
-
 
 create sequence boardSeq
 start with 1
@@ -642,6 +647,7 @@ nomaxvalue
 nominvalue
 nocycle
 nocache;
+-- Sequence BOARDSEQ이(가) 생성되었습니다.
 
 
 create table tbl_comment
@@ -659,6 +665,7 @@ create table tbl_comment
 ,constraint FK_tbl_comment_parentSeq foreign key(parentSeq) references tbl_board(seq) on delete cascade
 ,constraint CK_tbl_comment_status check( status in(1,0) ) 
 );
+-- Table TBL_COMMENT이(가) 생성되었습니다.
 
 create sequence commentSeq
 start with 1
@@ -667,6 +674,7 @@ nomaxvalue
 nominvalue
 nocycle
 nocache;
+-- Sequence COMMENTSEQ이(가) 생성되었습니다.
 
 
 desc tbl_board;
@@ -674,10 +682,10 @@ desc tbl_board;
 begin
     for i in 1..100 loop
         insert into tbl_board(seq, fk_userid, name, subject, content, pw, readCount, regDate, status, groupno)
-        values(boardSeq.nextval, 'dltnstls89', '연규영', '연규영 입니다'||i, '안녕하세요? 연규영'|| i ||' 입니다.', '1234', default, default, default, i);
+        values(boardSeq.nextval, 'seoyh', '서영학', '서영학 입니다'||i, '안녕하세요? 서영학'|| i ||' 입니다.', '1234', default, default, default, i);
     end loop;
 end;
-/
+
 
 begin
     for i in 101..200 loop
@@ -685,32 +693,160 @@ begin
         values(boardSeq.nextval, 'eomjh', '엄정화', '엄정화 입니다'||i, '안녕하세요? 엄정화'|| i ||' 입니다.', '1234', default, default, default, i);
     end loop;
 end;
-/
+
 commit;
 
 select * 
 from tbl_board 
 order by seq desc;
 
+update tbl_board set subject = '문의드립니다. 자바가 뭔가요?'
+where seq = 198;
+
+commit;
+
+select * 
+from tbl_board 
+where seq = 198;
+
+
+---- **** 답변형 게시판의 목록보기 **** ----
+select * 
+from tbl_board 
+order by seq desc;
+
+--- Oracle 11g 방법
+SELECT seq, fk_userid, name, subject, readCount, regDate, commentCount
+     , groupno, fk_seq, depthno
+FROM 
+(  
+  SELECT rownum AS rno
+       , seq, fk_userid, name, subject, readCount, regDate, commentCount
+       , groupno, fk_seq, depthno
+  FROM 
+  (
+      select seq, fk_userid, name, subject
+           , readCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate 
+           , commentCount
+           , groupno, fk_seq, depthno
+      from tbl_board
+      where status = 1 
+      start with fk_seq = 0 
+      connect by prior seq = fk_seq
+      order siblings by groupno desc, seq asc  
+  ) V
+) T   
+-- WHERE rno BETWEEN 1 AND 10;
+WHERE rno BETWEEN 11 AND 20;
+
+
+--- Oracle 12c 이상 방법
+select seq, fk_userid, name, subject
+     , readCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate 
+     , commentCount
+     , groupno, fk_seq, depthno
+from tbl_board
+where status = 1 
+start with fk_seq = 0 
+connect by prior seq = fk_seq
+order siblings by groupno desc, seq asc  
+-- OFFSET (1-1)*10 ROW
+OFFSET (2-1)*10 ROW
+FETCH NEXT 10 ROW ONLY;
+
+
+----------------------------------------------------------------------------
+
+--- 글삭제시 게시글 내용물안에 사진첨부가 들어가 있는 경우 사진첨부파일명을 알아와서 사진첨부파일명을 삭제하기 위한 것 ---
+
+select seq, content
+     , instr(content, '<img src="/myspring/resources/photo_upload/', 1) AS loc_number  
+     , substr(content,
+              instr(content, '<img src="/myspring/resources/photo_upload/', 1) + length('<img src="/myspring/resources/photo_upload/') 
+              )
+     , substr(content,
+              instr(content, '<img src="/myspring/resources/photo_upload/', 1) + length('<img src="/myspring/resources/photo_upload/'),  
+              instr(content, '" title="', 1) - (instr(content, '<img src="/myspring/resources/photo_upload/', 1) + length('<img src="/myspring/resources/photo_upload/'))
+              )         
+from tbl_board
+order by seq desc;
+
+
+-- 202502101219185247836895133100.jpg/202502101219185247836895126800.jpg/202502101219495247868621871500.jpg
 
 create or replace function func_photo_upload_delete
 (p_seq in number)
 return varchar2
 is
-    v_content tbl_board.content%type := '';
-    v_result  varchar2(4000) := '';
-    v_length  number := 0;
+   v_result varchar2(4000) := '';
+   v_content tbl_board.content%type := '';
+   v_length number := 0;
 begin
-    select content into v_content 
-    from tbl_board
-    where seq = p_seq;
-    
-    v_length := length('<img src="/myspring/resources/photo_upload/');
-    
-    while not (instr(v_content, '<img src="/myspring/resources/photo_upload/', 1) = 0) loop
-        v_content := substr(v_content, instr(v_content, '<img src="/myspring/resources/photo_upload/', 1) + v_length);
-        v_result := v_result || '/' || substr(v_content, instr(v_content, '" title="', 1) - 1); 
-    end loop;
-    
-    return v_result;
+   select content into v_content
+   from tbl_board
+   where seq = p_seq;
+  
+   v_length := length('<img src="/myspring/resources/photo_upload/');
+  
+   while not (instr(v_content, '<img src="/myspring/resources/photo_upload/', 1) = 0) loop
+      v_content := substr(v_content, instr(v_content, '<img src="/myspring/resources/photo_upload/', 1) + v_length);
+      v_result := v_result || '/' || substr(v_content, 1, instr(v_content, '" title="', 1) - 1);
+   end loop;
+  
+   return v_result;
 end func_photo_upload_delete;
+-- Function FUNC_PHOTO_UPLOAD_DELETE이(가) 컴파일되었습니다.
+
+select seq, content, substr(func_photo_upload_delete(seq), 2) AS "삭제해야할 photo_upload 파일"
+from tbl_board
+order by seq desc;
+
+select substr(func_photo_upload_delete(seq), 2) AS "삭제해야할 photo_upload 파일"
+from tbl_board
+where seq = 212;
+
+select substr(func_photo_upload_delete(seq), 2) AS "삭제해야할 photo_upload 파일"
+from tbl_board
+where seq = 211;
+
+select seq, filename, substr(func_photo_upload_delete(seq), 2) AS photofilename
+from tbl_board
+where seq = 212; -- 첨부파일명 및 사진이미지가 모두 있는 경우
+
+select seq, filename, substr(func_photo_upload_delete(seq), 2) AS photofilename
+from tbl_board
+where seq = 211;  -- 첨부파일명만 있고 사진이미지가 없는 경우
+
+select seq, filename, substr(func_photo_upload_delete(seq), 2) AS photofilename
+from tbl_board
+where seq = 210; -- 첨부파일명 사진이미지가 모두 없는 경우
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

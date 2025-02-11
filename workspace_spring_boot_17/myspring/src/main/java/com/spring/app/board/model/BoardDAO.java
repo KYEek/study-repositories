@@ -24,6 +24,7 @@ public interface BoardDAO {
 	int edit(BoardVO boardvo);
 
 	// 글 1개 삭제하기
+	Map<String, String> getView_delete(String seq); // 1개글 삭제할 때 먼저 사진이미지파일명 및 첨부파일명을 알아오기 위한 것
 	int del(String seq);
 
 	////////////////////////////////////////////////////////////////////
@@ -64,15 +65,11 @@ public interface BoardDAO {
 
 	// 페이징 처리시 보여주는 순번을 나타내기 위한 것 
 	int getCommentTotalCount(String parentSeq);
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+	// tbl_board 테이블에서 groupno 컬럼의 최대값 알아오기
+	int getGroupnoMax();
+
+	// 글쓰기(파일첨부가 있는 글쓰기) 
+	int add_withFile(BoardVO boardvo);
 
 }

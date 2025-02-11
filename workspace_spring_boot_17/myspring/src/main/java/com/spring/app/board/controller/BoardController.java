@@ -1,6 +1,10 @@
 package com.spring.app.board.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.InputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -20,6 +24,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
@@ -27,6 +33,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import com.spring.app.board.domain.BoardVO;
 import com.spring.app.board.domain.CommentVO;
 import com.spring.app.board.service.BoardService;
+import com.spring.app.common.FileManager;
 import com.spring.app.common.MyUtil;
 import com.spring.app.member.domain.MemberVO;
 
@@ -43,10 +50,96 @@ public class BoardController {
 	private BoardService service;
 	
 	
+	// === #150. 파일업로드 및 파일다운로드를 해주는 FileManager 클래스 의존객체 주입하기(DI : Dependency Injection) === 
+	@Autowired  // Type 에 따라 알아서 Bean 을 주입해준다.
+	private FileManager fileManager; 
+	
+	
 	// === #26. 게시판 글쓰기 폼페이지 요청 === //
 	@GetMapping("add")
 	public ModelAndView requiredLogin_add(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {  // <== Before Advice 를 사용하기         
- 		mav.setViewName("mycontent1/board/add");
+ 		
+		// === #134. 답변글쓰기가 추가된 경우 시작 === //
+		String subject = request.getParameter("subject");
+		
+		if(subject == null) {
+			subject = "";
+		}
+		else {
+			subject = "[답변] " + request.getParameter("subject");
+		}
+		
+		String fk_seq = request.getParameter("fk_seq");
+		
+		if(fk_seq == null) {
+			fk_seq = "";
+		}
+		
+		String groupno = request.getParameter("groupno");
+		String depthno = request.getParameter("depthno");
+		
+	/*
+	    view.jsp 에서 "답변글쓰기" 를 할때 글제목에 [ 또는 ] 이 들어간 경우 아래와 같은 오류가 발생한다.
+	          
+	    HTTP 상태 400 – 잘못된 요청
+	        메시지 : 요청 타겟에서 유효하지 않은 문자가 발견되었습니다. 
+	               유효한 문자들은 RFC 7230과 RFC 3986에 정의되어 있습니다.
+	    
+	    HTTP Status 400 – Bad Request
+	        Message : Invalid character found in the request target    
+	                  The valid characters are defined in RFC 7230 and RFC 3986
+	                      
+	    원인 : get 방식으로 보내는 데이터 값에 [ ] 와 같은 문자가 들어갈 경우임.    
+	    
+	    해결책은 
+	    1. 외장톰캣을 사용할 경우에는 톰캣의 C:\SW\apache-tomcat-10.1.31\conf\server.xml 에서 
+	    <Connector port="9090" protocol="HTTP/1.1"
+           connectionTimeout="20000"
+           redirectPort="8443"
+           maxParameterCount="1000" /> 
+           
+           에 가서
+           
+        <Connector port="9090" protocol="HTTP/1.1"
+           connectionTimeout="20000"
+           redirectPort="8443"
+           maxParameterCount="1000" 
+           relaxedQueryChars="[]()^|&quot;" />  
+                 
+           와 같이 relaxedQueryChars="[]()^|&quot;" 을 추가해주면 된다.
+           
+           
+        2. 내장톰캣을 사용할 경우에는    
+		package com.spring.app.config;
+		
+		import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+		import org.springframework.boot.web.server.WebServerFactoryCustomizer;
+		import org.springframework.context.annotation.Configuration;
+		
+		@Configuration
+		public class EmbeddedTomcatConfig implements WebServerFactoryCustomizer<TomcatServletWebServerFactory> {
+		
+			@Override
+		    public void customize(TomcatServletWebServerFactory factory) {
+		        factory.addConnectorCustomizers(connector -> connector.setProperty("relaxedQueryChars", "<>[\\]^`{|}"));
+		    }
+		
+		}
+    
+	*/	
+		
+	//	System.out.println("~~~ 확인용 subject: " + subject);
+		/*
+		   ~~~ 확인용 subject: [답변] 질문있어요? 졸업식에 가고 싶어요~~		
+		*/
+				
+		mav.addObject("subject", subject);
+		mav.addObject("fk_seq", fk_seq);
+		mav.addObject("groupno", groupno);
+		mav.addObject("depthno", depthno);
+		// === 답변글쓰기가 추가된 경우 끝 === //
+		
+		mav.setViewName("mycontent1/board/add");
 		//  /WEB-INF/views/mycontent1/board/add.jsp 페이지를 만들어야 한다.
 		
 		return mav;
@@ -56,14 +149,113 @@ public class BoardController {
 	// === #28. 게시판 글쓰기 완료 요청 === //
 	@PostMapping("add")
 //	public ModelAndView add(ModelAndView mav, BoardVO boardvo) {   // <== After Advice 를 사용하기 전 
-	public ModelAndView pointPlus_add(Map<String, String> paraMap, ModelAndView mav, BoardVO boardvo) {   // <== After Advice 를 사용하기 	
+//	public ModelAndView pointPlus_add(Map<String, String> paraMap, ModelAndView mav, BoardVO boardvo) {   // <== After Advice 를 사용하기, 파일첨부가 없을 경우 
+	public ModelAndView pointPlus_add(Map<String, String> paraMap, ModelAndView mav, BoardVO boardvo, MultipartHttpServletRequest mrequest) {  
+	// <== #146. After Advice 를 사용하기, 파일첨부가 있을 경우		
+	
 	/*
 	    form 태그의 name 명과  BoardVO 의 필드명이 같다라면 
 	    request.getParameter("form 태그의 name명"); 을 사용하지 않더라도
-	        자동적으로 BoardVO boardvo 에 set 되어진다.
+	    자동적으로 BoardVO boardvo 에 set 되어진다.
 	*/	
 		
-		int n = service.add(boardvo);  // <== 파일첨부가 없는 글쓰기 
+	/*
+	    웹페이지에 요청 form이 enctype="multipart/form-data" 으로 되어있어서 Multipart 요청(파일처리 요청)이 들어올때 
+	    컨트롤러에서는 HttpServletRequest 대신 MultipartHttpServletRequest 인터페이스를 사용해야 한다.
+	    MultipartHttpServletRequest 인터페이스는 HttpServletRequest 인터페이스와 MultipartRequest 인터페이스를 상속받고있다.
+        즉, 웹 요청 정보를 얻기 위한 getParameter()와 같은 메소드와 Multipart(파일처리) 관련 메소드를 모두 사용가능하다.  	
+    */		
+		
+	// 	=== 사용자가 쓴 글에 파일이 첨부되어 있는 것인지, 아니면 파일첨부가 안된것인지 구분을 지어주어야 한다. ===  
+	//  === #148. !!! 첨부파일이 있는 경우 작업 시작 !!! ===
+		MultipartFile attach = boardvo.getAttach(); 
+		
+		if(attach != null) {
+			// attach(첨부파일)가 비어 있지 않으면(즉, 첨부파일이 있는 경우라면)
+			
+			/*
+			   1. 사용자가 보낸 첨부파일을 WAS(톰캣)의 특정 폴더에 저장해주어야 한다.
+			   >>> 파일이 업로드 되어질 특정 경로(폴더)지정해주기 
+			       우리는 WAS 의 /myspring/src/main/webapp/resources/files 라는 폴더를 생성해서 여기로 업로드 해주도록 할 것이다. 
+			 */
+			
+			// WAS 의 webapp 의 절대경로를 알아와야 한다.
+			HttpSession session = mrequest.getSession();
+			String root = session.getServletContext().getRealPath("/");
+			
+		//	System.out.println("~~~ 확인용 webapp 의 절대경로 ==> " + root);
+			// ~~~ 확인용 webapp 의 절대경로 ==> C:\NCS\workspace_spring_boot_17\myspring\src\main\webapp\
+			
+			String path =  root+"resources"+File.separator+"files";  
+			/* File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
+		       운영체제가 Windows 이라면 File.separator 는  "\" 이고,
+		       운영체제가 UNIX, Linux, 매킨토시(맥) 이라면  File.separator 는 "/" 이다. 
+		    */
+			
+			// path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다.
+		//	System.out.println("~~~ 확인용 path ==> " + path);
+			// ~~~ 확인용 path ==> C:\NCS\workspace_spring_boot_17\myspring\src\main\webapp\resources\files
+			
+			/*
+			   2. 파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
+			*/
+			String newFileName = "";
+			// WAS(톰캣)의 디스크에 저장될 파일명
+			
+			byte[] bytes = null;
+			// 첨부파일의 내용물을 담는 것
+			
+			long fileSize = 0;
+			// 첨부파일의 크기
+			
+			
+			try {
+				bytes = attach.getBytes();
+				// 첨부파일의 내용물을 읽어오는 것
+				
+				String originalFilename = attach.getOriginalFilename();
+				// attach.getOriginalFilename() 이 첨부파일명의 파일명(예: 강아지.png) 이다. 
+				
+				System.out.println("~~~ 확인용 originalFilename => " + originalFilename); 
+				
+				// 첨부되어진 파일을 업로드 하는 것이다.
+				newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
+				
+				// === #151. BoardVO boardvo 에 fileName 값과 orgFilename 값과 fileSize 값을 넣어주기
+				boardvo.setFileName(newFileName);
+				// WAS(톰캣)에 저장된 파일명(2025020709291535243254235235234.png)
+				
+				boardvo.setOrgFilename(originalFilename);
+				// 게시판 페이지에서 첨부된 파일(강아지.png)을 보여줄 때 사용.
+				// 또한 사용자가 파일을 다운로드 할때 사용되어지는 파일명으로 사용.
+				
+				fileSize = attach.getSize(); // 첨부파일의 크기(단위는 byte임)
+				boardvo.setFileSize(String.valueOf(fileSize));
+			    
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}// end of if(attach != null)---------
+	//  === !!! 첨부파일이 있는 경우 작업 끝 !!! ===
+				
+	//	int n = service.add(boardvo);  // <== 파일첨부가 없는 글쓰기
+		
+		// === #152. 파일첨부가 있는 글쓰기 또는 파일첨부가 없는 글쓰기로 나뉘어서 service 호출하기 시작 === //
+		// 먼저 위의 int n = service.add(boardvo); 부분을 주석처리 하고서 아래와 같이 한다.
+		
+		int n = 0;
+		
+		if(attach.isEmpty()) {
+			// 파일첨부가 없는 경우라면
+			n = service.add(boardvo);  // <== 파일첨부가 없는 글쓰기
+		}
+		else {
+			// 파일첨부가 있는 경우라면 
+			n = service.add_withFile(boardvo);  // <== 파일첨부가 있는 글쓰기
+		}
+		// === 파일첨부가 있는 글쓰기 또는 파일첨부가 없는 글쓰기로 나뉘어서 service 호출하기 끝 === //
+
 		
 		if(n==1) {
 			mav.setViewName("redirect:/board/list");
@@ -734,7 +926,72 @@ public class BoardController {
 			                @RequestParam String seq,
 			                HttpServletRequest request) {
 		
-		int n = service.del(seq);
+		/////////////////////////////////////////////////////////////////////
+		// === #163. 파일첨부 또는 사진첨부 또는 파일첨부 및 사진첨부가 된 글이라면 글 삭제시 먼저 첨부파일, 사진파일을 삭제해주어야 한다. 시작 === //
+		Map<String, String> boardmap = service.getView_delete(seq);
+		
+		String filename = boardmap.get("filename");
+		// 202502101220495247928548169500.pdf  이것이 바로 WAS(톰캣) 디스크에 저장된 '첨부 파일명' 이다.
+		
+		Map<String, String> paraMap = new HashMap<>();
+		
+		if(filename != null && !"".equals(filename)) {
+			// 첨부파일이 존재하는 경우
+			
+			// 첨부파일이 저장되어 있는 WAS(톰캣) 디스크 경로명을 알아와야만 다운로드를 해줄 수 있다.
+	    	// 이 경로는 우리가 파일첨부를 위해서 /addEnd 에서 설정해두었던 경로와 똑같아야 한다.  
+			// WAS 의 webapp 의 절대경로를 알아와야 한다. 
+			HttpSession session = request.getSession(); 
+			String root = session.getServletContext().getRealPath("/");  
+			
+		 // System.out.println("~~~ 확인용 webapp 의 절대경로 => " + root);
+			// ~~~ 확인용 webapp 의 절대경로 => C:\NCS\workspace_spring_boot_17\myspring\src\main\webapp\
+								
+			String filepath = root+"resources"+File.separator+"files";
+			/* File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
+			      운영체제가 Windows 이라면 File.separator 는  "\" 이고,
+			      운영체제가 UNIX, Linux, 매킨토시(맥) 이라면  File.separator 는 "/" 이다. 
+			*/
+			
+			// file_path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다.
+		 //	System.out.println("~~~ 확인용 filepath => " + filepath);
+			// ~~~ 확인용 filepath => C:\NCS\workspace_spring_boot_17\myspring\src\main\webapp\resources\files 
+			
+			paraMap.put("filepath", filepath); // 삭제해야할 첨부파일이 저장된 경로
+			paraMap.put("filename", filename); // 삭제해야할 첨부파일명 
+		}
+		 
+		
+		// === 글내용중에 사진이미지가 들어가 있는 경우라면 사진이미지 파일도 삭제해주어야 한다.
+		String photofilename = boardmap.get("photofilename");
+		
+	//	System.out.println("~~~ 확인용 photofilename => " + photofilename);
+		/*
+		    ~~~ 확인용 photofilename => null
+		    ~~~ 확인용 photofilename => 202502101219185247836895133100.jpg/202502101219185247836895126800.jpg/202502101219495247868621871500.jpg     
+		*/
+		
+		if(photofilename != null) {
+			// 글내용중에 사진이미지가 들어가 있는 경우라면
+			
+			HttpSession session = request.getSession(); 
+			String root = session.getServletContext().getRealPath("/");  
+			
+			String photo_upload_path = root+"resources"+File.separator+"photo_upload";
+			
+			paraMap.put("photo_upload_path", photo_upload_path); // 삭제해야할 사진이미지 파일이 저장된 경로
+			paraMap.put("photofilename", photofilename);         // 삭제해야할 사진이미지 파일명 
+		}
+		// === 파일첨부 또는 사진첨부 또는 파일첨부 및 사진첨부가 된 글이라면 글 삭제시 먼저 첨부파일을 삭제해주어야 한다. 끝 === //
+		/////////////////////////////////////////////////////////////////////
+		
+	//	int n = service.del(seq);  // 파일첨부가 없는 글 삭제 
+		
+		// === #167. 첨부파일이 추가된 경우 또는 사진이미지가 들어가 있는 경우 글삭제하기 === //
+		//           먼저 위의 int n = service.del(seq); 을 주석처리 하고서 아래와 같이 해야한다.  
+		paraMap.put("seq", seq); // 삭제할 글번호
+		int n = service.del(paraMap); // 파일첨부, 사진이미지가 들었는 경우의 글 삭제하기
+		
 		
 		if(n==1) {
 			mav.addObject("message", "글 삭제 성공!!");
@@ -931,6 +1188,179 @@ public class BoardController {
 	}	
 	
 	
+	// === #161. 첨부파일 다운로드 받기 === //
+	@GetMapping("download")
+	public void requiredLogin_download(HttpServletRequest request, HttpServletResponse response) {
+		
+		String seq = request.getParameter("seq");
+		// 첨부파일이 있는 글번호 
+		
+		/*
+		    첨부파일이 있는 글번호에서
+		    202502071242164990019082166200.jpg 처럼
+		    이러한 fileName 값을 DB에서 가져와야 한다.
+		    또한 orgFilename 값도 DB에서 가져와야 한다.
+		*/
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("seq", seq);
+		paraMap.put("searchType", "");
+		paraMap.put("searchWord", "");
+		
+		
+		// **** 웹브라우저에 출력하기 시작 **** //
+		// HttpServletResponse response 객체는 전송되어져온 데이터를 조작해서 결과물을 나타내고자 할때 쓰인다.
+		response.setContentType("text/html; charset=UTF-8");
+		
+		PrintWriter out = null;
+		// out 은 웹브라우저에 기술하는 대상체라고 생각하자.
+		
+		try {
+		    Integer.parseInt(seq); 
+			
+		    BoardVO boardvo = service.getView_no_increase_readCount(paraMap);
+		    
+		    if(boardvo == null || (boardvo != null && boardvo.getFileName() == null) ) { 
+		    	out = response.getWriter();
+				// out 은 웹브라우저에 기술하는 대상체라고 생각하자.
+				
+				out.println("<script type='text/javascript'>alert('파일다운로드가 불가합니다.'); history.back();</script>");
+				return;
+		    }
+		    
+		    else {
+		    	// 정상적으로 다운로드를 할 경우 
+		    	
+		    	String fileName = boardvo.getFileName();
+		    	// 202502071242164990019082166200.jpg  이것이 바로 WAS(톰캣) 디스크에 저장된 파일명이다.
+		    	
+		    	String orgFilename = boardvo.getOrgFilename(); 
+		    	// 쉐보레전면.jpg   다운로드시 보여줄 파일명
+		    	
+		    	/*
+				   첨부파일이 저장되어있는 WAS(톰캣) 디스크 경로명을 알아와야만 다운로드를 해줄 수 있다.
+				   이 경로는 우리가 파일첨부를 위해서 @PostMapping("add") 에서 설정해두었던 경로와 똑같아야 한다.    
+				*/
+				// WAS 의 webapp 의 절대경로를 알아와야 한다.
+				HttpSession session = request.getSession();
+				String root = session.getServletContext().getRealPath("/");
+				
+			//	System.out.println("~~~ 확인용 webapp 의 절대경로 ==> " + root);
+				// ~~~ 확인용 webapp 의 절대경로 ==> C:\NCS\workspace_spring_boot_17\myspring\src\main\webapp\
+				
+				String path = root+"resources"+File.separator+"files";  
+				/* File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
+			       운영체제가 Windows 이라면 File.separator 는  "\" 이고,
+			       운영체제가 UNIX, Linux, 매킨토시(맥) 이라면  File.separator 는 "/" 이다. 
+			    */
+				
+				// path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다.
+			//	System.out.println("~~~ 확인용 path ==> " + path);
+				// ~~~ 확인용 path ==> C:\NCS\workspace_spring_boot_17\myspring\src\main\webapp\resources\files
+		    	
+				
+				// ***** file 다운로드 하기 ***** //
+				boolean flag = false; // file 다운로드 성공, 실패인지 여부를 알려주는 용도
+				flag = fileManager.doFileDownload(fileName, orgFilename, path, response);
+				// file 다운로드 성공시 flag 는 true,
+				// file 다운로드 실패시 flag 는 false 를 가진다.
+				
+				if(!flag) {
+					// 다운로드가 실패한 경우 메시지를 띄운다.
+					out = response.getWriter();
+					// out 은 웹브라우저에 기술하는 대상체라고 생각하자.
+					
+					out.println("<script type='text/javascript'>alert('파일다운로드가 실패되었습니다.'); history.back();</script>");
+				}
+		    	
+		    }
+			
+		} catch (NumberFormatException | IOException e) {
+			
+			try {
+				out = response.getWriter();
+				// out 은 웹브라우저에 기술하는 대상체라고 생각하자.
+				
+				out.println("<script type='text/javascript'>alert('파일다운로드가 불가합니다.'); history.back();</script>");
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			
+		}
+		
+	}
+	
+		
+	// === #162. 스마트에디터. 글쓰기 또는 글수정시 드래그앤드롭을 이용한 다중 사진 파일 업로드 하기 === //
+	@PostMapping("image/multiplePhotoUpload")
+	public void multiplePhotoUpload(HttpServletRequest request, HttpServletResponse response) {
+		
+		/*
+		   1. 사용자가 보낸 파일을 WAS(톰캣)의 특정 폴더에 저장해주어야 한다.
+		   >>>> 파일이 업로드 되어질 특정 경로(폴더)지정해주기
+		        우리는 WAS 의 webapp/resources/photo_upload 라는 폴더로 지정해준다.
+		*/
+		
+		// WAS 의 webapp 의 절대경로를 알아와야 한다.
+		HttpSession session = request.getSession();
+		String root = session.getServletContext().getRealPath("/");
+		String path = root + "resources"+File.separator+"photo_upload";
+		// path 가 첨부파일들을 저장할 WAS(톰캣)의 폴더가 된다.
+		
+    //  System.out.println("~~~ 확인용 path => " + path);
+	    //  ~~~ 확인용 path => C:\NCS\workspace_spring_boot_17\myspring\src\main\webapp\resources\photo_upload
+		
+		File dir = new File(path);
+		if(!dir.exists()) {
+			dir.mkdirs();
+		}
+		
+		try {
+			String filename = request.getHeader("file-name"); // 파일명(문자열)을 받는다 - 일반 원본파일명
+			// 네이버 스마트에디터를 사용한 파일업로드시 싱글파일업로드와는 다르게 멀티파일업로드는 파일명이 header 속에 담겨져 넘어오게 되어있다. 
+			
+			/*
+			    [참고]
+			    HttpServletRequest의 getHeader() 메소드를 통해 클라이언트의 정보를 알아올 수 있다. 
+	
+				request.getHeader("referer");           // 접속 경로(이전 URL)
+				request.getHeader("user-agent");        // 클라이언트 사용자의 시스템 정보
+				request.getHeader("User-Agent");        // 클라이언트 브라우저 정보 
+				request.getHeader("X-Forwarded-For");   // 클라이언트 ip 주소 
+				request.getHeader("host");              // Host 네임  예: 로컬 환경일 경우 ==> localhost:9090    
+			*/
+			
+		//	System.out.println(">>> 확인용 filename ==> " + filename);
+			// >>> 확인용 filename ==> berkelekle%EC%8B%AC%ED%94%8C%EB%9D%BC%EC%9A%B4%EB%93%9C01.jpg
+			
+			InputStream is = request.getInputStream(); // is는 네이버 스마트 에디터를 사용하여 사진첨부하기 된 이미지 파일임.
+			
+			// === 사진 이미지 파일 업로드 하기 === //
+			String newFilename = fileManager.doFileUpload(is, filename, path);
+		//	System.out.println("### 확인용 newFilename ==> " + newFilename);
+			//  ### 확인용 newFilename ==> 20250210165110401783618706200.jpg
+			
+			
+			// === 웹브라우저 상에 업로드 되어진 사진 이미지 파일 이미지를 쓰기 === //
+			String ctxPath = request.getContextPath(); //  
+			
+			String strURL = "";
+			strURL += "&bNewLine=true&sFileName="+newFilename; 
+			strURL += "&sFileURL="+ctxPath+"/resources/photo_upload/"+newFilename;
+						
+			PrintWriter out = response.getWriter();
+			out.print(strURL);
+			
+			// 글쓰기 또는 글수정시 이미지를 추가한 후 이미지를 마우스로 클릭하면
+			// 사진 사이즈 조절 레이어 에디터가 보여진다. 여기서 사진의 크기를 조절하면 된다.!!
+			// 사진의 크기 조절은 네이버 스마트에디터 소스속에 자바스크립트로 구현이 되어진 것이다.
+			// Ctrl + Alt + Shit + L 하여 검색어에 '사진 사이즈 조절 레이어' 를 하면 보여진다. 
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 	
 	
 	
