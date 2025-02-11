@@ -72,8 +72,8 @@
 
           if (
             ul.className == "" &&
-            className.substring(0, "SearchBoxDropDow".length) !=
-              "SearchBoxDropDow"
+            className.substring(0, "SearchBoxDropDown".length) !=
+              "SearchBoxDropDown"
           ) {
             ul.classList.toggle("hidden");
             body.classList.toggle("searchBoxShadow");
@@ -99,12 +99,14 @@
       </div>
       <div id="SearchBoxDropDown" class="SearchBoxDropDown">
         <ul id="ul2" class="hidden">
-          <div id="searchBoxMenu" class="flex text-sm SearchBoxDropDow">
-            <dib class="w-4/5 SearchBoxDropDow"><strong>최근</strong></dib>
-            <dib class="w-1/5 SearchBoxDropDow"><button>모두 보기</button></dib>
+          <div id="searchBoxMenu" class="flex text-sm SearchBoxDropDown">
+            <div class="w-4/5 SearchBoxDropDown"><strong>최근</strong></dib>
+            <div class="w-1/5 SearchBoxDropDown"
+              ><button>모두 보기</button></dib
+            >
           </div>
-          <div class="SearchBoxDropDow"></div>
-          <li class="SearchBoxDropDow">fds</li>
+          <div class="SearchBoxDropDown"></div>
+          <li class="SearchBoxDropDown">fds</li>
         </ul>
       </div>
     </div>
