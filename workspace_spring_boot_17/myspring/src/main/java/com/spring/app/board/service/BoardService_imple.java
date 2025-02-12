@@ -246,6 +246,19 @@ public class BoardService_imple implements BoardService {
 		   // ~~~~ 확인용 m : 1
 		}
 		
+		// === #185. 파일첨부가 된 댓글이라면 댓글 삭제시 첨부파일을 삭제해주어야 한다. 시작 === //
+		String filepath = paraMap.get("filepath");  // 삭제해야할 첨부파일이 저장된 경로
+		String filename = paraMap.get("filename");  // 삭제해야할 첨부파일명
+		
+		if(m==1 && filename != null && !"".equals(filename.trim())) {
+			try {
+				fileManager.doFileDelete(filename, filepath);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		// === 파일첨부가 된 글이라면 글 삭제시 첨부파일을 삭제해주어야 한다. 끝 === //
+		
 		return n*m;
 	}
 
@@ -326,6 +339,14 @@ public class BoardService_imple implements BoardService {
 		
 		int n = dao.add_withFile(boardvo);  // 첨부파일이 있는 경우
 		return n;
+	}
+
+
+	// === #181. 파일첨부가 되어진 댓글 1개에서 서버에 업로드 되어진 파일명과 오리지널파일명을 조회해주는 것 === // 
+	@Override
+	public CommentVO getCommentOne(String seq) {
+		CommentVO commentvo = dao.getCommentOne(seq);
+		return commentvo;
 	}
 	
 	

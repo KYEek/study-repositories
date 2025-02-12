@@ -1,0 +1,7 @@
+{
+  "paymentId": "payment-eacb1021-171e-4e3d-9da9-671b14043f1a",
+  "orderDetailArr": "[{\"productCountNum\":\"1\",\"productDetailNo\":\"23\",\"productPrice\":\"49900\"},{\"productCountNum\":\"1\",\"productDetailNo\":\"23\",\"productPrice\":\"49900\"}]",
+  "selected_address_no": "26",
+  "input_total_price": "139600",
+  "instantPay": "false"
+}

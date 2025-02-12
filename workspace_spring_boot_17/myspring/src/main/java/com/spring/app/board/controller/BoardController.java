@@ -939,7 +939,7 @@ public class BoardController {
 			// 첨부파일이 존재하는 경우
 			
 			// 첨부파일이 저장되어 있는 WAS(톰캣) 디스크 경로명을 알아와야만 다운로드를 해줄 수 있다.
-	    	// 이 경로는 우리가 파일첨부를 위해서 /addEnd 에서 설정해두었던 경로와 똑같아야 한다.  
+	    	// 이 경로는 우리가 파일첨부를 위해서 @PostMapping("add") 에서 설정해두었던 경로와 똑같아야 한다.  
 			// WAS 의 webapp 의 절대경로를 알아와야 한다. 
 			HttpSession session = request.getSession(); 
 			String root = session.getServletContext().getRealPath("/");  
@@ -1067,12 +1067,48 @@ public class BoardController {
 	// === #72. 댓글 삭제(Ajax 로 처리) === //
 	@DeleteMapping("deleteComment")
 	@ResponseBody
-    public Map<String, Integer> deleteComment(@RequestParam Map<String, String> paraMap){
+ // public Map<String, Integer> deleteComment(@RequestParam Map<String, String> paraMap) { // <== 파일첨부가 없는 댓글인 경우 
+	public Map<String, Integer> deleteComment(@RequestParam Map<String, String> paraMap,
+			                                  HttpServletRequest request) { // <== 파일첨부가 있는 댓글인 경우   	
+
+		/////////////////////////////////////////////////////////////////////
+		// === #184. 파일첨부가 된 댓글이라면 댓글 삭제시 먼저 첨부파일을 삭제해주어야 한다. 시작 === //
+		CommentVO commentvo = service.getCommentOne((String)paraMap.get("seq"));
+
+        String filename = commentvo.getFileName();
+        // 202502120933595410718575921100.txt  이것이 바로 WAS(톰캣) 디스크에 저장된 '첨부 파일명' 이다.
+        
+        if(filename != null && !"".equals(filename.trim())) {
+			// 첨부파일이 존재하는 경우
+			
+			// 첨부파일이 저장되어 있는 WAS(톰캣) 디스크 경로명을 알아와야만 다운로드를 해줄 수 있다.
+			// 이 경로는 우리가 파일첨부를 위해서 @PostMapping("addComment_withAttach") 에서 설정해두었던 경로와 똑같아야 한다.  
+			// WAS 의 webapp 의 절대경로를 알아와야 한다. 
+			HttpSession session = request.getSession(); 
+			String root = session.getServletContext().getRealPath("/");  
+
+			// System.out.println("~~~ 확인용 webapp 의 절대경로 => " + root);
+			// ~~~ 확인용 webapp 의 절대경로 => C:\NCS\workspace_spring_boot_17\myspring\src\main\webapp\
+
+			String filepath = root+"resources"+File.separator+"files";
+			/* File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
+			   운영체제가 Windows 이라면 File.separator 는  "\" 이고,
+			   운영체제가 UNIX, Linux, 매킨토시(맥) 이라면  File.separator 는 "/" 이다. 
+			*/
+       //  file_path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다.
+       //  System.out.println("~~~ 확인용 filepath => " + filepath);
+           // ~~~ 확인용 filepath => C:\NCS\workspace_spring_boot_17\myspring\src\main\webapp\resources\files 
+
+		   paraMap.put("filepath", filepath); // 삭제해야할 첨부파일이 저장된 경로
+           paraMap.put("filename", filename); // 삭제해야할 첨부파일명 
+        }
+        //=== 파일첨부가 된 글이라면 글 삭제시 먼저 첨부파일을 삭제해주어야 한다. 끝 === //
+        /////////////////////////////////////////////////////////////////////
 		
-		int n=0;
+	    int n=0;
 				
 		try {
-		  n=service.deleteComment(paraMap);
+		  n = service.deleteComment(paraMap);
 		} catch(Throwable e) {
 			e.printStackTrace();
 		}
@@ -1166,6 +1202,13 @@ public class BoardController {
 				
 				jsonObj.put("sizePerPage", sizePerPage); // 페이징 처리시 보여주는 순번을 나타내기 위한 것임. 
 				// {"seq":"3","fk_userid":"seoyh","name":"서영학","content":"세번째 댓글쓰기 입니다","regDate":"2025-01-24 10:50:40","totalCount":23,"sizePerPage":3}
+				
+				
+				// === #178. 댓글읽어오기에 있어서 첨부파일 기능을 넣은 경우 시작 === //
+				jsonObj.put("fileName", cmtvo.getFileName());  
+				jsonObj.put("orgFilename", cmtvo.getOrgFilename());
+				jsonObj.put("fileSize", cmtvo.getFileSize());
+				// === 댓글읽어오기에 있어서 첨부파일 기능을 넣은 경우 끝 === //
 				
 				jsonArr.put(jsonObj);
 			}// end of for------------------------
@@ -1364,7 +1407,206 @@ public class BoardController {
 	
 	
 	
+	// === #174. 파일첨부가 있는 댓글쓰기(Ajax 로 처리) === //
+	@PostMapping("addComment_withAttach")
+	@ResponseBody
+	public Map<String, Object> addComment_withAttach(CommentVO commentvo, MultipartHttpServletRequest mrequest) {
+		// 댓글쓰기에 첨부파일이 있는 경우
+		// !!! 먼저, 오라클에서 tbl_comment 테이블에 fileName, orgFilename, fileSize 컬럼을 추가한다.
+		// !!! 그런 다음에 CommentVO 클래스에 가서 fileName, orgFilename, fileSize 필드를 추가하고, getter, setter 한다.
+		
+		// ====== !!! 첨부파일 업로드 시작 !!! ======= //
+		MultipartFile attach = commentvo.getAttach();
+		   
+		/*
+		   1. 사용자가 보낸 첨부파일을 WAS(톰캣)의 특정 폴더에 저장해주어야 한다.
+		   >>> 파일이 업로드 되어질 특정 경로(폴더)지정해주기 
+		       우리는 WAS 의 /myspring/src/main/webapp/resources/files 라는 폴더를 생성해서 여기로 업로드 해주도록 할 것이다. 
+		 */
+		
+		// WAS 의 webapp 의 절대경로를 알아와야 한다.
+		HttpSession session = mrequest.getSession();
+		String root = session.getServletContext().getRealPath("/");
+		
+	//	System.out.println("~~~ 확인용 webapp 의 절대경로 ==> " + root);
+		// ~~~ 확인용 webapp 의 절대경로 ==> C:\NCS\workspace_spring_boot_17\myspring\src\main\webapp\
+		
+		String path =  root+"resources"+File.separator+"files";  
+		/* File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
+	       운영체제가 Windows 이라면 File.separator 는  "\" 이고,
+	       운영체제가 UNIX, Linux, 매킨토시(맥) 이라면  File.separator 는 "/" 이다. 
+	    */
+		
+		// path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다.
+	//	System.out.println("~~~ 확인용 path ==> " + path);
+		// ~~~ 확인용 path ==> C:\NCS\workspace_spring_boot_17\myspring\src\main\webapp\resources\files    
+		
+		
+		/*
+		   2. 파일첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
+		*/
+		String newFileName = "";
+		// WAS(톰캣)의 디스크에 저장될 파일명
+		
+		byte[] bytes = null;
+		// 첨부파일의 내용물을 담는 것
+		
+		long fileSize = 0;
+		// 첨부파일의 크기
+		
+		
+		try {
+			bytes = attach.getBytes();
+			// 첨부파일의 내용물을 읽어오는 것
+			
+			String originalFilename = attach.getOriginalFilename();
+			// attach.getOriginalFilename() 이 첨부파일명의 파일명(예: 강아지.png) 이다. 
+			
+		//	System.out.println("~~~ 확인용 originalFilename => " + originalFilename); 
+			
+			// 첨부되어진 파일을 업로드 하는 것이다.
+			newFileName = fileManager.doFileUpload(bytes, originalFilename, path);
+			
+		/* 
+		    3. CommentVO commentvo 에 fileName 값과 orgFilename 값과 fileSize 값을 넣어주기
+		*/
+			commentvo.setFileName(newFileName);
+			// WAS(톰캣)에 저장된 파일명(2025020709291535243254235235234.png)
+			
+			commentvo.setOrgFilename(originalFilename);
+			// 댓글 게시판 페이지에서 첨부된 파일(강아지.png)을 보여줄 때 사용.
+			// 또한 사용자가 파일을 다운로드 할때 사용되어지는 파일명으로 사용.
+			
+			fileSize = attach.getSize(); // 첨부파일의 크기(단위는 byte임)
+			commentvo.setFileSize(String.valueOf(fileSize));
+		    
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// ====== !!! 첨부파일 업로드 끝 !!! ======= //
+		
+		
+		// === tbl_comment 테이블에 댓글 insert 해주기 시작 === //
+        int n = 0;
+		
+		try {
+		     n = service.addComment(commentvo);
+		    // 댓글쓰기(insert) 및 원게시물(tbl_board 테이블)에 댓글의 개수 증가(update 1씩 증가)하기 
+		    // 이어서 회원의 포인트를 50점을 증가하도록 한다. (tbl_member 테이블에 point 컬럼의 값을 50 증가하도록 update 한다.)
+		} catch(Throwable e) {
+			e.printStackTrace();
+		}
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("name", commentvo.getName());
+		map.put("n", n);
+		
+		return map;	
+		// {"name":"서영학","n":1}
+		// 또는
+		// {"name":"서영학","n":0}
+	}
+	
+	
+	@GetMapping("downloadComment")
+	public void requiredLogin_downloadComment(HttpServletRequest request, HttpServletResponse response) {
+		
+		String seq = request.getParameter("seq");
+		// 첨부파일이 있는 글번호 
+		
+		/*
+		    첨부파일이 있는 글번호에서
+		    202502071242164990019082166200.jpg 처럼
+		    이러한 fileName 값을 DB에서 가져와야 한다.
+		    또한 orgFilename 값도 DB에서 가져와야 한다.
+		*/
+		
+		// **** 웹브라우저에 출력하기 시작 **** //
+		// HttpServletResponse response 객체는 전송되어져온 데이터를 조작해서 결과물을 나타내고자 할때 쓰인다.
+		response.setContentType("text/html; charset=UTF-8");
+		
+		PrintWriter out = null;
+		// out 은 웹브라우저에 기술하는 대상체라고 생각하자.
+		
+		try {
+		    Integer.parseInt(seq); 
+			
+		    CommentVO commentvo = service.getCommentOne(seq);
+		    
+		    if(commentvo == null || (commentvo != null && commentvo.getFileName() == null) ) { 
+		    	out = response.getWriter();
+				// out 은 웹브라우저에 기술하는 대상체라고 생각하자.
+				
+				out.println("<script type='text/javascript'>alert('존재하지 않는 글번호이거나 첨부파일이 없으므로 파일다운로드가 불가합니다.'); history.back();</script>");
+				return;
+		    }
+		    
+		    else {
+		    	// 정상적으로 다운로드를 할 경우 
+		    	
+		    	String fileName = commentvo.getFileName();
+		    	// 202502071242164990019082166200.jpg  이것이 바로 WAS(톰캣) 디스크에 저장된 파일명이다.
+		    	
+		    	String orgFilename = commentvo.getOrgFilename(); 
+		    	// 쉐보레전면.jpg   다운로드시 보여줄 파일명
+		    	
+		    	/*
+				   첨부파일이 저장되어있는 WAS(톰캣) 디스크 경로명을 알아와야만 다운로드를 해줄 수 있다.
+				   이 경로는 우리가 파일첨부를 위해서 @PostMapping("add") 에서 설정해두었던 경로와 똑같아야 한다.    
+				*/
+				// WAS 의 webapp 의 절대경로를 알아와야 한다.
+				HttpSession session = request.getSession();
+				String root = session.getServletContext().getRealPath("/");
+				
+			//	System.out.println("~~~ 확인용 webapp 의 절대경로 ==> " + root);
+				// ~~~ 확인용 webapp 의 절대경로 ==> C:\NCS\workspace_spring_boot_17\myspring\src\main\webapp\
+				
+				String path = root+"resources"+File.separator+"files";  
+				/* File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다.
+			       운영체제가 Windows 이라면 File.separator 는  "\" 이고,
+			       운영체제가 UNIX, Linux, 매킨토시(맥) 이라면  File.separator 는 "/" 이다. 
+			    */
+				
+				// path 가 첨부파일이 저장될 WAS(톰캣)의 폴더가 된다.
+			//	System.out.println("~~~ 확인용 path ==> " + path);
+				// ~~~ 확인용 path ==> C:\NCS\workspace_spring_boot_17\myspring\src\main\webapp\resources\files
+		    	
+				
+				// ***** file 다운로드 하기 ***** //
+				boolean flag = false; // file 다운로드 성공, 실패인지 여부를 알려주는 용도
+				flag = fileManager.doFileDownload(fileName, orgFilename, path, response);
+				// file 다운로드 성공시 flag 는 true,
+				// file 다운로드 실패시 flag 는 false 를 가진다.
+				
+				if(!flag) {
+					// 다운로드가 실패한 경우 메시지를 띄운다.
+					out = response.getWriter();
+					// out 은 웹브라우저에 기술하는 대상체라고 생각하자.
+					
+					out.println("<script type='text/javascript'>alert('파일다운로드가 실패되었습니다.'); history.back();</script>");
+				}
+		    	
+		    }
+			
+		} catch (NumberFormatException | IOException e) {
+			
+			try {
+				out = response.getWriter();
+				// out 은 웹브라우저에 기술하는 대상체라고 생각하자.
+				
+				out.println("<script type='text/javascript'>alert('파일다운로드가 불가합니다.'); history.back();</script>");
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			
+		}
+		
+	}
+	
 	
 	
 	
 }
+
+
+

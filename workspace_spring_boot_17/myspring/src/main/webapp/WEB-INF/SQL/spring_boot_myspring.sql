@@ -821,6 +821,61 @@ select seq, filename, substr(func_photo_upload_delete(seq), 2) AS photofilename
 from tbl_board
 where seq = 210; -- 첨부파일명 사진이미지가 모두 없는 경우
 
+----------------------------------------------------------------------
+
+--- *** 댓글쓰기시 파일첨부하기 *** ---
+-- !!! 파일첨부가 가능하도록 tbl_comment 테이블을 수정해야 한다. !!!
+
+alter table tbl_comment
+add fileName varchar2(255); -- WAS(톰캣)에 저장될 파일명(2025021109291535243254235235234.png)
+-- Table TBL_COMMENT이(가) 변경되었습니다.
+
+alter table tbl_comment
+add orgFilename varchar2(255); -- 진짜 파일명(강아지.png)  // 사용자가 파일을 업로드 하거나 파일을 다운로드 할때 사용되어지는 파일명 
+-- Table TBL_COMMENT이(가) 변경되었습니다.
+
+alter table tbl_comment
+add fileSize number;  -- 파일크기
+-- Table TBL_COMMENT이(가) 변경되었습니다.
+
+select *
+from tbl_comment
+where parentseq = 211
+order by seq desc;
+
+
+SELECT seq, fk_userid, name, content, regDate
+     , fileName, orgFilename, fileSize 
+FROM 
+(
+    select row_number() over(order by seq desc) AS rno
+         , seq, fk_userid, name, content
+         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate
+         , nvl(fileName, ' ' ) AS fileName
+         , nvl(orgFilename, ' ') AS orgFilename
+         , nvl(to_char(fileSize), ' ') AS fileSize
+    from tbl_comment
+    where parentSeq = to_number('211')
+) V
+WHERE rno BETWEEN 1 AND 3;
+
+
+select *
+from tbl_comment
+where parentseq = 211
+order by seq desc;
+
+select *
+from tbl_comment
+where seq = 24;
+
+
+
+
+
+
+
+
 
 
 

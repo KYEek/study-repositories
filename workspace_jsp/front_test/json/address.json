@@ -1,0 +1,22 @@
+[
+  {
+    "pk_addr_no": "1",
+    "member_name": "연규영",
+    "addr_address": "東京都新宿区西新宿2-8-1",
+    "addr_detail": "27階",
+    "addr_extraaddr": "新宿住友ビル",
+    "addr_post_no": "123-4567",
+    "member_mobile": "090-1234-5678",
+    "addr_isdefault": "1"
+  },
+  {
+    "pk_addr_no": "2",
+    "member_name": "연규영",
+    "addr_address": "서울 마포구 와우산로26길 11",
+    "addr_detail": "101호",
+    "addr_extraaddr": " (창전동, 더하우스)",
+    "addr_post_no": "04059",
+    "member_mobile": "010-1234-5678",
+    "addr_isdefault": "0"
+  }
+]

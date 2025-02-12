@@ -1,0 +1,44 @@
+@charset "UTF-8";
+
+body {
+  overflow: hidden;
+}
+
+div#carouselExampleControls {
+  position: relative;
+  top:100px;
+  width: 100vw;
+  height: 100vh;
+}
+
+.fullscreen {
+  width: 100vw;
+  height: 100vh;
+}
+
+.list_size {
+  width: 100vw;
+  height: 100vh;
+}
+
+.group_list {
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+.group_ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+li {
+  overflow: hidden;
+}
+
+.main_img {
+  height: 100vh;
+  width: 100vw;
+  object-fit: cover;
+  object-position: right;
+}
+

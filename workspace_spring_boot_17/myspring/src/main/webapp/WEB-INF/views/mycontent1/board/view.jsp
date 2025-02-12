@@ -42,7 +42,7 @@
 	  
 	  $("input:text[name='content']").bind("keydown", function(e){
 		  if(e.keyCode == 13) { // 엔터
-			  goAddWrite();
+			  goAddWrite();     // 댓글쓰기
 		  }
 	  });
 	  
@@ -91,7 +91,8 @@
 			    	     // {"n":1}
 			    	     
 			    	     if(json.n == 1) {
-			    		 	goReadComment(); // 페이징 처리 안한 댓글 읽어오기
+			    		  // goReadComment();  // 페이징 처리 안한 댓글 읽어오기
+			    		     goViewComment(1); // 페이징 처리 한 댓글 읽어오기
 			    	     }
 			    	     
 			    	     $btn.text("수정").removeClass("btn-info").addClass("btn-secondary");
@@ -140,7 +141,8 @@
 				    	     // {"n":1}
 				    	     
 				    	     if(json.n == 1) {
-				    		 	goReadComment(); // 페이징 처리 안한 댓글 읽어오기
+				    		 //	goReadComment(); // 페이징 처리 안한 댓글 읽어오기
+				    		    goViewComment(1); // 페이징 처리 한 댓글 읽어오기
 				    	     }
 				    	 },
 				    	 error: function(request, status, error){
@@ -213,7 +215,17 @@
 	  }
 	  
 	  // 첨부파일이 없는 댓글쓰기인 경우
-	  goAddWrite_noAttach();
+	  // goAddWrite_noAttach();
+	  
+	  <%-- === #171. 댓글쓰기에 첨부파일이 있는 경우와, 첨부파일이 없는 경우 시작 === --%>
+	  if($("input:file[name='attach']").val() == "") {
+		  // 첨부파일이 없는 댓글쓰기인 경우
+		  goAddWrite_noAttach();
+	  }
+	  else {
+		  // 첨부파일이 있는 댓글쓰기인 경우
+		  goAddWrite_withAttach();
+	  }
 	  
   }// end of function goAddWrite()-----------------
   
@@ -271,6 +283,77 @@
       });
 	  
   }// end of goAddWrite_noAttach()----------------------------
+  
+  
+  // === #172. 첨부파일이 있는 댓글쓰기인 경우 === //
+  function goAddWrite_withAttach() {
+	  
+	  <%-- jQuery 에서 Ajax 를 사용하여 파일을 첨부할 때는 2가지 방법이 있다.
+	       첫번째, formData 객체를 사용하는 것이고(메일보내기[다중파일첨부]에서 해볼것이다),
+	       두번째, ajaxForm 을 사용하는 것이다.
+	       우리는 ajaxForm 을 사용해서 파일을 첨부해보겠다.
+	       
+	       우선 ajaxForm 을 사용하기 위해서는 jquery.form.min.js 가 있어야 한다.
+	       우리는 /myspring/src/main/resources/static/js/jquery.form.min.js 파일이 있다.
+	       
+	       우리는 /myspring/src/main/webapp/WEB-INF/views/header/header1.jsp 와
+	            /myspring/src/main/webapp/WEB-INF/views/header/header2.jsp 파일속에
+	       <script type="text/javascript" src="<%=ctxPath%>/js/jquery.form.min.js"></script> 라고 기술해 두었다.       
+	  --%>
+	  
+	       
+      <%--
+        // 보내야할 데이터를 선정하는 또 다른 방법
+	    // jQuery에서 사용하는 것으로써,
+	    // form태그의선택자.serialize(); 을 해주면 form 태그내의 모든 값들을 name값을 키값으로 만들어서 보내준다. 
+	    const queryString = $("form[name='addWriteFrm']").serialize();
+      --%>     
+	  const queryString = $("form[name='addWriteFrm']").serialize();     
+	       
+	  // 첨부파일이 있는 form 태그는 $.ajax() 가 아니라 폼태그선택자.ajaxForm(); 이다.
+	  // 그리고 맨 아래에서 폼태그선택자.submit(); 을 꼭 해주어야 한다.
+	  $("form[name='addWriteFrm']").ajaxForm({
+		  url:"<%= ctxPath%>/board/addComment_withAttach",
+	    /*	  
+		  data:{"fk_userid":$("input:hidden[name='fk_userid']").val() 
+			   ,"name":$("input:text[name='name']").val() 
+			   ,"content":$("input:text[name='content']").val()
+			   ,"parentSeq":$("input:hidden[name='parentSeq']").val()
+			   ,"attach":$("input:file[name='attach']").val()}, 
+		*/
+		  // 또는
+		  data:queryString,
+		  
+		  type:"post",                   // === #173. 파일을 전송하는 form 은 항상 post 방식이어야 한다. === 
+		  enctype:"multipart/form-data", // === #173. 파일을 전송하는 form 은 항상 enctype 이 multipart/form-data 이어야 한다. === 
+			  
+		  dataType:"json",
+		  success:function(json){
+			  console.log(JSON.stringify(json));
+    		  // {"name":"서영학","n":1}
+    		  // 또는 
+    		  // {"name":"서영학","n":0}
+    		  
+    		  if(json.n == 0){
+    			  alert(json.name + "님의 포인트는 300점을 초과할 수 없으므로 댓글쓰기가 불가합니다.");
+    		  }
+    		  else {
+    			   goViewComment(1); // 페이징 처리한 댓글 읽어오기  
+    		  }
+    		  
+    		  $("input:text[name='content']").val("");
+    		  $("input:file[name='attach']").val("");
+		  },
+		  error: function(request, status, error){
+		      alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		  }
+		  
+	  });
+	  
+	  $("form[name='addWriteFrm']").submit();
+	  
+  }// end of function goAddWrite_withAttach()-----------------
+  
   
   
   // 페이징 처리 안한 댓글 읽어오기
@@ -339,11 +422,17 @@
 			   ,"currentShowPageNo":currentShowPageNo},
 		  dataType:"json",
 		  success:function(json){
-			// console.log(JSON.stringify(json));
+			   console.log(JSON.stringify(json));
 			  /*
+			     첨부파일기능이 없는 경우
 			     [{"name":"서영학","regDate":"2025-02-05 10:41:34","totalCount":23,"sizePerPage":3,"fk_userid":"seoyh","seq":"37","content":"댓글연습 23"}
 		         ,{"name":"서영학","regDate":"2025-02-05 10:41:32","totalCount":23,"sizePerPage":3,"fk_userid":"seoyh","seq":"36","content":"댓글연습 22"}
 		         ,{"name":"서영학","regDate":"2025-02-05 10:41:30","totalCount":23,"sizePerPage":3,"fk_userid":"seoyh","seq":"35","content":"댓글연습 21"}] 
+			  
+			     첨부파일기능이 있는 경우
+			     [{"fileName":"202502111228595334818205598900.jpg","fileSize":"131110","name":"서영학","regDate":"2025-02-11 12:28:59","totalCount":23,"sizePerPage":3,"fk_userid":"seoyh","seq":"24","content":"파일첨부가 있는 댓글연습1","orgFilename":"쉐보레전면.jpg"}
+			     ,{"fileName":" ","fileSize":" ","name":"관리자","regDate":"2025-02-07 12:45:08","totalCount":23,"sizePerPage":3,"fk_userid":"admin","seq":"22","content":"댓글연습 22","orgFilename":" "}
+			     ,{"fileName":" ","fileSize":" ","name":"관리자","regDate":"2025-02-07 12:45:03","totalCount":23,"sizePerPage":3,"fk_userid":"admin","seq":"21","content":"댓글연습 21","orgFilename":" "}] 
 			  
 			     // 또는
 			     []
@@ -381,7 +470,19 @@
 					  
 					  v_html += `<tr>
 					              <td class='comment'>\${sunbun}</td>
-					              <td>\${item.content}</td>
+					              <td>\${item.content}</td>`;
+					              
+					              <%-- === #180. 첨부파일 기능이 추가된 경우 시작 === --%>
+					              if(${sessionScope.loginuser != null}) {
+					            	 v_html += `<td><a href='<%= ctxPath%>/board/downloadComment?seq=\${item.seq}'>\${item.orgFilename}</a></td>`;
+					              }
+					              else {
+					              	 v_html += `<td>\${item.orgFilename}</td>`;
+					              }
+					              
+					              v_html += `<td>\${Number(item.fileSize).toLocaleString('en')}</td>
+					              <%-- === 첨부파일 기능이 추가된 경우 끝 === --%>
+					              
 					              <td class='comment'>\${item.name}</td>
 					              <td class='comment'>\${item.regDate}</td>`;
 					  
@@ -647,6 +748,14 @@
 				      </td>
 				   </tr>
 				   
+				   <%-- === #170. 댓글쓰기에 파일첨부하기 === --%>
+				   <tr style="height: 30px;">
+				      <th>파일첨부</th>
+				      <td>
+				         <input type="file" name="attach" /> 
+				      </td>
+				   </tr>
+				   
 				   <tr>
 				      <th colspan="2">
 				      	<button type="button" class="btn btn-success btn-sm mr-3" onclick="goAddWrite()">댓글쓰기 확인</button>
@@ -667,8 +776,9 @@
 				  <th style="width: 6%">순번</th>
 				  <th style="text-align: center;">내용</th>
 				  
-				  <%-- === 댓글쓰기에 첨부파일이 있는 경우 시작 === --%>
-				  
+				  <%-- === #179. 댓글쓰기에 첨부파일이 있는 경우 시작 === --%>
+				  <th style="width: 10%">첨부파일</th>
+				  <th style="width: 8%">bytes</th>
 				  <%-- === 댓글쓰기에 첨부파일이 있는 경우 끝 === --%>
 				  
 				  <th style="width: 8%; text-align: center;">작성자</th>

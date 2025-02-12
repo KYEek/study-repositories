@@ -259,11 +259,24 @@
 
    <!-- === #62.1  댓글쓰기(tbl_comment 테이블에 insert) === -->
    <insert id="addComment" parameterType="CommentVO">
-	   <!-- 첨부파일이 없는 경우 -->
-	   insert into tbl_comment(seq, fk_userid, name, content, regDate, parentSeq, status)
-	   values(commentSeq.nextval, #{fk_userid}, #{name}, #{content}, default, #{parentSeq}, default)
+	   <!-- 
+	      insert into tbl_comment(seq, fk_userid, name, content, regDate, parentSeq, status)
+	      values(commentSeq.nextval, #{fk_userid}, #{name}, #{content}, default, #{parentSeq}, default) 
+	   -->
 	   
-	   <!-- 첨부파일이 있는 경우 -->
+	   <!-- === #176. 첨부파일이 없는 경우 
+	                  먼저, 위의 insert 문을 주석처리 한 다음에 아래처럼 한다.
+	   -->
+	   <if test="fileName == null">
+	      insert into tbl_comment(seq, fk_userid, name, content, regDate, parentSeq, status)
+	      values(commentSeq.nextval, #{fk_userid}, #{name}, #{content}, default, #{parentSeq}, default)
+	   </if>
+	   
+	   <!-- === #176. 첨부파일이 있는 경우 === -->
+	   <if test="fileName != null">
+	      insert into tbl_comment(seq, fk_userid, name, content, regDate, parentSeq, status, fileName, orgFilename, fileSize)
+	      values(commentSeq.nextval, #{fk_userid}, #{name}, #{content}, default, #{parentSeq}, default, #{fileName}, #{orgFilename}, #{fileSize})      
+	   </if>
    </insert> 
 
    <!-- === #62.2  tbl_board 테이블에 commentCount 컬럼이 1증가(update) === -->
@@ -649,6 +662,7 @@
    <select id="getCommentList_Paging" parameterType="HashMap" resultType="CommentVO">
        <!-- 첨부파일이 없는 경우 -->
        <!-- Oracle 11g -->
+ <!--       
 		SELECT seq, fk_userid, name, content, regDate
 		FROM 
 		(
@@ -659,6 +673,7 @@
 		    where parentSeq = to_number(#{parentSeq})
 		) V
 		WHERE rno BETWEEN #{startRno} AND #{endRno}
+ -->		
        
        <!-- Oracle 12c 이상 -->
 	   <!--  	
@@ -671,7 +686,36 @@
 		FETCH NEXT to_number(#{sizePerPage}) ROW ONLY
 	   -->	
        
-       <!-- 첨부파일이 있는 경우 -->
+       <!-- === #177. 첨부파일이 있는 경우 === -->
+       <!-- Oracle 11g -->
+		SELECT seq, fk_userid, name, content, regDate
+		     , fileName, orgFilename, fileSize
+		FROM 
+		(
+		    select row_number() over(order by seq desc) AS rno
+		         , seq, fk_userid, name, content
+		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate
+		         , nvl(fileName, ' ' ) AS fileName
+		         , nvl(orgFilename, ' ') AS orgFilename
+		         , nvl(to_char(fileSize), ' ') AS fileSize
+		    from tbl_comment
+		    where parentSeq = to_number(#{parentSeq})
+		) V
+		WHERE rno BETWEEN #{startRno} AND #{endRno}
+       
+       <!-- Oracle 12c 이상 -->
+	   <!--  	
+		select seq, fk_userid, name, content
+		     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate
+		     , nvl(fileName, ' ' ) AS fileName
+		     , nvl(orgFilename, ' ') AS orgFilename
+		     , nvl(to_char(fileSize), ' ') AS fileSize
+		from tbl_comment
+		where parentSeq = to_number(#{parentSeq})
+		ORDER BY seq DESC
+		OFFSET (to_number(#{currentShowPageNo})-1)*to_number(#{sizePerPage}) ROW  
+		FETCH NEXT to_number(#{sizePerPage}) ROW ONLY
+	   -->
    
    </select>
    
@@ -690,6 +734,14 @@
        from tbl_board
    </select> 
 
+
+   <!-- === #183. 파일첨부가 되어진 댓글 1개에서 서버에 업로드 되어진 파일명과 오리지널파일명을 조회해주는 것 === -->
+   <select id="getCommentOne" parameterType="String" resultType="CommentVO">
+      select nvl(fileName, ' ') AS fileName
+           , nvl(orgFilename, ' ') AS orgFilename
+      from tbl_comment
+      where seq = #{seq}
+   </select>   
 
 
 </mapper>

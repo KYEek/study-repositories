@@ -4,19 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dropdown Example</title>
-    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
-    <style type="text/tailwindcss">
+    <link src="css/searchbox.css" rel="stylesheet" />
+    <!-- <script src -->
+    <!-- <style type="text/tailwindcss">
+      /* 색상변수 */
       :root {
         --searchBox: #f8fafd;
         --searchBox-active: #edf3f8;
       }
+
+      /* 검색창 */
       #searchBox {
         box-sizing: content-box;
         width: 24rem;
         position: relative;
+
+        /* 검색 입력창 */
         #searchInput {
-          width: 82%;
+          width: 90%;
           background-color: var(--searchBox-active);
+
+          /* 인풋부분 */
           #SearchInputDiv {
             width: 90%;
 
@@ -25,20 +33,40 @@
               outline: none;
             }
           }
+          /* 아이콘 div */
           #SearchIconDiv {
             width: 3rem;
           }
         }
 
-        #ul2 {
-          border: 1px solid #ccc;
-          background-color: white;
+        /* ----------------------------------------------- */
+        /* 검색 결과창 */
+        #SearchResultBox {
+          @apply bg-white w-7/6 pl-5;
+          position: relative;
+          border: 1px solid #969696;
+          bottom: 3rem;
+          transition: bottom 0.5s;
+
+          /* 최근 검색된 페이지들 */
+          #searchBoxMenuRecentPage {
+            list-style: none;
+
+            li {
+              @apply hover:bg-gray-200;
+              display: inline-block;
+              width: 18%;
+            }
+          }
         }
+
+        /* 숨기는 클래스 */
         .hidden {
-          display: none;
+          opacity: 0;
         }
       }
 
+      /* 토글되는 클래스들 */
       .searchBoxShadow {
         background-color: rgba(0, 0, 0, 0.5);
         transition: background-color 0.5s;
@@ -49,35 +77,47 @@
         width: 100% !important;
         transition: width 0.5s;
       }
-    </style>
+
+      .searchBoxResultActive {
+        bottom: 0 !important;
+      }
+    </style> -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         //객체 가져오기
         const searchBoxInput = document.querySelector("#searchInput");
-        const ul = document.querySelector("#ul2");
+        const SearchResultBox = document.querySelector("#SearchResultBox");
         const body = document.querySelector("body");
 
         //검색 버튼 클릭시
+        //스타일 클래스 토글
         searchBoxInput.addEventListener("click", (e) => {
+          //이벤트 버블링 방지
           e.stopPropagation();
-          if (ul.className.trim() == "hidden") {
-            ul.classList.toggle("hidden");
+          const className = SearchResultBox.className;
+          if (className.indexOf("hidden") != -1) {
+            SearchResultBox.classList.toggle("hidden");
             body.classList.toggle("searchBoxShadow");
             searchBoxInput.classList.toggle("searchBoxActive");
+            SearchResultBox.classList.toggle("searchBoxResultActive");
           }
         });
         //바디 선택시
         body.addEventListener("click", (e) => {
           const className = e.target.className;
+          console.log(className.substring(0, "SearchBoxDropDown".length));
 
+          //스타일 클래스 토글
           if (
-            ul.className == "" &&
+            SearchResultBox.className.indexOf("hidden") == -1 &&
             className.substring(0, "SearchBoxDropDown".length) !=
               "SearchBoxDropDown"
           ) {
-            ul.classList.toggle("hidden");
+            SearchResultBox.classList.toggle("hidden");
+            console.log("body");
             body.classList.toggle("searchBoxShadow");
             searchBoxInput.classList.toggle("searchBoxActive");
+            SearchResultBox.classList.toggle("searchBoxResultActive");
           }
         });
       });
@@ -97,17 +137,109 @@
           />
         </div>
       </div>
-      <div id="SearchBoxDropDown" class="SearchBoxDropDown">
-        <ul id="ul2" class="hidden">
-          <div id="searchBoxMenu" class="flex text-sm SearchBoxDropDown">
-            <div class="w-4/5 SearchBoxDropDown"><strong>최근</strong></dib>
-            <div class="w-1/5 SearchBoxDropDown"
-              ><button>모두 보기</button></dib
+      <div id="SearchResultBox" class="hidden rounded-md">
+        <!-- 검색 메뉴 -->
+        <div id="searchBoxMenu" class="flex text-sm SearchBoxDropDown mt-2">
+          <div class="SearchBoxDropDown w-15/20 text-base font-bold">최근</div>
+          <div class="SearchBoxDropDown w-5/20 text-base">
+            <button
+              class="SearchBoxDropDown font-bold rounded-md hover:bg-gray-200 pl-3 pr-3"
             >
+              모두 보기
+            </button>
           </div>
-          <div class="SearchBoxDropDown"></div>
-          <li class="SearchBoxDropDown">fds</li>
-        </ul>
+        </div>
+        <div id="searchBoxMenuRecentPage" class="SearchBoxDropDown mt-2">
+          <ul>
+            <!--검색결과  -->
+            <li class="SearchBoxDropDown">
+              <div class="SearchBoxDropDown" style="text-align: center">
+                <img
+                  class="SearchBoxDropDown w-10 h-10"
+                  src="images/samsung_electronics_logo.jpg"
+                />
+              </div>
+              <div>
+                <span clas="SearchBoxDropDown text-[0.8rem] font-bold"
+                  >samsung electonics</span
+                >
+              </div>
+            </li>
+            <!-- 페이지 검색결과  -->
+            <li class="SearchBoxDropDown">
+              <div class="SearchBoxDropDown" style="text-align: center">
+                <img
+                  class="SearchBoxDropDown w-10 h-10"
+                  src="images/samsung_electronics_logo.jpg"
+                />
+              </div>
+              <div>
+                <span clas="SearchBoxDropDown text-[0.8rem] font-bold"
+                  >samsung electonics</span
+                >
+              </div>
+            </li>
+            <li class="SearchBoxDropDown">
+              <div class="SearchBoxDropDown" style="text-align: center">
+                <img
+                  class="SearchBoxDropDown w-10 h-10"
+                  src="images/samsung_electronics_logo.jpg"
+                />
+              </div>
+              <div>
+                <span clas="SearchBoxDropDown text-[0.8rem] font-bold"
+                  >samsung electonics</span
+                >
+              </div>
+            </li>
+            <li class="SearchBoxDropDown">
+              <div class="SearchBoxDropDown" style="text-align: center">
+                <img
+                  class="SearchBoxDropDown w-10 h-10"
+                  src="images/samsung_electronics_logo.jpg"
+                />
+              </div>
+              <div>
+                <span clas="SearchBoxDropDown text-[0.8rem] font-bold"
+                  >samsung electonics</span
+                >
+              </div>
+            </li>
+            <li class="SearchBoxDropDown">
+              <div class="SearchBoxDropDown" style="text-align: center">
+                <img
+                  class="SearchBoxDropDown w-10 h-10"
+                  src="images/samsung_electronics_logo.jpg"
+                />
+              </div>
+              <div>
+                <span clas="SearchBoxDropDown text-[0.8rem] font-bold"
+                  >samsung electonics</span
+                >
+              </div>
+            </li>
+          </ul>
+        </div>
+        <!-- 페이지 검색 결과 끝 -->
+
+        <!-- 최근 검색 키워드 -->
+        <div id="searchBoxMenuRecent" class="SearchBoxDropDown mt-2">
+          <ul class="SearchBoxDropDown">
+            <li class="SearchBoxDropDown hover:bg-gray-200 mb-2 mr-5 flex">
+              <div class="SearchBoxDropDown w-1/11">🔍</div>
+              <div class="SearchBoxDropDown w-10/11">122</div>
+            </li>
+            <li class="SearchBoxDropDown hover:bg-gray-200 mb-2 mr-5 flex">
+              <div class="SearchBoxDropDown w-1/11">🔍</div>
+              <div class="SearchBoxDropDown w-10/11">1234</div>
+            </li>
+            <li class="SearchBoxDropDown hover:bg-gray-200 mb-2 mr-5 flex">
+              <div class="SearchBoxDropDown w-1/11">🔍</div>
+              <div class="SearchBoxDropDown w-10/11">12345</div>
+            </li>
+          </ul>
+        </div>
+        <!-- 최근 검색 키워드 끝 -->
       </div>
     </div>
     <div class="h-50">안녕</div>
