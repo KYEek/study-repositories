@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dropdown Example</title>
     <!-- Tailwind CSS -->
-    <link href="/main.css" rel="stylesheet" />
+    <!-- <link href="/main.css" rel="stylesheet" /> -->
     <!-- <link src="css/searchbox.css" rel="stylesheet" /> -->
     <!-- <script src -->
-    <!-- <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <style type="text/tailwindcss">
       /* 색상변수 */
       :root {
@@ -84,13 +84,14 @@
       .searchBoxResultActive {
         bottom: 0 !important;
       }
-    </style> -->
+    </style>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         //객체 가져오기
         const searchBoxInput = document.querySelector("#searchInput");
         const SearchResultBox = document.querySelector("#SearchResultBox");
         const body = document.querySelector("body");
+        const SearchBoxButton = document.querySelector("#SearchBoxSeeAll");
 
         //검색 버튼 클릭시
         //스타일 클래스 토글
@@ -123,6 +124,11 @@
             SearchResultBox.classList.toggle("searchBoxResultActive");
           }
         });
+
+        SearchBoxButton.addEventListener("click", (e) => {
+          e.stopPropagation();
+          SearchBoxButton.textContent = "지우기";
+        });
       });
     </script>
   </head>
@@ -146,6 +152,7 @@
           <div class="SearchBoxDropDown w-15/20 text-base font-bold">최근</div>
           <div class="SearchBoxDropDown w-5/20 text-base">
             <button
+              id="SearchBoxSeeAll"
               class="SearchBoxDropDown font-bold rounded-md hover:bg-gray-200 pl-3 pr-3"
             >
               모두 보기
