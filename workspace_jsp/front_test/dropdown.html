@@ -85,52 +85,7 @@
         bottom: 0 !important;
       }
     </style>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        //객체 가져오기
-        const searchBoxInput = document.querySelector("#searchInput");
-        const SearchResultBox = document.querySelector("#SearchResultBox");
-        const body = document.querySelector("body");
-        const SearchBoxButton = document.querySelector("#SearchBoxSeeAll");
-
-        //검색 버튼 클릭시
-        //스타일 클래스 토글
-        searchBoxInput.addEventListener("click", (e) => {
-          //이벤트 버블링 방지
-          e.stopPropagation();
-          const className = SearchResultBox.className;
-          if (className.indexOf("hidden") != -1) {
-            SearchResultBox.classList.toggle("hidden");
-            body.classList.toggle("searchBoxShadow");
-            searchBoxInput.classList.toggle("searchBoxActive");
-            SearchResultBox.classList.toggle("searchBoxResultActive");
-          }
-        });
-        //바디 선택시
-        body.addEventListener("click", (e) => {
-          const className = e.target.className;
-          console.log(className.substring(0, "SearchBoxDropDown".length));
-
-          //스타일 클래스 토글
-          if (
-            SearchResultBox.className.indexOf("hidden") == -1 &&
-            className.substring(0, "SearchBoxDropDown".length) !=
-              "SearchBoxDropDown"
-          ) {
-            SearchResultBox.classList.toggle("hidden");
-            console.log("body");
-            body.classList.toggle("searchBoxShadow");
-            searchBoxInput.classList.toggle("searchBoxActive");
-            SearchResultBox.classList.toggle("searchBoxResultActive");
-          }
-        });
-
-        SearchBoxButton.addEventListener("click", (e) => {
-          e.stopPropagation();
-          SearchBoxButton.textContent = "지우기";
-        });
-      });
-    </script>
+    <script src="js/header.js"></script>
   </head>
   <body>
     <h1 class="text-lg">Dropdown Example</h1>
@@ -159,102 +114,30 @@
             </button>
           </div>
         </div>
-        <div id="searchBoxMenuRecentPage" class="SearchBoxDropDown mt-2">
-          <ul>
-            <!--검색결과  -->
-            <li class="SearchBoxDropDown">
-              <div class="SearchBoxDropDown" style="text-align: center">
-                <img
-                  class="SearchBoxDropDown w-10 h-10"
-                  src="images/samsung_electronics_logo.jpg"
-                />
-              </div>
-              <div>
-                <span clas="SearchBoxDropDown text-[0.8rem] font-bold"
-                  >samsung electonics</span
-                >
-              </div>
-            </li>
-            <!-- 페이지 검색결과  -->
-            <li class="SearchBoxDropDown">
-              <div class="SearchBoxDropDown" style="text-align: center">
-                <img
-                  class="SearchBoxDropDown w-10 h-10"
-                  src="images/samsung_electronics_logo.jpg"
-                />
-              </div>
-              <div>
-                <span clas="SearchBoxDropDown text-[0.8rem] font-bold"
-                  >samsung electonics</span
-                >
-              </div>
-            </li>
-            <li class="SearchBoxDropDown">
-              <div class="SearchBoxDropDown" style="text-align: center">
-                <img
-                  class="SearchBoxDropDown w-10 h-10"
-                  src="images/samsung_electronics_logo.jpg"
-                />
-              </div>
-              <div>
-                <span clas="SearchBoxDropDown text-[0.8rem] font-bold"
-                  >samsung electonics</span
-                >
-              </div>
-            </li>
-            <li class="SearchBoxDropDown">
-              <div class="SearchBoxDropDown" style="text-align: center">
-                <img
-                  class="SearchBoxDropDown w-10 h-10"
-                  src="images/samsung_electronics_logo.jpg"
-                />
-              </div>
-              <div>
-                <span clas="SearchBoxDropDown text-[0.8rem] font-bold"
-                  >samsung electonics</span
-                >
-              </div>
-            </li>
-            <li class="SearchBoxDropDown">
-              <div class="SearchBoxDropDown" style="text-align: center">
-                <img
-                  class="SearchBoxDropDown w-10 h-10"
-                  src="images/samsung_electronics_logo.jpg"
-                />
-              </div>
-              <div>
-                <span clas="SearchBoxDropDown text-[0.8rem] font-bold"
-                  >samsung electonics</span
-                >
-              </div>
-            </li>
-          </ul>
-        </div>
+        <!-- 페이지 검색결과 -->
+        <div id="searchBoxMenuRecentPage" class="SearchBoxDropDown mt-2"></div>
         <!-- 페이지 검색 결과 끝 -->
 
         <!-- 최근 검색 키워드 -->
-        <div id="searchBoxMenuRecent" class="SearchBoxDropDown mt-2">
-          <ul class="SearchBoxDropDown">
-            <li class="SearchBoxDropDown hover:bg-gray-200 mb-2 mr-5 flex">
-              <div class="SearchBoxDropDown w-1/11">🔍</div>
-              <div class="SearchBoxDropDown w-10/11">122</div>
-            </li>
-            <li class="SearchBoxDropDown hover:bg-gray-200 mb-2 mr-5 flex">
-              <div class="SearchBoxDropDown w-1/11">🔍</div>
-              <div class="SearchBoxDropDown w-10/11">1234</div>
-            </li>
-            <li class="SearchBoxDropDown hover:bg-gray-200 mb-2 mr-5 flex">
-              <div class="SearchBoxDropDown w-1/11">🔍</div>
-              <div class="SearchBoxDropDown w-10/11">12345</div>
-            </li>
-          </ul>
-        </div>
+        <div id="searchBoxMenuRecent" class="SearchBoxDropDown mt-2"></div>
         <!-- 최근 검색 키워드 끝 -->
       </div>
     </div>
+
     <div class="h-50">안녕</div>
     <div class="h-50">안녕</div>
     <div class="h-50">안녕</div>
     <div class="h-50">안녕</div>
+    <svg
+      role="none"
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      data-supported-dps="24x24"
+      data-test-icon="image-medium"
+      type="image"
+    ></svg>
   </body>
 </html>

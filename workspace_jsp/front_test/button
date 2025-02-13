@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  </head>
+  <body>
+    <button
+      type="button"
+      class="border-1 rounded-full border-gray-400 px-3 py-0.5 font-bold text-gray-700 text-lg hover:bg-gray-100 hover:inset-ring-1 hover:inset-ring-gray-400 transition-all duration-200 hover:cursor-pointer"
+    >
+      Button1
+    </button>
+    <button
+      type="button"
+      class="border-1 rounded-full border-orange-500 px-3 py-0.5 font-bold text-orange-500 text-lg hover:bg-gray-100 hover:inset-ring-1 hover:inset-ring-orange-500 transition-all duration-200 hover:cursor-pointer"
+    >
+      Button2
+    </button>
+    <button
+      type="button"
+      class="border-1 border-orange-400 rounded-full px-3 py-0.5 font-bold text-white text-lg bg-orange-400 hover:bg-orange-500 hover:border-orange-500 transition-all duration-200 hover:cursor-pointer"
+    >
+      Button2
+    </button>
+  </body>
+</html>
