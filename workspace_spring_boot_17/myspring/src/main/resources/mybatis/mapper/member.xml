@@ -55,11 +55,47 @@
    
    <!-- === tbl_member 테이블의 idle 컬럼의 값을 1로 변경하기 === -->
    <update id="updateIdle" parameterType="String">
-        update tbl_member set idle = 1
-        where userid = #{userid}
+       update tbl_member set idle = 1
+       where userid = #{userid}
    </update>
    
-
+   
+   <!-- === 인사관리 페이지에 접속한 이후에, 인사관리 페이지에 접속한 페이지URL, 사용자ID, 접속IP주소, 접속시간을 기록으로 DB에 tbl_empManger_accessTime 테이블에 insert 하도록 한다. === --> 
+   <insert id="insert_accessTime" parameterType="HashMap">
+   	   insert into tbl_empManger_accessTime(seqAccessTime, pageUrl, fk_userid, clientIP, accessTime)
+   	   values(seq_seqAccessTime.nextval, #{pageUrl}, #{fk_userid}, #{clientIP}, #{accessTime})
+   </insert>  
+   
+   
+   <!-- === 인사관리 페이지별 사용자별 접속통계 가져오기 === -->
+   <resultMap type="HashMap" id="pageurlUsername_Map">
+	    <result property="pagename"  	column="pagename"  	javaType="String" />
+	    <result property="name"  		column="name"  		javaType="String" />
+	    <result property="cnt"  		column="cnt"  		javaType="String" />
+	</resultMap>
+   <select id="pageurlUsername" resultMap="pageurlUsername_Map">
+		SELECT  case
+		           when instr(V.pageurl, '/employeeList', -1, 1) &gt; 0 then '직원목록'
+		           when instr(V.pageurl, '/chart', -1, 1) &gt; 0 then '통계차트'
+		           else '기타'
+		        end AS pagename
+		      , V.name
+		      , V.cnt
+		FROM 
+		(
+		    SELECT A.pageurl, M.name, A.CNT
+		    FROM 
+		    (
+		      select pageurl, fk_userid
+		           , count(*) AS CNT
+		      from tbl_empManger_accessTime
+		      group by pageurl, fk_userid
+		    ) A JOIN tbl_member M
+		    ON A.fk_userid = M.userid 
+		) V
+		ORDER BY 1, 2   	   
+   </select>
+   
 </mapper>
 
 

@@ -871,12 +871,6 @@ where seq = 24;
 
 
 
-
-
-
-----------------------------------
-
-
 ------------- >>>>>>>> 일정관리(풀캘린더) 시작 <<<<<<<< -------------
 show user;
 -- USER이(가) "MYMVC_USER"입니다.
@@ -942,8 +936,8 @@ create table tbl_calendar_schedule
 ,subject       varchar2(400)          -- 제목
 ,color         varchar2(50)           -- 색상
 ,place         varchar2(200)          -- 장소
-,joinuser      varchar2(4000)         -- 공유자   
-,content       varchar2(4000)         -- 내용   
+,joinuser      varchar2(4000)         -- 공유자	
+,content       varchar2(4000)         -- 내용	
 ,fk_smcatgono  number(8)              -- 캘린더 소분류 번호
 ,fk_lgcatgono  number(3)              -- 캘린더 대분류 번호
 ,fk_userid     varchar2(40) not null  -- 캘린더 일정 작성자 유저아이디
@@ -951,7 +945,7 @@ create table tbl_calendar_schedule
 ,constraint FK_schedule_fk_smcatgono foreign key(fk_smcatgono) 
             references tbl_calendar_small_category(smcatgono) on delete cascade
 ,constraint FK_schedule_fk_lgcatgono foreign key(fk_lgcatgono) 
-            references tbl_calendar_large_category(lgcatgono) on delete cascade   
+            references tbl_calendar_large_category(lgcatgono) on delete cascade	
 ,constraint FK_schedule_fk_userid foreign key(fk_userid) references tbl_member(userid) 
 );
 -- Table TBL_CALENDAR_SCHEDULE이(가) 생성되었습니다.
@@ -1005,6 +999,160 @@ where name = '이순신';
 ------------- >>>>>>>> 일정관리(풀캘린더) 끝 <<<<<<<< -------------
 
 
+-----------------------------------------------------------------
+--- ****************** 사원관리 시작 ******************* ---
+show user;
+-- USER이(가) "HR"입니다.
+
+select distinct nvl(department_id, -9999) as department_id
+from employees
+order by department_id asc;
+
+
+SELECT E.department_id, D.department_name, E.employee_id,
+       E.first_name || ' ' || E.last_name AS fullname,
+       to_char(E.hire_date, 'yyyy-mm-dd') AS hire_date,
+       nvl(E.salary + E.salary * E.commission_pct, E.salary) AS monthsal,
+       func_gender(E.jubun) AS gender,
+       func_age(E.jubun) AS age
+FROM employees E LEFT JOIN departments D 
+ON E.department_id = D.department_id
+WHERE 1=1
+AND nvl(E.department_id, -9999) IN(-9999,10,60)
+AND func_gender(E.jubun) = '여'
+ORDER BY E.department_id, E.employee_id;
+
+select *
+from employees
+order by employee_id asc;
+
+
+-- employees 테이블에서 부서명별 인원수 및 퍼센티지 가져오기
+select nvl(D.department_name, '부서없음') AS department_name
+     , count(*) AS cnt
+     , round( count(*) / (select count(*) from employees) * 100, 2 ) AS percentage
+from employees E left join departments D
+on E.department_id = D.department_id
+group by D.department_name
+order by cnt desc, D.department_name asc;
+
+
+-- employees 테이블에서 성별 인원수 및 퍼센티지 가져오기
+select func_gender(jubun) AS gender
+     , count(*) AS cnt
+     , round( count(*) / (select count(*) from employees) * 100, 1 ) AS percentage
+from employees
+group by func_gender(jubun);
+
+
+-- employees 테이블에서 성별 입사년도별 인원수 가져오기
+select func_gender(jubun) AS gender
+     , sum( decode( extract(year from hire_date), 2001, 1, 0) ) AS "Y2001"
+     , sum( decode( extract(year from hire_date), 2002, 1, 0) ) AS "Y2002"
+     , sum( decode( extract(year from hire_date), 2003, 1, 0) ) AS "Y2003"
+     , sum( decode( extract(year from hire_date), 2004, 1, 0) ) AS "Y2004"
+     , sum( decode( extract(year from hire_date), 2005, 1, 0) ) AS "Y2005"
+     , sum( decode( extract(year from hire_date), 2006, 1, 0) ) AS "Y2006"
+     , sum( decode( extract(year from hire_date), 2007, 1, 0) ) AS "Y2007"
+     , sum( decode( extract(year from hire_date), 2008, 1, 0) ) AS "Y2008"
+from employees
+group by func_gender(jubun)
+order by gender;
+
+
+select func_gender(jubun) AS gender
+     , count(*) AS cnt
+     , round( count(*) / (select count(*) from employees) * 100, 1 ) AS percentage
+from employees
+where department_id = (select department_id 
+                       from departments 
+                       where department_name = 'Shipping')
+-- where department_id is null                    
+group by func_gender(jubun);
+
+
+---- **** Arround Advice 를 위해서 만든 테이블 **** ----
+show user;
+-- USER이(가) "MYMVC_USER"입니다.
+
+create table tbl_empManger_accessTime
+(seqAccessTime   number
+,pageUrl         varchar2(150) not null
+,fk_userid       varchar2(40) not null
+,clientIP        varchar2(30) not null
+,accessTime      varchar2(20) default sysdate not null
+,constraint PK_tbl_empManger_accessTime primary key(seqAccessTime)
+,constraint FK_tbl_empManger_accessTime foreign key(fk_userid) references tbl_member(userid)
+);
+-- Table TBL_EMPMANGER_ACCESSTIME이(가) 생성되었습니다.
+
+create sequence seq_seqAccessTime
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+-- Sequence SEQ_SEQACCESSTIME이(가) 생성되었습니다.
+
+select * 
+from tbl_empManger_accessTime
+order by seqAccessTime desc;
+
+
+SELECT  case
+           when instr(V.pageurl, '/employeeList', -1, 1) > 0 then '직원목록'
+           when instr(V.pageurl, '/chart', -1, 1) > 0 then '통계차트'
+           else '기타'
+        end AS PAGENAME
+      , V.name
+      , V.cnt
+FROM 
+(
+    SELECT A.pageurl, M.name, A.CNT
+    FROM 
+    (
+      select pageurl, fk_userid
+           , count(*) AS CNT
+      from tbl_empManger_accessTime
+      group by pageurl, fk_userid
+    ) A JOIN tbl_member M
+    ON A.fk_userid = M.userid 
+) V
+ORDER BY 1, 2;
+/*
+ --------------------------------
+    PAGENAME    NAME     CNT
+ --------------------------------
+    직원목록     관리자      3
+    직원목록     서영학      2
+    통계차트     관리자      2
+    통계차트     서영학      1
+*/
+        
+--- ****************** 사원관리 끝 ******************* ---
+
+--- ***** Spring 스케줄러 연습용 ***** ---
+create table tbl_test_springscheduler
+(no         number
+,name       nvarchar2(20)
+,writetime  date
+,constraint PK_tbl_test_springscheduler primary key(no)
+);
+-- Table TBL_TEST_SPRINGSCHEDULER이(가) 생성되었습니다.
+
+create sequence seq_tbl_test_springscheduler
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+-- Sequence SEQ_TBL_TEST_SPRINGSCHEDULER이(가) 생성되었습니다.
+
+select no, name, to_char(writetime, 'yyyy-mm-dd hh24:mi:ss') AS writetime
+from tbl_test_springscheduler
+order by no;
 
 
 
@@ -1013,7 +1161,14 @@ where name = '이순신';
 
 
 
-    
+
+
+
+
+
+
+
+
 
 
 

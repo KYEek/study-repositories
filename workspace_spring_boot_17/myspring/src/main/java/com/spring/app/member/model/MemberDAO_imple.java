@@ -1,5 +1,6 @@
 package com.spring.app.member.model;
 
+import java.util.List;
 import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -38,6 +39,23 @@ public class MemberDAO_imple implements MemberDAO {
 	public void updateIdle(String userid) {
 		
 		sqlsession.update("member.updateIdle", userid);
+	}
+
+	
+	// 인사관리 페이지에 접속한 이후에, 인사관리 페이지에 접속한 페이지URL, 사용자ID, 접속IP주소, 접속시간을 기록으로 DB에 tbl_empManger_accessTime 테이블에 insert 하도록 한다. 
+	@Override
+	public void insert_accessTime(Map<String, String> paraMap) {
+		
+		sqlsession.insert("member.insert_accessTime", paraMap);
+	}
+
+	
+	// 인사관리 페이지별 사용자별 접속통계 가져오기 
+	@Override
+	public List<Map<String, String>> pageurlUsername() {
+		
+		List<Map<String, String>> pageurlUsernameList = sqlsession.selectList("member.pageurlUsername"); 
+		return pageurlUsernameList;
 	}
 	
 	

@@ -1,0 +1,19 @@
+※ 관광사진 갤러리를 최근수정순으로 조회
+
+XML  기본값  한페이지당 10개행을 보여줄때 1페이지  총갯수 5803
+http://apis.data.go.kr/B551011/PhotoGalleryService1/galleryList1?serviceKey=공공데이터포털에서발급받은(Encoding)일반인증키&arrange=C&MobileOS=ETC&MobileApp=AppTesting
+
+JSON  기본값  한페이지당 10개행을 보여줄때 1페이지  총갯수 5803
+http://apis.data.go.kr/B551011/PhotoGalleryService1/galleryList1?serviceKey=공공데이터포털에서발급받은(Encoding)일반인증키&arrange=C&MobileOS=ETC&MobileApp=AppTesting&_type=json
+
+XML  한페이지당 20개행을 보여줄때 1페이지  총갯수 5803
+http://apis.data.go.kr/B551011/PhotoGalleryService1/galleryList1?serviceKey=공공데이터포털에서발급받은(Encoding)일반인증키&arrange=C&MobileOS=ETC&MobileApp=AppTesting&numOfRows=20&pageNo=1
+
+JSON 한페이지당 20개행을 보여줄때 1페이지  총갯수 5803
+http://apis.data.go.kr/B551011/PhotoGalleryService1/galleryList1?serviceKey=공공데이터포털에서발급받은(Encoding)일반인증키&arrange=C&MobileOS=ETC&MobileApp=AppTesting&_type=json&numOfRows=20&pageNo=1
+
+XML  한페이지당 5803개행을 보여줄때 1페이지
+http://apis.data.go.kr/B551011/PhotoGalleryService1/galleryList1?serviceKey=공공데이터포털에서발급받은(Encoding)일반인증키&arrange=C&MobileOS=ETC&MobileApp=AppTesting&numOfRows=5803
+
+JSON  한페이지당 5803개행을 보여줄때 1페이지
+http://apis.data.go.kr/B551011/PhotoGalleryService1/galleryList1?serviceKey=공공데이터포털에서발급받은(Encoding)일반인증키&arrange=C&MobileOS=ETC&MobileApp=AppTesting&_type=json&numOfRows=5803

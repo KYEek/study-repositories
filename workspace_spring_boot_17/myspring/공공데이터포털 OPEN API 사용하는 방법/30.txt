@@ -1,0 +1,22 @@
+※ 관광사진 갤러리 키워드검색 목록 조회
+
+XML  기본값  한페이지당 10개행을 보여줄때 1페이지  총갯수 47
+http://apis.data.go.kr/B551011/PhotoGalleryService1/gallerySearchList1?serviceKey=공공데이터포털에서발급받은(Encoding)일반인증키&MobileOS=ETC&MobileApp=AppTest&keyword=서울 야경 축제
+
+JSON  기본값  한페이지당 10개행을 보여줄때 1페이지  총갯수 47
+http://apis.data.go.kr/B551011/PhotoGalleryService1/gallerySearchList1?serviceKey=공공데이터포털에서발급받은(Encoding)일반인증키&MobileOS=ETC&MobileApp=AppTest&_type=json&keyword=서울 야경 축제
+
+XML  한페이지당 20개행을 보여줄때 2페이지  총갯수 6172
+http://apis.data.go.kr/B551011/PhotoGalleryService1/gallerySearchList1?serviceKey=공공데이터포털에서발급받은(Encoding)일반인증키&MobileOS=ETC&MobileApp=AppTest&keyword=제주&numOfRows=20&pageNo=2
+
+JSON  한페이지당 20개행을 보여줄때 2페이지  총갯수 6172
+http://apis.data.go.kr/B551011/PhotoGalleryService1/gallerySearchList1?serviceKey=공공데이터포털에서발급받은(Encoding)일반인증키&MobileOS=ETC&MobileApp=AppTest&_type=json&keyword=제주&numOfRows=20&pageNo=2
+
+XML  한페이지당 6172개행을 보여줄때 1페이지
+http://apis.data.go.kr/B551011/PhotoGalleryService1/gallerySearchList1?serviceKey=공공데이터포털에서발급받은(Encoding)일반인증키&MobileOS=ETC&MobileApp=AppTest&keyword=제주&numOfRows=6172
+
+JSON  한페이지당 6172개행을 보여줄때 1페이지
+http://apis.data.go.kr/B551011/PhotoGalleryService1/gallerySearchList1?serviceKey=공공데이터포털에서발급받은(Encoding)일반인증키&MobileOS=ETC&MobileApp=AppTest&_type=json&keyword=제주&numOfRows=6172
+
+
+

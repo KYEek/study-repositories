@@ -27,7 +27,12 @@ public class Interceptor_Configuration implements WebMvcConfigurer {
 		        .addPathPatterns("/interceptor/member_only/member_a","/interceptor/member_only/member_b"); // 해당 경로에 접근하기 전에 인터셉터가 가로챈다. 
 		
 		registry.addInterceptor(adminLoginCheckInterceptor)
-                .addPathPatterns("/interceptor/special_member/special_member_a","/interceptor/special_member/special_member_b"); // 해당 경로에 접근하기 전에 인터셉터가 가로챈다.
+                .addPathPatterns("/interceptor/special_member/special_member_a","/interceptor/special_member/special_member_b");
+		        // 해당 경로에 접근하기 전에 인터셉터가 가로챈다.  
+		
+		        // === #204. "/emp/chart" 을 제거한다. 
+		    // .addPathPatterns("/interceptor/special_member/special_member_a","/interceptor/special_member/special_member_b", "/emp/chart");
+		        
 		
 	 /*
         addInterceptor() : 인터셉터를 등록해준다.

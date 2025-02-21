@@ -75,6 +75,9 @@ public interface BoardDAO {
 	// 파일첨부가 되어진 댓글 1개에서 서버에 업로드 되어진 파일명과 오리지널파일명을 조회해주는 것
 	CommentVO getCommentOne(String seq);
 
+	// == 스프링스케줄러 연습 (매 1분마다 insert) ==
+	void test_insert(Map<String, String> paraMap);
+
 }
 
 

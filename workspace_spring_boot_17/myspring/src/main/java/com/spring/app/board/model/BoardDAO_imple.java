@@ -205,6 +205,13 @@ public class BoardDAO_imple implements BoardDAO {
 		return commentvo;
 	}
 
+
+	// == 스프링스케줄러 연습 (매 1분마다 insert) ==
+	@Override
+	public void test_insert(Map<String, String> paraMap) {
+		sqlsession.insert("board.test_insert", paraMap);
+	}
+
 	
 	
 	

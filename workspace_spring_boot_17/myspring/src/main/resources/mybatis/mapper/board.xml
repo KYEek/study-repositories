@@ -744,6 +744,13 @@
    </select>   
 
 
+   <!-- == 스프링스케줄러 연습 (매 1분마다 insert) == -->
+   <insert id="test_insert" parameterType="HashMap">
+      insert into tbl_test_springscheduler(no, name, writetime)
+      values(seq_tbl_test_springscheduler.nextval, #{name}, to_date(#{currentTime}, 'yyyy-mm-dd hh24:mi:ss'))
+   </insert>
+ 
+
 </mapper>
 
 

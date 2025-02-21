@@ -3,6 +3,7 @@ package com.spring.app;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 // 프로젝트명+Application 으로 되어진 클래스가 프로젝트가 동작할 수 있게 해주는 시작점인 메인 클래스 파일이다. 
 // 이 클래스에는 @SpringBootApplication 어노테이션이 붙어있는데  @SpringBootApplication 어노테이션 속에는 
@@ -11,7 +12,8 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 // 프로젝트명+Application 클래스의 base-package 인 "com.spring.app" 및 그 하위(자식) package 에 있는 여러개의 클래스들 중 
 // @Component 어노테이션이 붙어있는 클래스들은 bean 으로 만들어 주는데 이러한 bean 들을 모두 스캔해서 읽어오는 기능을 해주는 것이다. 
 @SpringBootApplication
-@EnableAspectJAutoProxy  // Application 클래스에 @EnableAspectJAutoProxy 를 추가하여 AOP(Aspect Oriented Programming)클래스를 찾을 수 있게 해준다. 우리는 com.spring.app.aop.CommonAop 이 AOP 클래스 이다. 
+@EnableAspectJAutoProxy  // Application 클래스에 @EnableAspectJAutoProxy 를 추가하여 AOP(Aspect Oriented Programming)클래스를 찾을 수 있게 해준다. 우리는 com.spring.app.aop.CommonAop 이 AOP 클래스 이다.
+@EnableScheduling        // === #208. @EnableScheduling 어노테이션을 사용하여 스프링스케줄러를 구현하도록 한다. Scheduler는 기본적으로 Spring Boot에 포함되어 있기 때문에 추가적으로 pom.xml 파일에 dependency 를 추가할 필요는 없고, Application 클래스에 @EnableScheduling 를 추가만 해주면 Scheduler 를 기능을 사용할 수 있게 된다.
 public class MyspringApplication {
 
 	public static void main(String[] args) {
