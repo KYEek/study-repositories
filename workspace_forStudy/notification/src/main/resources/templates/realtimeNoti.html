@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>실시간 알림 SPA</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      #notification-list {
+        list-style: none;
+        padding: 0;
+      }
+      #notification-list li {
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>실시간 알림</h1>
+    <ul id="notification-list"></ul>
+
+    <!-- SockJS와 Stomp.js 라이브러리 로드 -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <script src="/app2.js"></script>
+  </body>
+</html>

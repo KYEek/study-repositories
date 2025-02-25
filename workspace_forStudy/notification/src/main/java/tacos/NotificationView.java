@@ -15,4 +15,9 @@ public class NotificationView {
 		return "notificationView";
 	}
 	
+	@GetMapping("/realtime/{userId}")
+	public String getRealTimeNoti(@PathVariable String userId) {
+		return "realtimeNoti";
+	}
+	
 }
